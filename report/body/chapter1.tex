@@ -1,0 +1,29 @@
+\chapter{Introduction} \label{chap:intro}
+
+\section{Context} \label{sec:ae1}
+
+\ac{CPPS} are complex systems that integrate physical processes with digital technologies to optimise production processes. Several software engineering approaches and technologies are utilised in the development and operation of \ac{CPPS}. One of such approaches is \ac{FBD}. \ac{FBD} is a graphical programming language used in industrial automation and control systems. \ac{FBD} uses graphical function blocks to represent the logic and control of a system. The function blocks are connected in a network to form a control program. One of the benefits of \ac{FBD} is that it provides a visual representation of the control logic, which can be easier to understand and debug than traditional textual programming languages. \ac{FBD} is also modular, which means that function blocks can be reused in multiple programs, reducing development time and improving code maintainability. Also, \ac{FBD} is often used in conjunction with \acp{PLC} to control machinery and processes in manufacturing and other industrial applications. \ac{FBD} programs can be created and edited using specialised software tools that allow for the creation and manipulation of function blocks.
+
+Several methods and tools are used in \ac{FBD}, including the IEC 61499 standard. As IEC 61499 supporting tools, there are \acp{RTE} and \acp{IDE}. While \acp{RTE} enables the execution of Function Blocks compliant with the standard, \acp{IDE} are used to design, create, and deploy Function Block pipelines into the Edge layer of a \ac{CPPS}.
+
+These \acp{IDE} offer features and tools that facilitate the development, testing, and deployment of IEC 61499-compliant control systems. They provide graphical editors for creating function block diagrams, simulation capabilities, and additional functionalities to streamline the development process. However, despite being increasingly popular, there aren’t many web-based \acp{IDE} specifically designed for IEC 61499.
+
+\section{Motivation} \label{sec:ae2}
+
+The evolution of \ac{CPPS} has increased the demand for flexible and intelligent control solutions capable of integrating physical processes with digital technologies. \ac{FBD} and the IEC 61499 standard offer a structured, modular approach to building such distributed automation systems. To fully leverage these benefits, development tools must evolve alongside industrial needs, supporting more accessible, collaborative, and scalable workflows.
+
+\section{Problem} \label{sec:ae3}
+
+Existing IEC 61499 development environments are predominantly desktop-based and lack modern capabilities such as remote access, real-time collaboration, and seamless integration with cloud or edge infrastructures. These limitations hinder efficient development, maintenance, and deployment of control applications within distributed \ac{CPPS}. As a result, current tools fall short in supporting the flexibility, scalability, and interconnectedness required by modern industrial automation systems.
+
+\section{Research Questions} \label{sec:ae4}
+
+This research seeks to investigate how modern web technologies can be leveraged to enhance the development, deployment, and operation of IEC 61499-compliant systems. This study is guided by the following main research question:
+\begin{quote}
+How can web-based \acp{IDE} enhance the development, deployment, and collaboration processes for IEC 61499 applications in distributed \ac{CPPS}, addressing the limitations of traditional desktop-based environments?
+\end{quote}
+To further refine the scope, the following sub-questions are proposed:
+\begin{itemize}
+  \item What architectural and technological mrequirements must be considered when designing a web-based \acp{IDE} for IEC 61499?
+  \item In what ways do web-based \acp{IDE} improve collaboration, accessibility, and scalability compared to existing desktop tools?
+\end{itemize}
