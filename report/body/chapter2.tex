@@ -1,16 +1,18 @@
-\chapter{Literature Review} \label{chap:ch2}
-
+\chapter{Literature Review} \label{chap:literature-review}
+% TODO need to write more about the review of the articles
 This chapter reviews prior work related to IEC 61499-based development, \ac{CPPS}, and web-based \acp{IDE}. The goal is to identify how current tools support distributed automation and where existing gaps justify the development of a web-based solution.
 
-\section{Methodology} \label{sec:lr2}
-A systematic literature review approach was adopted, the objective was to collect, screen, and analyze studies addressing IEC 61499 development tools, \ac{CPPS}, and web-based engineering environments.
+\section{Methodology}
+A systematic literature review approach was adopted, the objective was to collect, screen, and analyze studies addressing IEC 61499 development tools, function blocks, \ac{CPPS}, and web-based development environments, to then critically reflect upon their findings to help the writing of this dissertation and the planning of the final product.
 
 \subsection{Search and Selection}
-The search was conducted in \textit{ScienceDirect}, \textit{Scopus} and others using combinations of the following terms:
+The search was conducted in digital libraries \textbf{ScienceDirect}, \textbf{IEEE Xplore}, \textbf{ACM Digital Library}, among others, as well as research paper aggregators like \textbf{Semantic Scholar}, \textbf{Scopus} and \textbf{Web of Science} using combinations of the following terms:
 
 \begin{quote}
 (\texttt{"IEC 61499"} OR \texttt{"FBD"}) AND (\texttt{"web-based"} OR \texttt{"IDE"}) AND (\texttt{"CPPS"})
 \end{quote}
 
-\section{Related Work} \label{sec:lr3}
-Recent studies explore cloud-native automation and containerized function block execution \cite{rohat_web_2014,lyu_towards_2024}, yet most solutions remain constrained by traditional architectures. Emerging web-based IDE prototypes, such as early 4diac Web IDE developments \cite{sorokin_novel_2022}, show promise in accessibility and scalability but lack maturity and full IEC 61499 compliance.
+Following the search, a manual review process was conducted to refine and validate the results. Titles and abstracts were first screened to understand the relevance of the articles with respect to this dissertation. The publications were then examined in greater detail through full-text review, the reference lists of selected papers were manually inspected to identify relevant works that may not have been captured by the initial keyword search.
+
+\section{Related Work}
+Some recent studies explore web-based execution of \ac{FBD}, \citeauthor{rohat_remote_2014} \cite{rohat_remote_2014} as well as \citeauthor{lyu_towards_2024} \cite{lyu_towards_2024} propose the creation of a web platform for IEC 61499 development. While their works are important case studies that will be taken into account and thoroughly studied, it should be of note that this paper has different objectives and aims to achieve a different final product.

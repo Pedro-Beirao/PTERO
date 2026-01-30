@@ -1,34 +1,36 @@
-\chapter{State of the Art} \label{chap:ch3}
+\chapter{State of the Art} \label{chap:state-of-the-art}
 
-This chapter provides a comprehensive analysis of the current landscape regarding development environments for \ac{CPPS} and the IEC 61499 standard. It categorizes existing solutions into traditional desktop-based environments and emerging web-based engineering tools while identifying the key technological enablers that facilitate the migration of \ac{FBD} to the web.
+This chapter provides a comprehensive analysis of the current landscape of development environments for \ac{CPPS} and the IEC 61499 standard. It categorizes existing solutions into desktop-based and web-based development tools, while analyzing a possible gap in the ecosystem.
 
-\section{Development Ecosystem} \label{sec:sota_iec61499}
+\section{Development Ecosystem}
 
 Currently, the development ecosystem is dominated by desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations.
 
 \subsection{Open-Source}
-The most prominent open-source implementation is the Eclipse 4diac framework. It consists of the 4diac IDE (based on the Eclipse framework) and the 4diac FORTE (a run-time environment), althought it can also use different \acp{RTE} like DINASORE.
+The most prominent open-source implementation is the \textbf{Eclipse 4diac} framework. It consists of the \textbf{4diac \ac{IDE}} (based on the \textbf{Eclipse} framework) and the \textbf{4diac FORTE} (a run-time environment), although it can also use different \acp{RTE} like \textbf{DINASORE}.
 
-This IDE is very feature rich at the cost of significant system resources and increased complexity which make it more difficult to use. It relies on the heavyweight Eclipse Rich Client Platform.
+This \ac{IDE} is very feature rich at the cost of significant system resources and increased complexity which make it more difficult to use. It relies on the heavyweight \textbf{Eclipse Rich Client Platform}.
 
 \subsection{Commercial}
-The commercial side is dominated by EcoStruxure Automation Expert, ISaGRAF Workbench and other monolithic desktop based environments, usually with a built-in proprietary \ac{RTE}. This makes them often very complete production ready tools, but they are not very flexible and not the best fit for many needs.
+% TODO may be too complex for some more basic needs
+The commercial side is dominated by \textbf{EcoStruxure Automation Expert}, \textbf{ISaGRAF Workbench} and other monolithic desktop based environments, usually with a built-in proprietary \ac{RTE}. This makes them often very complete production ready tools, but they are not very flexible and not the best fit for many needs.
 
-\section{Evolution of Web-Based Engineering Tools} \label{sec:sota_web_tools}
+\section{Evolution of Web-Based Engineering Tools}
 
-The software engineering domain has seen a massive shift from desktop \acp{IDE} to cloud-native environments. This trend is now influencing the domain of \ac{ICS}. Recent studies have proposed \ac{SOA} to integrate IEC 61499 with cloud layers, yet the engineering tools themselves remain largely desktop-bound.
+The software engineering domain has seen a massive shift from desktop \acp{IDE} to cloud-native environments. This trend is now influencing the domain of \ac{ICS}, and while recent studies have proposed a \ac{SOA} to integrate IEC 61499 with cloud layers \cite{torres_literature_2025}, the engineering tools themselves remain largely desktop-bound.
 
 \subsection{Web-Based IDEs in Software Development}
-In general software development, tools like Visual Studio Code have started offering web-based counterparts to their desktop applications in search of a more flexible user experience.
+% TODO why is this so important
+In general software development, tools like \textbf{Visual Studio Code} have started offering web-based counterparts to their desktop applications \cite{noauthor_vscode_nodate} in search of a more flexible user experience. In fact, newer development environments like \textbf{Zed} make it a key goal of their products to have web platform support \cite{noauthor_zed_nodate}.
 
-\section{Gap Analysis} \label{sec:sota_gap}
+\section{Gap Analysis}
 
 Current IEC 61499 tools face significant limitations that hinder modern \ac{CPPS} development:
 
 \begin{itemize}
     \item \textbf{Platform Dependency:} Existing solutions are monolithic desktop applications, lacking the accessibility and portability of web-based environments.
 
-    \item \textbf{Resource Intensity:} Current options are heavyweight and complex, creating a high barrier to entry compared to modern agile tooling.
+    \item \textbf{Resource Intensity:} Current options are heavyweight and complex, creating a high barrier to entry compared modern development tools of other purposes.
 
-    \item \textbf{The Web Gap:} Despite industry trends, there is currently no mature, lightweight web interface for \ac{FBD}, leaving \ac{ICS} engineering behind the curve of cloud-native software development.
+    \item \textbf{Web Trends:} Despite industry trends, there is currently no mature, lightweight web interface for \ac{FBD}, leaving \ac{ICS} engineering behind the curve of cloud-native software development.
 \end{itemize}
