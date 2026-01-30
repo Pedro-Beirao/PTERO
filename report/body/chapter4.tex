@@ -1,10 +1,44 @@
-\chapter{Solution} \label{chap:solution}
+\chapter{Proposed Solution} \label{chap:proposed-solution}
+% TODO explain what this chapter will do
 
 \section{Approach}
 % TODO This is the time where you describe your approach How you expect to solve the problem and justify it! Refer to requirements, limitations, identified gaps in the literature, improvements over others work, etc.
-
 
 \section{Methods}
 
 \subsection{Introduction}
 % TODO State the purpose of the chapter and why the chosen methodology is appropriate for addressing the research question.
+
+\clearpage
+\section{Workplan}
+\Cref{fig:workplan} outlines the planned work for this dissertation. The schedule is organized into three main phases: Experimentation, Code Development, and Deliveries. During the Experimentation phase, there will be a focus on studying the standard and running experiments to establish a solid technical foundation. The Code Development phase overlaps partially with Experimentation, ensuring that the software evolves in parallel with the experimental insights. Finally, the Deliveries phase spans the entire project duration and includes writing the dissertation and preparing the final presentation, ensuring that all outputs are documented and communicated effectively.
+
+\begin{figure}[h]
+\begin{ganttchart}[
+  x unit=0.6mm,
+  y unit chart=0.6cm,
+  group height=0.2mm,
+  bar height=0.2mm,
+  time slot format=isodate
+]{2026-02-01}{2026-07-31}
+  \gantttitlecalendar{year, month=shortname} \\
+
+  \ganttgroup{Experimentation}{2026-02-01}{2026-04-01} \\
+  \ganttbar{Framework Selection}{2026-02-01}{2026-03-01} \\
+  \ganttbar{IEC 61499 study}{2026-02-01}{2026-03-15} \\
+  \ganttbar{\ac{RTE} Experimentation}{2026-02-15}{2026-04-01} \\
+  \ganttnewline
+
+  \ganttgroup{Code Development}{2026-03-01}{2026-07-15} \\
+  \ganttbar{\ac{RTE} Communication}{2026-03-01}{2026-05-01} \\
+  \ganttbar{\ac{UI} Development}{2026-04-01}{2026-07-15} \\
+  \ganttbar{Advanced Features}{2026-05-15}{2026-07-15} \\
+  \ganttnewline
+
+  \ganttgroup{Deliveries}{2026-02-01}{2026-07-31} \\
+  \ganttbar{Write Dissertation}{2026-02-01}{2026-07-31} \\
+  \ganttbar{Prepare Presentation}{2026-06-01}{2026-07-31} \\
+\end{ganttchart}
+\caption{Gantt chart timeline for the proposed work}
+\label{fig:workplan}
+\end{figure}
