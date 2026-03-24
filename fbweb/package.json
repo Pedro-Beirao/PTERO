@@ -1,0 +1,30 @@
+{
+  "name": "fbweb",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@types/three": "^0.156.0",
+    "rete": "^2.0.6",
+    "rete-area-3d-plugin": "^2.0.5",
+    "rete-area-plugin": "^2.1.5",
+    "rete-connection-plugin": "^2.0.5",
+    "rete-connection-reroute-plugin": "^2.0.3",
+    "rete-context-menu-plugin": "^2.0.6",
+    "rete-render-utils": "^2.0.3",
+    "rete-scopes-plugin": "^2.1.1",
+    "rete-vue-plugin": "^2.1.2",
+    "sass": "^1.97.3",
+    "sass-loader": "^16.0.6",
+    "three": "^0.156.1",
+    "vue": "^3.2.13"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-typescript": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "typescript": "~4.5.5"
+  }
+}

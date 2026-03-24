@@ -1,0 +1,23 @@
+<FBType Name="STATE_CHECK" OpcUa="SERVICE">
+    <InterfaceList>
+        <EventInputs>
+            <Event Name="INIT" Type="Event"/>
+            <Event Name="RUN" Type="Event">
+              <With Var="CURR_STATE"/>
+            </Event>
+        </EventInputs>
+        <EventOutputs>
+            <Event Name="INIT_O" Type="Event"/>
+            <Event Name="RUN_O" Type="Event">
+              <With Var="FLAG"/>
+            </Event>
+        </EventOutputs>
+        <InputVars>
+            <VarDeclaration Name="CURR_STATE" Type="STRING"/>
+            <VarDeclaration Name="STATE" Type="STRING"/>
+        </InputVars>
+        <OutputVars>
+            <VarDeclaration Name="FLAG" Type="BOOLEAN"/>
+        </OutputVars>
+    </InterfaceList>
+</FBType>

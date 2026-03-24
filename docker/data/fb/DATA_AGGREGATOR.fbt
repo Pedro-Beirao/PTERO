@@ -1,0 +1,26 @@
+<FBType Name="DATA_AGGREGATOR" OpcUa="SERVICE">
+    <InterfaceList>
+        <EventInputs>
+            <Event Name="INIT" Type="Event"/>
+            <Event Name="RUN" Type="Event">
+              <With Var="DATA_A"/>
+              <With Var="DATA_B"/>
+              <With Var="STATE"/>
+            </Event>
+        </EventInputs>
+        <EventOutputs>
+            <Event Name="INIT_O" Type="Event"/>
+            <Event Name="RUN_O" Type="Event">
+              <With Var="DATA"/>
+            </Event>
+        </EventOutputs>
+        <InputVars>
+            <VarDeclaration Name="DATA_A" Type="STRING"/>
+            <VarDeclaration Name="DATA_B" Type="STRING"/>
+            <VarDeclaration Name="STATE" Type="BOOLEAN"/>
+        </InputVars>
+        <OutputVars>
+            <VarDeclaration Name="DATA" Type="STRING"/>
+        </OutputVars>
+    </InterfaceList>
+</FBType>

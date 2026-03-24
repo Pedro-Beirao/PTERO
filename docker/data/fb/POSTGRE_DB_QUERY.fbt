@@ -1,0 +1,27 @@
+<FBType Name="POSTGRE_DB_QUERY" OpcUa="POINT.ENDPOINT">
+    <InterfaceList>
+        <EventInputs>
+            <Event Name="INIT" Type="Event"/>
+            <Event Name="RUN" Type="Event"/>
+        </EventInputs>
+        <EventOutputs>
+            <Event Name="INIT_O" Type="Event"/>
+            <Event Name="RUN_O" Type="Event">
+                <With Var="RESULT"/>
+            </Event>
+        </EventOutputs>
+        <InputVars>
+            <VarDeclaration Name="HOST" Type="STRING"/>
+            <VarDeclaration Name="PORT" Type="UINT"/>
+            <VarDeclaration Name="USER" Type="STRING"/>
+            <VarDeclaration Name="PASSWORD" Type="STRING"/>
+            <VarDeclaration Name="DBNAME" Type="STRING"/>
+            <VarDeclaration Name="FILEPATH" Type="STRING"/>
+        </InputVars>
+        <OutputVars>
+            <VarDeclaration Name="RESULT" Type="STRING"/>
+            <!-- <VarDeclaration Name="RESULT_VALUES" Type="STRING"/> -->
+        </OutputVars>
+    </InterfaceList>
+</FBType>
+

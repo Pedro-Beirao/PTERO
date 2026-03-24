@@ -1,0 +1,24 @@
+<FBType Name="COLOR_GENERATOR" OpcUa="DEVICE.SENSOR">
+  <InterfaceList>
+    <EventInputs>
+      <Event Name="INIT" Type="Event"/>
+      <Event Name="READ" Type="Event">
+        <With Var="COLORS"/>
+      </Event>
+    </EventInputs>
+    <EventOutputs>
+      <Event Name="INIT_O" Type="Event"/>
+      <Event Name="READ_O" Type="Event">
+        <With Var="DATA"/>
+      </Event>
+    </EventOutputs>
+    <InputVars>
+      <VarDeclaration Name="COLORS" Type="STRING"/>
+      <VarDeclaration Name="DELAY" Type="REAL"/>
+      <VarDeclaration Name="SENSOR_IDS" Type="STRING"/>
+    </InputVars>
+    <OutputVars>
+      <VarDeclaration Name="DATA" Type="STRING"/>
+    </OutputVars>
+  </InterfaceList>
+</FBType>
