@@ -84,9 +84,35 @@ function deploy() {
 
   const firstMessage = buildMessage(`<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`, "");
 
+  let message_id = 1
+
   for (let i = 0; i < data["nodes"].length; i++) {
-    const fbtype = data["nodes"][i]["type"].split("/")[1]
-    const message = buildMessage(`<Request Action="CREATE" ID="${i + 1}"><FB Name="${fbtype}" Type="${fbtype}"/></Request>`, "");
+    const fbtype = data["nodes"][i]["type"].split("/")[1];
+    const message = buildMessage(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbtype}" Type="${fbtype}"/></Request>`, "");
+    console.log(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbtype}" Type="${fbtype}"/></Request>`);
+    message_id++;
+
+
+  }
+
+  for (let i = 0; i < data["links"].length; i++) {
+    const link = data["links"][i];
+    // [link_id, source_id, source_slot, destination_id, destination_slot, data_type]
+
+    // Is it possible that link[1] - 1 isnt always correct?
+    // const source_fbtype = data["nodes"][link[1] - 1]["type"].split("/")[1]
+    // const destination_fbtype = data["nodes"][link[3] - 1]["type"].split("/")[1]
+
+    const source = data["nodes"].find(item => item["id"] == link[1]);
+    const destination = data["nodes"].find(item => item["id"] == link[3]);
+
+    const source_str = `${source["type"].split("/")[1]}.${source["outputs"][link[2]]["name"]}`;
+    const destination_str = `${destination["type"].split("/")[1]}.${destination["inputs"][link[4]]["name"]}`;
+
+    const message = buildMessage(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`, "");
+    console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
+    message_id++;
+
   }
 }
 
