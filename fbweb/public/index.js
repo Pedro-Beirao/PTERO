@@ -75,9 +75,44 @@ function registerNode(fbt_doc) {
 
 function exportGraph() {
   const data = graph.serialize();
-
-  // console.log(data);
-
   const json = JSON.stringify(data, null, 2);
   console.log(json);
+}
+
+function deploy() {
+  const data = graph.serialize();
+
+  const firstMessage = buildMessage(`<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`, "");
+
+  for (let i = 0; i < data["nodes"].length; i++) {
+    const fbtype = data["nodes"][i]["type"].split("/")[1]
+    const message = buildMessage(`<Request Action="CREATE" ID="${i + 1}"><FB Name="${fbtype}" Type="${fbtype}"/></Request>`, "");
+  }
+}
+
+function buildMessage(messagePayload, configurationName) {
+  // Encode configuration name to bytes (UTF-8)
+  const configBytes = new TextEncoder().encode(configurationName);
+
+  // Helper: build a 3-byte header [0x50, highByte, lowByte] from a length
+  function makeHeader(length) {
+    const high = (length >> 8) & 0xff;
+    const low  =  length       & 0xff;
+    return new Uint8Array([0x50, high, low]);
+  }
+
+  const header1 = makeHeader(configBytes.length);   // config name length
+  const header2 = makeHeader(messagePayload.length); // payload length
+
+  // Concatenate: header1 + configName + header2 + payload
+  const total = header1.length + configBytes.length + header2.length + messagePayload.length;
+  const result = new Uint8Array(total);
+  let offset = 0;
+
+  result.set(header1,      offset); offset += header1.length;
+  result.set(configBytes,  offset); offset += configBytes.length;
+  result.set(header2,      offset); offset += header2.length;
+  result.set(messagePayload, offset);
+
+  return result;
 }
