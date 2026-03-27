@@ -1,6 +1,7 @@
 :root {
-    --dark: #061E29;
-    --navy: #1D546D;
-    --teal: #5F9598;
-    --light: #F3F4F4;
+    --primary: #C2F9B9;
+    --darker-primary: #1F960D;
+
+    --secondary: #95BF8E;
+    --darker-secondary: #42683B;
 }
