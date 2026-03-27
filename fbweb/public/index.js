@@ -26,11 +26,15 @@ function registerNode(fbt_doc) {
     let outputs = fbt_doc.querySelectorAll("EventOutputs > Event");
 
     for (let i = 0; i < inputs.length; i++) {
-      this.addInput(inputs[i].getAttribute("Name"), inputs[i].getAttribute("Type"));
+      const input = this.addInput(inputs[i].getAttribute("Name"), inputs[i].getAttribute("Type"));
+      input.color_off = "#470000"
+      input.color_on = "#ff0000"
     }
 
     for (let i = 0; i < outputs.length; i++) {
-      this.addOutput(outputs[i].getAttribute("Name"), outputs[i].getAttribute("Type"));
+      const output = this.addOutput(outputs[i].getAttribute("Name"), outputs[i].getAttribute("Type"));
+      output.color_off = "#470000"
+      output.color_on = "#ff0000"
     }
 
     // Now the variables
@@ -38,13 +42,17 @@ function registerNode(fbt_doc) {
     outputs = fbt_doc.querySelectorAll("OutputVars > VarDeclaration");
 
     for (let i = 0; i < inputs.length; i++) {
-      this.addInput(inputs[i].getAttribute("Name"), inputs[i].getAttribute("Type"));
+      const input = this.addInput(inputs[i].getAttribute("Name"), inputs[i].getAttribute("Type"));
+      input.color_off = "#000047"
+      input.color_on = "#0000ff"
+
       this.properties[inputs[i].getAttribute("Name")] = ""
     }
 
     for (let i = 0; i < outputs.length; i++) {
-      this.addOutput(outputs[i].getAttribute("Name"), outputs[i].getAttribute("Type"));
-      this.properties[inputs[i].getAttribute("Name")] = ""
+      const output = this.addOutput(outputs[i].getAttribute("Name"), outputs[i].getAttribute("Type"));
+      output.color_off = "#000047"
+      output.color_on = "#0000ff"
     }
   }
   CustomNode.title = name;

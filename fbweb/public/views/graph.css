@@ -8,9 +8,12 @@
 
 #node-panel {
   position: absolute;
-  background-color: #2e2e3c;
+  background-color: #333;
+  margin: 0.5em;
   padding: 1em;
   padding-top: 2em;
+  width: 21em;
+  border: #555 1px solid;
 }
 
 .close {
@@ -24,6 +27,16 @@
   cursor: pointer;
 }
 
+.property {
+  margin-top: 2px;
+  margin-bottom: 6px;
+}
+
 .property_value {
-  background-color: darkgrey;
+  border: darkgrey 1px solid;
+  width: 100%;
+  padding: 4px;
+  padding-bottom: 2px;
+  padding-right: 2em;
+	border-radius: 3px;
 }

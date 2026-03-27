@@ -13,7 +13,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #0e0e10;
+  background: #222;
   font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
   color: #c9c9d0;
   overflow: hidden;
