@@ -57,5 +57,26 @@ function registerNode(fbt_doc) {
   }
   CustomNode.title = name;
 
+  CustomNode.prototype.onDrawForeground = function(ctx, graphcanvas)
+  {
+    if (this.flags.collapsed) return;
+
+    ctx.save();
+
+    for (let i = 0; i < this.inputs.length; i++) {
+      const property = this.properties[this.inputs[i]["name"]]
+      if (property != null && property != "" && this.inputs[i]["link"] == null) {
+        ctx.font = "14px monospace";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "right";
+
+        const y = LiteGraph.NODE_SLOT_HEIGHT * (i + 0.5) + 9;
+        ctx.fillText(property, -7, y);
+      }
+    }
+
+    ctx.restore();
+  }
+
   LiteGraph.registerNodeType("custom/" + name, CustomNode);
 }
