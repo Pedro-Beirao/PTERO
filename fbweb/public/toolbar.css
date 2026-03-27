@@ -1,0 +1,113 @@
+#tab-bar {
+  display: flex;
+  align-items: stretch;
+  background: #141416;
+  border-bottom: 1px solid #2a2a30;
+  height: 40px;
+  flex-shrink: 0;
+  padding-left: 4px;
+  user-select: none;
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #555560;
+  cursor: pointer;
+  border-right: 1px solid #222226;
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: #9090a0;
+  background: #1a1a1e;
+}
+
+.tab.active {
+  color: #e0e0e8;
+  background: #0e0e10;
+}
+
+/* Active indicator bar */
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #5b8aff;
+}
+
+.tab-icon {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+#toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding-right: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  height: 26px;
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.action-btn.secondary {
+  background: #1e1e26;
+  color: #7070a0;
+}
+
+.action-btn.secondary:hover {
+  background: #28283a;
+  color: #a0a0c0;
+}
+
+.action-btn.primary {
+  background: #1e3a6e;
+  color: #7ab3ff;
+}
+
+.action-btn.primary:hover {
+  background: #254a8a;
+  color: #aaccff;
+}
+
+#tab-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.tab-panel {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.tab-panel.active {
+  display: flex;
+  flex-direction: column;
+}

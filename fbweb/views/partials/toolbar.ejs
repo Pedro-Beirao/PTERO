@@ -1,0 +1,18 @@
+<div id="tab-bar">
+  <div class="tab active" data-panel="panel-graph" onclick="switchTab(this)">
+    Graph
+  </div>
+  <div class="tab" data-panel="panel-console" onclick="switchTab(this)">
+    Function Blocks
+  </div>
+  <div class="tab" data-panel="panel-assets" onclick="switchTab(this)">
+    Deployment
+  </div>
+
+  <div id="toolbar-actions">
+    <button class="action-btn secondary" onclick="exportGraph()">⤓ Export</button>
+    <button class="action-btn primary" onclick="deploy()">▶ Deploy</button>
+  </div>
+</div>
+
+<script src="toolbar.js"></script>

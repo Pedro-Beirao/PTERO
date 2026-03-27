@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LiteGraph App</title>
+  <script src="https://unpkg.com/litegraph.js/build/litegraph.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/litegraph.js/css/litegraph.css">
+  <link rel="stylesheet" href="index.css">
+  <script src="index.js"></script>
+</head>
+<body>
+  <%- include("partials/toolbar") -%>
+
+  <div id="tab-content">
+    <div class="tab-panel active" id="panel-graph">
+      <%- include("partials/graph") -%>
+    </div>
+
+    <div class="tab-panel" id="panel-fbs">
+      <%- include("partials/fbs") -%>
+    </div>
+
+    <div class="tab-panel" id="panel-deployment">
+      <%- include("partials/deployment") -%>
+    </div>
+  </div>
+</body>
+</html>

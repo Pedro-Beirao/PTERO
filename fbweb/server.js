@@ -5,12 +5,15 @@ const fs = require("fs");
 const app = express();
 const PORT = 3000;
 
-// serve static frontend
-app.use(express.static(path.join(__dirname, "public")));
-
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get('/', (req, res) => res.render('index'));
 
 app.get("/nodes", (req, res) => {
   try {

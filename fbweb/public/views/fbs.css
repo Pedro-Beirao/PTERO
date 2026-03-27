@@ -1,0 +1,21 @@
+.placeholder-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.placeholder-panel .ph-icon {
+  font-size: 42px;
+  opacity: 0.3;
+  color: #2e2e3c;
+}
+
+.placeholder-panel .ph-label {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #3a3a50;
+}
