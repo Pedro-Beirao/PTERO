@@ -7,7 +7,7 @@ function exportGraph() {
 function deploy() {
   const data = graph.serialize();
 
-  const firstMessage = buildMessage(`<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`, "");
+  const query_message = buildMessage(`<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`, "");
 
   let message_id = 1
 
@@ -48,6 +48,8 @@ function deploy() {
     console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
     message_id++;
   }
+
+  const start_message = buildMessage(`<Request Action="START" ID="${message_id}"></Request>`, "");
 }
 
 function buildMessage(messagePayload, configurationName) {
