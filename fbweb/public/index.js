@@ -24,6 +24,8 @@ function registerNode(fbt_doc) {
 
   // Define the LiteGraph Node
   function CustomNode() {
+    this.properties = {}
+
     // First add the events
     let inputs = fbt_doc.querySelectorAll("EventInputs > Event");
     let outputs = fbt_doc.querySelectorAll("EventOutputs > Event");
@@ -42,20 +44,15 @@ function registerNode(fbt_doc) {
 
     for (let i = 0; i < inputs.length; i++) {
       this.addInput(inputs[i].getAttribute("Name"), inputs[i].getAttribute("Type"));
+      this.properties[inputs[i].getAttribute("Name")] = ""
     }
 
     for (let i = 0; i < outputs.length; i++) {
       this.addOutput(outputs[i].getAttribute("Name"), outputs[i].getAttribute("Type"));
+      this.properties[inputs[i].getAttribute("Name")] = ""
     }
   }
   CustomNode.title = name;
-
-    // // Find outputs in the XML
-    // const outputs = fbt_doc.getElementsByTagName("output");
-    // for (let i = 0; i < outputs.length; i++) {
-    //   this.addOutput(outputs[i].getAttribute("name"), outputs[i].getAttribute("type"));
-    // }
-  // }
 
   LiteGraph.registerNodeType("custom/" + name, CustomNode);
 }
@@ -86,17 +83,24 @@ function deploy() {
 
   let message_id = 1
 
-  for (let i = 0; i < data["nodes"].length; i++) {
-    const fbtype = data["nodes"][i]["type"].split("/")[1];
-    const message = buildMessage(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbtype}" Type="${fbtype}"/></Request>`, "");
-    console.log(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbtype}" Type="${fbtype}"/></Request>`);
+  for (const node of data["nodes"]) {
+    const fbtype = node["type"].split("/").pop();
+    const fbname = node["title"] || fbtype;
+
+    const message = buildMessage(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`, "");
+    console.log(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`);
     message_id++;
 
-
+    for (const [key, value] of Object.entries(node["properties"])) {
+      if (value != "") {
+        const message = buildMessage(`<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`, "");
+        console.log(`<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`)
+        message_id++;
+      }
+    }
   }
 
-  for (let i = 0; i < data["links"].length; i++) {
-    const link = data["links"][i];
+  for (const link of data["links"]) {
     // [link_id, source_id, source_slot, destination_id, destination_slot, data_type]
 
     // Is it possible that link[1] - 1 isnt always correct?
@@ -106,13 +110,15 @@ function deploy() {
     const source = data["nodes"].find(item => item["id"] == link[1]);
     const destination = data["nodes"].find(item => item["id"] == link[3]);
 
-    const source_str = `${source["type"].split("/")[1]}.${source["outputs"][link[2]]["name"]}`;
-    const destination_str = `${destination["type"].split("/")[1]}.${destination["inputs"][link[4]]["name"]}`;
+    const source_name = source["title"] || source["type"].split("/").pop()
+    const destination_name = source["title"] || source["type"].split("/").pop()
+
+    const source_str = `${source_name}.${source["outputs"][link[2]]["name"]}`;
+    const destination_str = `${destination_name}.${destination["inputs"][link[4]]["name"]}`;
 
     const message = buildMessage(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`, "");
     console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
     message_id++;
-
   }
 }
 
