@@ -37,32 +37,77 @@ app.get("/nodes", (req, res) => {
   }
 });
 
-// Middleware to parse raw XML
-app.use(express.raw({ type: 'application/xml' }));
+// Middleware to parse JSON and XML
+app.use(express.json());
 
-// Endpoint to receive XML from frontend
-app.post('/send-command', (req, res) => {
-    const xmlMessage = req.body.toString();
-    console.log('Received XML:', xmlMessage);
+app.post('/deploy', async (req, res) => {
+  try {
+    for (const r of req.body) {
+      const message = buildMessage(r.message, r.config)
+      const response = await sendToDinasore(message);
+    }
+    console.log('All messages processed');
+    res.send('All messages processed');
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).send('Error processing messages');
+  }
+});
 
-    // Send the XML to DINASORE via TCP
+function sendToDinasore(message) {
+  return new Promise((resolve, reject) => {
     const tcpClient = new net.Socket();
     const DINASORE_HOST = 'localhost';
     const DINASORE_PORT = 61499;
 
+    tcpClient.setTimeout(5000, () => {
+      console.error('Connection timeout for message:', message);
+      tcpClient.destroy();
+      reject(new Error('Connection timeout'));
+    });
+
     tcpClient.connect(DINASORE_PORT, DINASORE_HOST, () => {
-        tcpClient.write(xmlMessage);
-        console.log('Sent to DINASORE:', xmlMessage);
+      tcpClient.write(message);
+      console.log('Sent to DINASORE:', message.toString("utf-8"));
     });
 
     tcpClient.on('data', (data) => {
-        console.log('Response from DINASORE:', data.toString());
-        res.send(data.toString());
-        tcpClient.destroy();
+      console.log('Raw data received:', data.toString("utf-8"));
+      tcpClient.destroy();
+      resolve(data.toString("utf-8"));
+    });
+
+    tcpClient.on('close', () => {
+      // console.log('Connection closed for message:', message);
     });
 
     tcpClient.on('error', (err) => {
-        console.error('TCP error:', err);
-        res.status(500).send('Error sending to DINASORE');
+      console.error('TCP error for message:', message, err);
+      tcpClient.destroy();
+      reject(err);
     });
-});
+  });
+}
+
+function buildMessage(message, config) {
+  const configBuffer = Buffer.from(config, 'utf-8');
+  const messageBuffer = Buffer.from(message, 'utf-8');
+
+  // Allocate 2-byte headers
+  // Header 1: [0x50][len_hi][len_lo]
+  const header1 = Buffer.alloc(3);
+  header1[0] = 0x50;
+  header1.writeUInt16BE(configBuffer.length, 1);
+
+  // Header 2: [0x50][len_hi][len_lo]
+  const header2 = Buffer.alloc(3);
+  header2[0] = 0x50;
+  header2.writeUInt16BE(messageBuffer.length, 1);
+
+  return Buffer.concat([
+    header1,
+    configBuffer,
+    header2,
+    messageBuffer
+  ]);
+}

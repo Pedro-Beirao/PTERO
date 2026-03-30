@@ -4,14 +4,14 @@ function exportGraph() {
   console.log(json);
 }
 
-async function sendCommandToBackend(message) {
-    try {
-        const response = await fetch('/send-command', {
+async function sendCommandToBackend(messages) {
+  try {
+        const response = await fetch('/deploy', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/xml',
+                'Content-Type': 'application/json',
             },
-            body: message,
+            body: JSON.stringify(messages),
         });
         const result = await response.text();
         console.log('Response from backend:', result);
@@ -23,27 +23,26 @@ async function sendCommandToBackend(message) {
 async function deploy() {
   const data = graph.serialize();
 
-  const query_message = buildMessage(`<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`, "");
-  await sendCommandToBackend(query_message);
+  const messages = []
+
+  messages.push({ message: `<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`, config: "" });
   let message_id = 1;
 
-  const resource_message = buildMessage(`<Request Action="CREATE" ID="1"><FB Name="EMB_RES" Type="EMB_RES"/></Request>`, "");
-  await sendCommandToBackend(resource_message);
+  messages.push({ message: `<Request Action="CREATE" ID="1"><FB Name="EMB_RES" Type="EMB_RES"/></Request>`, config: "" });
   message_id++;
 
   for (const node of data["nodes"]) {
     const fbtype = node["type"].split("/").pop();
     const fbname = node["title"] || fbtype;
 
-    const message = buildMessage(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`, "EMB_RES");
-    await sendCommandToBackend(message);
+    messages.push({ message: `<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`, config: "EMB_RES" });
     // console.log(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`);
     message_id++;
 
+
     for (const [key, value] of Object.entries(node["properties"])) {
       if (value != "") {
-        const message = buildMessage(`<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`, "EMB_RES");
-        await sendCommandToBackend(message);
+        messages.push({ message: `<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`, config: "EMB_RES" });
         // console.log(`<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`)
         message_id++;
       }
@@ -66,48 +65,14 @@ async function deploy() {
     const source_str = `${source_name}.${source["outputs"][link[2]]["name"]}`;
     const destination_str = `${destination_name}.${destination["inputs"][link[4]]["name"]}`;
 
-    const message = buildMessage(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`, "EMB_RES");
-    await sendCommandToBackend(message);
-    console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
+    messages.push({ message: `<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`, config: "EMB_RES" });
+    // console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
     message_id++;
   }
 
-  const start_message = buildMessage(`<Request Action="START" ID="${message_id}"></Request>`, "EMB_RES");
-  await sendCommandToBackend(start_message);
-}
+  messages.push({ message: `<Request Action="START" ID="${message_id}"/>`, config: "EMB_RES" });
 
-function buildMessage(messagePayload, configurationName) {
-    // Helper: Convert a number to two bytes (big-endian)
-    function toTwoBytes(num) {
-        const hex = num.toString(16).padStart(4, '0');
-        const byte1 = parseInt(hex.substring(0, 2), 16);
-        const byte2 = parseInt(hex.substring(2, 4), 16);
-        return [byte1, byte2];
-    }
-
-    // Build the first header: 0x50 + length of configurationName (2 bytes)
-    const configNameBytes = new TextEncoder().encode(configurationName);
-    const configNameLenBytes = toTwoBytes(configurationName.length);
-    const header1 = new Uint8Array([0x50, configNameLenBytes[0], configNameLenBytes[1]]);
-
-    // Build the second header: 0x50 + length of messagePayload (2 bytes)
-    const messagePayloadBytes = new TextEncoder().encode(messagePayload);
-    const messageLenBytes = toTwoBytes(messagePayload.length);
-    const header2 = new Uint8Array([0x50, messageLenBytes[0], messageLenBytes[1]]);
-
-    // Concatenate all parts
-    const result = new Uint8Array(
-        header1.length +
-        configNameBytes.length +
-        header2.length +
-        messagePayloadBytes.length
-    );
-    result.set(header1, 0);
-    result.set(configNameBytes, header1.length);
-    result.set(header2, header1.length + configNameBytes.length);
-    result.set(messagePayloadBytes, header1.length + configNameBytes.length + header2.length);
-
-    return result;
+  sendCommandToBackend(messages);
 }
 
 function switchTab(el) {

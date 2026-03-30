@@ -103,4 +103,4 @@ def __build_message(message_payload, configuration_name):
     response = b''.join([response_header_1, configuration_name, response_header_2, message_payload])
     return response
 
-print(__build_message(b"MESSAGE", b"EMB_RES"))
+print(__build_message(b'<Request Action="START" ID="17"/>', b"EMB_RES"))
