@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const net = require('net');
 
 const app = express();
 const PORT = 3000;
@@ -34,4 +35,34 @@ app.get("/nodes", (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Failed to load nodes" });
   }
+});
+
+// Middleware to parse raw XML
+app.use(express.raw({ type: 'application/xml' }));
+
+// Endpoint to receive XML from frontend
+app.post('/send-command', (req, res) => {
+    const xmlMessage = req.body.toString();
+    console.log('Received XML:', xmlMessage);
+
+    // Send the XML to DINASORE via TCP
+    const tcpClient = new net.Socket();
+    const DINASORE_HOST = 'localhost';
+    const DINASORE_PORT = 61499;
+
+    tcpClient.connect(DINASORE_PORT, DINASORE_HOST, () => {
+        tcpClient.write(xmlMessage);
+        console.log('Sent to DINASORE:', xmlMessage);
+    });
+
+    tcpClient.on('data', (data) => {
+        console.log('Response from DINASORE:', data.toString());
+        res.send(data.toString());
+        tcpClient.destroy();
+    });
+
+    tcpClient.on('error', (err) => {
+        console.error('TCP error:', err);
+        res.status(500).send('Error sending to DINASORE');
+    });
 });

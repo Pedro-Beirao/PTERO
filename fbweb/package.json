@@ -13,7 +13,8 @@
   "dependencies": {
     "ejs": "^5.0.1",
     "express": "^5.2.1",
-    "fast-xml-parser": "^5.5.9"
+    "fast-xml-parser": "^5.5.9",
+    "ws": "^8.20.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",

@@ -84,23 +84,23 @@ class DiacSimulator:
     def disconnect(self):
         self.sock.close()
 
-    @staticmethod
-    def __build_message(message_payload, configuration_name):
-        # build the first part of the header
-        hex_input = '{:04x}'.format(len(configuration_name))
-        second_byte = int(hex_input[0:2], 16)
-        third_byte = int(hex_input[2:4], 16)
-        response_len = struct.pack('BB', second_byte, third_byte)
-        response_header_1 = b''.join([b'\x50', response_len])
+def __build_message(message_payload, configuration_name):
+    # build the first part of the header
+    hex_input = '{:04x}'.format(len(configuration_name))
+    second_byte = int(hex_input[0:2], 16)
+    third_byte = int(hex_input[2:4], 16)
+    response_len = struct.pack('BB', second_byte, third_byte)
+    response_header_1 = b''.join([b'\x50', response_len])
 
-        # build the second part of the header
-        hex_input = '{:04x}'.format(len(message_payload))
-        second_byte = int(hex_input[0:2], 16)
-        third_byte = int(hex_input[2:4], 16)
-        response_len = struct.pack('BB', second_byte, third_byte)
-        response_header_2 = b''.join([b'\x50', response_len])
+    # build the second part of the header
+    hex_input = '{:04x}'.format(len(message_payload))
+    second_byte = int(hex_input[0:2], 16)
+    third_byte = int(hex_input[2:4], 16)
+    response_len = struct.pack('BB', second_byte, third_byte)
+    response_header_2 = b''.join([b'\x50', response_len])
 
-        # join the 3 parts
-        response = b''.join([response_header_1, configuration_name, response_header_2, message_payload])
-        return response
+    # join the 3 parts
+    response = b''.join([response_header_1, configuration_name, response_header_2, message_payload])
+    return response
 
+print(__build_message(b"MESSAGE", b"EMB_RES"))
