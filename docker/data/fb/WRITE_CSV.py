@@ -26,14 +26,12 @@ class WRITE_CSV:
                 return [None, None, None]
 
             self.data = np.matrix(np.copy(data))
-            self.data = self.data.astype('float64')
-            self.data = np.around(self.data, decimals = 3)
             self.path = os.path.join(*re.split('\\/', path), "{0}.csv".format(name))
 
             print("Data on write CSV:" , self.data)
 
             with open(self.path, "a+") as f:
-                np.savetxt(f, self.data, delimiter=",", fmt='%.5f')
+                np.savetxt(f, self.data, delimiter=",", fmt='%s')
 
             '''
             with open(self.path, mode='a+', newline='') as csv_file:

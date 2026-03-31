@@ -41,53 +41,54 @@ app.get("/nodes", (req, res) => {
 app.use(express.json());
 
 app.post('/deploy', async (req, res) => {
+  const tcpClient = new net.Socket();
+  const DINASORE_HOST = 'localhost';
+  const DINASORE_PORT = 61499;
+
   try {
+    // Connect to DINASORE once
+    await new Promise((resolve, reject) => {
+      tcpClient.setTimeout(5000, () => {
+        console.error('Connection timeout');
+        tcpClient.destroy();
+        reject(new Error('Connection timeout'));
+      });
+
+      tcpClient.connect(DINASORE_PORT, DINASORE_HOST, () => {
+        console.log('Connected to DINASORE');
+        resolve();
+      });
+
+      tcpClient.on('error', (err) => {
+        console.error('TCP connection error:', err);
+        tcpClient.destroy();
+        reject(err);
+      });
+    });
+
+    // Process all messages using the same connection
     for (const r of req.body) {
-      const message = buildMessage(r.message, r.config)
-      const response = await sendToDinasore(message);
+      const message = buildMessage(r.message, r.config);
+      const response = await new Promise((resolve, reject) => {
+        tcpClient.write(message);
+        console.log('Sent to DINASORE:', message.toString("utf-8"));
+
+        tcpClient.once('data', (data) => {
+          console.log('Raw data received:', data.toString("utf-8"));
+          resolve(data.toString("utf-8"));
+        });
+      });
     }
+
     console.log('All messages processed');
     res.send('All messages processed');
   } catch (err) {
     console.error('Error:', err);
     res.status(500).send('Error processing messages');
+  } finally {
+    tcpClient.destroy();
   }
 });
-
-function sendToDinasore(message) {
-  return new Promise((resolve, reject) => {
-    const tcpClient = new net.Socket();
-    const DINASORE_HOST = 'localhost';
-    const DINASORE_PORT = 61499;
-
-    tcpClient.setTimeout(5000, () => {
-      console.error('Connection timeout for message:', message);
-      tcpClient.destroy();
-      reject(new Error('Connection timeout'));
-    });
-
-    tcpClient.connect(DINASORE_PORT, DINASORE_HOST, () => {
-      tcpClient.write(message);
-      console.log('Sent to DINASORE:', message.toString("utf-8"));
-    });
-
-    tcpClient.on('data', (data) => {
-      console.log('Raw data received:', data.toString("utf-8"));
-      tcpClient.destroy();
-      resolve(data.toString("utf-8"));
-    });
-
-    tcpClient.on('close', () => {
-      // console.log('Connection closed for message:', message);
-    });
-
-    tcpClient.on('error', (err) => {
-      console.error('TCP error for message:', message, err);
-      tcpClient.destroy();
-      reject(err);
-    });
-  });
-}
 
 function buildMessage(message, config) {
   const configBuffer = Buffer.from(config, 'utf-8');
