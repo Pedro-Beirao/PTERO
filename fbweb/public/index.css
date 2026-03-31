@@ -1,6 +1,7 @@
 @import url("colors.css");
 @import url("toolbar.css");
 @import url("views/graph.css");
+@import url("views/fbs.css");
 
 *, *::before, *::after {
   box-sizing: border-box;

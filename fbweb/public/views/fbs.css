@@ -1,21 +1,28 @@
-.placeholder-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
+.sidebar {
+  height: 100%;
+  width: 15em;
+  position: absolute;
+  display: block;
+  background-color: #111;
 }
 
-.placeholder-panel .ph-icon {
-  font-size: 42px;
-  opacity: 0.3;
-  color: #2e2e3c;
+.fb-item {
+  padding: 1em 1em 1em 1em;
 }
 
-.placeholder-panel .ph-label {
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #3a3a50;
+.fb-item:hover {
+  background-color: #222;
+}
+
+.fbs-editor {
+  display: block;
+  height: 100%;
+  width: 100%;
+  margin-left: 15em;
+}
+
+.xml-editor {
+  height: 100%;
+  width: 50%;
+  background-color: red;
 }
