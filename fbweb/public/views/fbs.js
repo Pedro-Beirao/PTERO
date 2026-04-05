@@ -1,24 +1,44 @@
-import { CodeJar } from 'https://cdn.jsdelivr.net/npm/codejar@4.3.0/dist/codejar.min.js';
+const fbs_editor = document.getElementById('fbs-editor');
+const xml_editor = document.getElementById('xml-editor');
+const py_editor = document.getElementById('py-editor');
+const resize_handle = document.getElementById('resize-handle');
 
-const editorElement = document.getElementById('xml-editor');
+window.xml_editorview = CodeMirror(xml_editor, {
+  lineNumbers: true,
+  tabSize: 2,
+  theme: "monokai",
+  mode: "xml"
+});
 
-// Highlighting function using Prism
-function highlight(editor) {
-  editor.innerHTML = Prism.highlight(editor.textContent, Prism.languages.python, 'python');
-}
+window.py_editorview = CodeMirror(py_editor, {
+  lineNumbers: true,
+  tabSize: 2,
+  theme: "monokai",
+  mode: "python"
+});
 
-// Initialize CodeJar
-const jar = CodeJar(editorElement, highlight);
+let isDragging = false;
 
-// Optional: add some default code
-jar.updateCode(`
-  class CONCATENATE_REALS:
+resize_handle.addEventListener('mousedown', function(e) {
+  isDragging = true;
+  e.preventDefault();
+});
 
-      def schedule(self, event_name, event_value, value1, value2):
-          if event_name == 'INIT':
-              return [event_value, None, 0]
+document.addEventListener('mousemove', function(e) {
+  if (!isDragging) return;
 
-          elif event_name == 'RUN':
-              output = str(value1) + ';' + str(value2)
-              return [None, event_value, output]
-`);
+  const containerRect = fbs_editor.getBoundingClientRect();
+  let newWidth = e.clientX - containerRect.left;
+  if (newWidth < 50) newWidth = 50;
+  else if (newWidth > (containerRect.width - 50)) newWidth = containerRect.width - 50;
+
+  xml_editor.style.width = `${newWidth}px`;
+  py_editor.style.flex = 'none';
+  py_editor.style.width = `calc(100% - ${newWidth + 8}px)`;
+});
+
+document.addEventListener('mouseup', function() {
+  isDragging = false;
+  window.xml_editorview.refresh();
+  window.py_editorview.refresh();
+});

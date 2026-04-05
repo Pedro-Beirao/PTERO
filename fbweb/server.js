@@ -21,16 +21,22 @@ app.get("/nodes", (req, res) => {
     const fbs_path = path.join(__dirname, "function_blocks");
     const files = fs.readdirSync(fbs_path);
 
-    const allNodes = files
+    const allFiles = files
       .filter(file => file.endsWith(".fbt"))
       .map(file => {
-        const filePath = path.join(fbs_path, file);
-        const data = fs.readFileSync(filePath, "utf-8");
+        const name = file.split(".")[0];
+        const xml_path = path.join(fbs_path, (name + ".fbt"));
+        const py_path = path.join(fbs_path, (name + ".py"));
+        const data = {
+          name: file.split(".")[0],
+          xml: fs.readFileSync(xml_path, "utf-8"),
+          py: fs.readFileSync(py_path, "utf-8"),
+        };
         return data;
       })
       .flat(); // Combines all results into one array
 
-    res.json(allNodes);
+    res.json(allFiles);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to load nodes" });

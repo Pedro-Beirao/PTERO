@@ -3,12 +3,34 @@ window.graph = new LGraph();
 
 fetch('/nodes')
   .then(res => res.json())
-  .then(fbt_strings => {
+  .then(fbs => {
 
-    fbt_strings.forEach(fbt_string => {
+    fbs.forEach(fb => {
       const parser = new DOMParser();
-      const fbt_doc = parser.parseFromString(fbt_string, "text/xml");
+      const fbt_doc = parser.parseFromString(fb.xml, "text/xml");
       registerNode(fbt_doc)
+    });
+
+    window.fbs = fbs;
+
+    const sidebar = document.getElementById("sidebar");
+    window.fbs.forEach(fb => {
+      const div = document.createElement("div");
+      div.className = "fb-item";
+      div.textContent = fb.name;
+
+      div.addEventListener("click", () => {
+        if (window.xml_editorview) {
+          window.xml_editorview.setValue(fb.xml || "");
+          window.xml_editorview.refresh();
+        }
+        if (window.py_editorview) {
+          window.py_editorview.setValue(fb.py || "");
+          window.py_editorview.refresh();
+        }
+      });
+
+      sidebar.appendChild(div);
     });
   });
 

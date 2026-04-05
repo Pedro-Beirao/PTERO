@@ -1,4 +1,4 @@
-.sidebar {
+#sidebar {
   height: 100%;
   width: 15em;
   position: absolute;
@@ -12,17 +12,36 @@
 
 .fb-item:hover {
   background-color: #222;
+  cursor: pointer;
 }
 
-.fbs-editor {
-  display: block;
+#fbs-editor {
+  display: flex;
   height: 100%;
-  width: 100%;
+  width: auto;
   margin-left: 15em;
+  background-color: #222;
 }
 
-.xml-editor {
+#resize-handle {
+  width: 8px;
+  background-color: #444;
+  cursor: col-resize;
   height: 100%;
-  width: 50%;
-  background-color: red;
+}
+
+#xml-editor {
+  flex: 1;
+  height: 100%;
+  overflow: auto;
+}
+
+#py-editor {
+  flex: 1;
+  height: 100%;
+  overflow: auto;
+}
+
+.CodeMirror {
+  height: 100%;
 }

@@ -82,8 +82,11 @@ function switchTab(el) {
   const panelId = el.dataset.panel;
   if (panelId) document.getElementById(panelId).classList.add('active');
 
-  // Resize canvas when graph tab becomes active
   if (panelId === 'panel-graph' && window.graph) {
     requestAnimationFrame(() => resizeCanvas());
+  }
+  else if (panelId === 'panel-fbs' && window.xml_editorview) {
+    window.xml_editorview.refresh()
+    window.py_editorview.refresh()
   }
 }
