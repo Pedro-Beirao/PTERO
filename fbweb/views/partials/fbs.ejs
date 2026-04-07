@@ -8,3 +8,42 @@
 </div>
 
 <script type="module" src="views/fbs.js"></script>
+
+<script type="module">
+  // import * as Y from "https://cdn.jsdelivr.net/npm/yjs@13.6.30/+esm";
+  // import { WebsocketProvider } from "https://cdn.jsdelivr.net/npm/y-websocket@3.0.0/+esm";
+  // import { CodemirrorBinding } from "https://cdn.jsdelivr.net/npm/y-codemirror@3.0.1/+esm";
+
+  import * as Y from "https://esm.sh/yjs@13.6.10";
+
+  import { WebsocketProvider } from "https://esm.sh/y-websocket@3.0.0?deps=yjs@13.6.10";
+  import { CodemirrorBinding } from "https://esm.sh/y-codemirror@3.0.1?deps=yjs@13.6.10";
+
+  window.ydoc = new Y.Doc();
+  const provider = new WebsocketProvider("ws://localhost:1234", "room", ydoc);
+  const ytext = ydoc.getText("editor");
+
+  // const editor = CodeMirror.fromTextArea(
+  //   document.getElementById("#xml-editor"),
+  //   { mode: "xml", lineNumbers: true }
+  // );
+
+  // window.binding = new CodemirrorBinding(ytext, editor, provider.awareness);
+
+  function loadFB(name) {
+    const ytext = window.ydoc.getText(name);
+
+    if (window.binding) {
+      window.binding.destroy();
+    }
+
+    window.binding = new CodemirrorBinding(
+      ytext,
+      window.xml_editorview,
+      provider.awareness
+    );
+
+    window.xml_editorview.refresh();
+  }
+  window.loadFB = loadFB;
+</script>

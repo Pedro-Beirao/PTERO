@@ -20,14 +20,12 @@ fetch('/nodes')
       div.textContent = fb.name;
 
       div.addEventListener("click", () => {
-        if (window.xml_editorview) {
-          window.xml_editorview.setValue(fb.xml || "");
-          window.xml_editorview.refresh();
-        }
         if (window.py_editorview) {
           window.py_editorview.setValue(fb.py || "");
           window.py_editorview.refresh();
         }
+
+        window.loadFB(fb.name);
       });
 
       sidebar.appendChild(div);
