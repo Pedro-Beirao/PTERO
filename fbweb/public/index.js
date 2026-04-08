@@ -7,15 +7,19 @@ window.ydoc = new Y.Doc();
 // const indexeddbProvider = new IndexeddbPersistence('room', ydoc)
 window.provider = new WebsocketProvider("ws://localhost:1234", "room", ydoc);
 
+const not_connected = document.getElementById('not-connected');
+
 provider.on('synced', (isSynced) => {
   if (isSynced) {
-
+    not_connected.style.display = 'none';
   }
 });
 
 provider.on('status', event => {
-  console.log(event.status) // logs "connected" or "disconnected"
-})
+  if (event.status === 'disconnected') {
+    not_connected.style.display = 'flex';
+  }
+});
 
 // const editor = CodeMirror.fromTextArea(
 //   document.getElementById("#xml-editor"),
