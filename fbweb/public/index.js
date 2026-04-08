@@ -5,7 +5,7 @@ import { WebsocketProvider } from "https://esm.sh/y-websocket@3.0.0?deps=yjs@13.
 window.ydoc = new Y.Doc();
 // const indexeddbProvider = new IndexeddbPersistence('room', ydoc)
 window.provider = new WebsocketProvider("ws://localhost:1234", "room", ydoc);
-window.fbs = window.ydoc.getArray('fbs');
+window.fbs = window.ydoc.getMap('fbs');
 
 const not_connected = document.getElementById('not-connected');
 provider.on('synced', (isSynced) => {

@@ -49,3 +49,10 @@
 .CodeMirror {
   height: 100%;
 }
+
+#fbs-toolbar {
+  height: 3em;
+  margin-left: 15em;
+  text-align: center;
+  border-bottom: 8px solid #444;
+}

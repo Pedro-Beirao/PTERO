@@ -1,6 +1,8 @@
+import * as Y from "https://esm.sh/yjs@13.6.0";
 import { CodemirrorBinding } from "https://esm.sh/y-codemirror@3.0.1?deps=yjs@13.6.0";
 
 const fbs_list = document.getElementById("fbs-list");
+const name_edit = document.getElementById("name-edit");
 const fbs_editor = document.getElementById('fbs-editor');
 const xml_editor = document.getElementById('xml-editor');
 const py_editor = document.getElementById('py-editor');
@@ -21,7 +23,7 @@ window.py_editorview = CodeMirror(py_editor, {
 });
 
 const fb_names = window.ydoc.getArray('fb-names');
-fb_names.observe(() => {
+window.fbs.observe(() => {
   populateSidebar();
 });
 populateSidebar();
@@ -33,43 +35,73 @@ document.getElementById("add").addEventListener("click", () => {
 function populateSidebar() {
   fbs_list.innerHTML = "";
 
-  fb_names.forEach((fb_name, index) => {
+  window.fbs.forEach((fb, id) => {
     const div = document.createElement("div");
     div.className = "fb-item";
+    div.textContent = fb.get("name");
 
-    const label = document.createElement("span");
-    label.textContent = fb_name;
-
-    // 2. The Edit Button
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "✎";
-    editBtn.className = "btn-edit";
-
-    editBtn.onclick = (e) => {
-      e.stopPropagation();
-      enterEditMode(index, fb_name, div, label);
-    };
-
-    div.onclick = () => bindTextEditors(fb_name);
+    div.onclick = () => bindTextEditors(fb);
 
     if (!fbs_list.hasChildNodes())
-      bindTextEditors(fb_name);
+      bindTextEditors(fb);
 
-    div.appendChild(label);
-    div.appendChild(editBtn);
     fbs_list.appendChild(div);
   });
 };
 
 function newFB() {
   for (let i = 0; i < 1000; i++) {
-    const new_fb = `NEW_FB_${i}`;
+    const new_name = `NEW_FB_${i}`;
 
-    const exists = fb_names.toArray().some(fb => fb == new_fb);
+    const exists = Array.from(window.fbs.values())
+      .some(fb => fb.get('name') === new_name);
 
     if (!exists) {
-      fb_names.push([new_fb]);
-      bindTextEditors(new_fb)
+      const fb = new Y.Map();
+      fb.set('name', new_name);
+      fb.set('xml', new Y.Text(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE FBType SYSTEM "http://www.holobloc.com/xml/LibraryElement.dtd">
+<FBType Name="${new_name}">
+  <InterfaceList>
+    <EventInputs>
+      <Event Name="INIT" Type="Event"/>
+      <Event Name="READ" Type="Event">
+        <With Var="VARIABLE_1"/>
+      </Event>
+    </EventInputs>
+    <EventOutputs>
+      <Event Name="INIT_O" Type="Event"/>
+      <Event Name="READ_O" Type="Event">
+        <With Var="DATA_1"/>
+      </Event>
+    </EventOutputs>
+    <InputVars>
+      <VarDeclaration Name="VARIABLE_1" Type="STRING"/>
+      <VarDeclaration Name="VARIABLE_2" Type="REAL"/>
+      <VarDeclaration Name="VARIABLE_3" Type="INT"/>
+    </InputVars>
+    <OutputVars>
+      <VarDeclaration Name="DATA_1" Type="STRING"/>
+    </OutputVars>
+  </InterfaceList>
+</FBType>`));
+      fb.set('py', new Y.Text(`import random
+
+  class ${new_name}:
+    def __init__(self):
+      pass
+
+    def schedule(self, event_name, event_value, variable_1, variable_2, variable_3):
+      if event_name == "INIT":
+        return [event_value, None, ""]
+
+      elif event_name == "READ":
+        return [None, event_value, ""]
+  `));
+
+      window.fbs.set(crypto.randomUUID(), fb);
+
+      bindTextEditors(fb)
       break;
     }
   }
@@ -123,70 +155,52 @@ function updateFBName(index, newName) {
   });
 }
 
-function bindTextEditors(name) {
-  const xml_text = window.ydoc.getText(name + ".xml");
-  const py_text = window.ydoc.getText(name + ".py");
+function InputBind(map, key, input) {
+  // Set the initial value immediately
+  input.value = map.get(key) || "";
 
-  if (xml_text.toString().length === 0) {
-      xml_text.insert(0, `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE FBType SYSTEM "http://www.holobloc.com/xml/LibraryElement.dtd">
-<FBType Name="${name}">
-  <InterfaceList>
-    <EventInputs>
-      <Event Name="INIT" Type="Event"/>
-      <Event Name="READ" Type="Event">
-        <With Var="VARIABLE_1"/>
-      </Event>
-    </EventInputs>
-    <EventOutputs>
-      <Event Name="INIT_O" Type="Event"/>
-      <Event Name="READ_O" Type="Event">
-        <With Var="DATA_1"/>
-      </Event>
-    </EventOutputs>
-    <InputVars>
-      <VarDeclaration Name="VARIABLE_1" Type="STRING"/>
-      <VarDeclaration Name="VARIABLE_2" Type="REAL"/>
-      <VarDeclaration Name="VARIABLE_3" Type="INT"/>
-    </InputVars>
-    <OutputVars>
-      <VarDeclaration Name="DATA_1" Type="STRING"/>
-    </OutputVars>
-  </InterfaceList>
-</FBType>
-`);
+  const onInput = () => map.set(key, input.value);
+  input.addEventListener('input', onInput);
+
+  const observer = (event) => {
+    // This is where the cross-client sync happens
+    if (event.keysChanged.has(key)) {
+      const newValue = map.get(key);
+      if (input.value !== newValue) {
+        input.value = newValue;
+        populateSidebar()
+      }
     }
+  };
 
-  if (py_text.toString().length === 0) {
-    py_text.insert(0, `import random
+  map.observe(observer);
 
-class ${name}:
-  def __init__(self):
-    pass
-
-  def schedule(self, event_name, event_value, variable_1, variable_2, variable_3):
-    if event_name == "INIT":
-      return [event_value, None, ""]
-
-    elif event_name == "READ":
-      return [None, event_value, ""]
-`);
+  return {
+    destroy: () => {
+      input.removeEventListener('input', onInput);
+      map.unobserve(observer);
     }
+  };
+}
 
-  if (window.xml_binding) {
-    window.xml_binding.destroy();
-  }
-  if (window.py_binding) {
-    window.py_binding.destroy();
-  }
+function bindTextEditors(fb) {
+  if (window.name_binding) window.name_binding.destroy();
+  if (window.xml_binding) window.xml_binding.destroy();
+  if (window.py_binding) window.py_binding.destroy();
+
+  window.name_binding = InputBind(
+    fb,
+    "name",
+    name_edit
+  );
 
   window.xml_binding = new CodemirrorBinding(
-    xml_text,
+    fb.get("xml"),
     window.xml_editorview,
     provider.awareness
   );
   window.py_binding = new CodemirrorBinding(
-    py_text,
+    fb.get("py"),
     window.py_editorview,
     provider.awareness
   );
