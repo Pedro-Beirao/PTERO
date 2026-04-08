@@ -1,6 +1,6 @@
 const canvas = document.getElementById("graphCanvas");
 
-const graphCanvas = new LGraphCanvas(canvas, graph);
+const graphCanvas = new LGraphCanvas(canvas, window.graph);
 
 resizeCanvas()
 window.addEventListener('resize', resizeCanvas);

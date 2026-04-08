@@ -14,18 +14,6 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static(path.join(__dirname, "public")));
 
-
-const Y = require('yjs')
-const { WebsocketProvider } = require('y-websocket')
-
-const doc = new Y.Doc()
-const wsProvider = new WebsocketProvider('ws://localhost:1234', 'room', doc)
-
-wsProvider.on('status', event => {
-  console.log(event.status) // logs "connected" or "disconnected"
-})
-
-
 app.get('/', (req, res) => res.render('index'));
 
 app.get("/nodes", (req, res) => {

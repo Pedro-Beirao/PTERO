@@ -1,3 +1,55 @@
+import * as Y from "https://esm.sh/yjs@13.6.0";
+import { WebsocketProvider } from "https://esm.sh/y-websocket@3.0.0?deps=yjs@13.6.0";
+// import { IndexeddbPersistence } from "https://esm.sh/y-indexeddb@9.0.12?deps=yjs@13.6.0";
+import { CodemirrorBinding } from "https://esm.sh/y-codemirror@3.0.1?deps=yjs@13.6.0";
+
+window.ydoc = new Y.Doc();
+// const indexeddbProvider = new IndexeddbPersistence('room', ydoc)
+window.provider = new WebsocketProvider("ws://localhost:1234", "room", ydoc);
+
+provider.on('synced', (isSynced) => {
+  if (isSynced) {
+
+  }
+});
+
+provider.on('status', event => {
+  console.log(event.status) // logs "connected" or "disconnected"
+})
+
+// const editor = CodeMirror.fromTextArea(
+//   document.getElementById("#xml-editor"),
+//   { mode: "xml", lineNumbers: true }
+// );
+
+// window.binding = new CodemirrorBinding(ytext, editor, provider.awareness);
+
+function loadTextEditors(name) {
+  const xml_text = window.ydoc.getText(name + ".xml");
+  const py_text = window.ydoc.getText(name + ".py");
+
+  if (window.xml_binding) {
+    window.xml_binding.destroy();
+  }
+  if (window.py_binding) {
+    window.py_binding.destroy();
+  }
+
+  window.xml_binding = new CodemirrorBinding(
+    xml_text,
+    window.xml_editorview,
+    provider.awareness
+  );
+  window.py_binding = new CodemirrorBinding(
+    py_text,
+    window.py_editorview,
+    provider.awareness
+  );
+
+  window.xml_editorview.refresh();
+  window.py_editorview.refresh();
+}
+
 LiteGraph.clearRegisteredTypes();
 window.graph = new LGraph();
 
@@ -20,12 +72,7 @@ fetch('/nodes')
       div.textContent = fb.name;
 
       div.addEventListener("click", () => {
-        if (window.py_editorview) {
-          window.py_editorview.setValue(fb.py || "");
-          window.py_editorview.refresh();
-        }
-
-        window.loadFB(fb.name);
+        loadTextEditors(fb.name);
       });
 
       sidebar.appendChild(div);

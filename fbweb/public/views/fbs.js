@@ -1,3 +1,5 @@
+// const fb_names = ydoc.getArray('fb-names')
+
 const fbs_editor = document.getElementById('fbs-editor');
 const xml_editor = document.getElementById('xml-editor');
 const py_editor = document.getElementById('py-editor');
