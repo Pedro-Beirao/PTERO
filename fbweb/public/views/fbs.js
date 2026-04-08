@@ -2,7 +2,7 @@ import * as Y from "https://esm.sh/yjs@13.6.0";
 import { CodemirrorBinding } from "https://esm.sh/y-codemirror@3.0.1?deps=yjs@13.6.0";
 
 const fbs_list = document.getElementById("fbs-list");
-const name_edit = document.getElementById("name-edit");
+const fbs_toolbar = document.getElementById("fbs-toolbar");
 const fbs_editor = document.getElementById('fbs-editor');
 const xml_editor = document.getElementById('xml-editor');
 const py_editor = document.getElementById('py-editor');
@@ -39,11 +39,12 @@ function populateSidebar() {
     const div = document.createElement("div");
     div.className = "fb-item";
     div.textContent = fb.get("name");
+    div.dataset.uuid = id;
 
-    div.onclick = () => bindTextEditors(fb);
+    div.onclick = () => bindTextEditors(id);
 
     if (!fbs_list.hasChildNodes())
-      bindTextEditors(fb);
+      bindTextEditors(id);
 
     fbs_list.appendChild(div);
   });
@@ -57,6 +58,8 @@ function newFB() {
       .some(fb => fb.get('name') === new_name);
 
     if (!exists) {
+      const uuid = crypto.randomUUID();
+
       const fb = new Y.Map();
       fb.set('name', new_name);
       fb.set('xml', new Y.Text(`<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -99,100 +102,71 @@ function newFB() {
         return [None, event_value, ""]
   `));
 
-      window.fbs.set(crypto.randomUUID(), fb);
+      window.fbs.set(uuid, fb);
 
-      bindTextEditors(fb)
+      bindTextEditors(uuid)
       break;
     }
   }
 }
 
-function enterEditMode(index, oldName, container, spanToReplace) {
-  // Prevent double-inputs if already editing
-  if (container.querySelector('input')) return;
+function deleteFB() {
 
-  const input = document.createElement("input");
-  input.type = "text";
-  input.value = oldName;
-  input.className = "fb-edit-input";
-
-  // Hide the original span and show the input
-  spanToReplace.style.display = "none";
-  container.prepend(input);
-  input.focus();
-  input.select();
-
-  const finished = (shouldSave) => {
-    const newName = input.value.trim();
-    if (shouldSave && newName && newName !== oldName) {
-      updateFBName(index, newName);
-    } else {
-      // If cancelled or empty, just put the span back
-      input.remove();
-      spanToReplace.style.display = "inline";
-    }
-  };
-
-  // Event Listeners
-  input.onblur = () => finished(true);
-  input.onkeydown = (e) => {
-    if (e.key === "Enter") finished(true);
-    if (e.key === "Escape") finished(false);
-  };
 }
 
-function updateFBName(index, newName) {
-  window.ydoc.transact(() => {
-    const oldData = fb_names.get(index);
+function InputBind(uuid, key, div) {
+  const fb = fbs.get(uuid);
 
-    fb_names.delete(index, 1);
-    fb_names.insert(index, [newName]);
+  const input = div.querySelector("input");
+  input.value = fb.get(key) || "";
 
-    // fb_names.insert(index, [{
-    //   ...oldData,
-    //   name: newName
-    // }]);
-  });
-}
-
-function InputBind(map, key, input) {
-  // Set the initial value immediately
-  input.value = map.get(key) || "";
+  const deleteBtn = div.querySelector("button");
 
   const onInput = () => {
-    map.set(key, input.value);
+    fb.set(key, input.value);
     populateSidebar();
   }
   input.addEventListener('input', onInput);
 
+  const onClick = () => {
+    window.ydoc.transact(() => {
+      fbs.delete(uuid);
+    });
+    populateSidebar();
+  }
+  deleteBtn.addEventListener('click', onClick);
+
   const observer = (event) => {
     if (event.keysChanged.has(key)) {
-      const newValue = map.get(key);
+      const newValue = fb.get(key);
       if (input.value !== newValue) {
         input.value = newValue;
         populateSidebar();
       }
     }
   };
-  map.observe(observer);
+  fb.observe(observer);
 
   return {
     destroy: () => {
       input.removeEventListener('input', onInput);
-      map.unobserve(observer);
+      deleteBtn.removeEventListener('click', onClick);
+      fb.unobserve(observer);
     }
   };
 }
 
-function bindTextEditors(fb) {
+function bindTextEditors(uuid) {
+  const fb = fbs.get(uuid);
+
   if (window.name_binding) window.name_binding.destroy();
   if (window.xml_binding) window.xml_binding.destroy();
   if (window.py_binding) window.py_binding.destroy();
 
   window.name_binding = InputBind(
-    fb,
+    uuid,
     "name",
-    name_edit
+    fbs_toolbar
   );
 
   window.xml_binding = new CodemirrorBinding(

@@ -53,6 +53,19 @@
 #fbs-toolbar {
   height: 3em;
   margin-left: 15em;
+  padding: 0.5em;
   text-align: center;
   border-bottom: 8px solid #444;
+}
+
+input {
+  flex-grow: 1;
+  font-size: inherit;
+  font-family: inherit;
+  border: 1px solid #09f;
+  outline: none;
+  padding: 2px 4px;
+  background-color: #333;
+  color: white;
+  border: 2px solid #444;
 }
