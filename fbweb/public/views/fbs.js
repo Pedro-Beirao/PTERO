@@ -159,20 +159,21 @@ function InputBind(map, key, input) {
   // Set the initial value immediately
   input.value = map.get(key) || "";
 
-  const onInput = () => map.set(key, input.value);
+  const onInput = () => {
+    map.set(key, input.value);
+    populateSidebar();
+  }
   input.addEventListener('input', onInput);
 
   const observer = (event) => {
-    // This is where the cross-client sync happens
     if (event.keysChanged.has(key)) {
       const newValue = map.get(key);
       if (input.value !== newValue) {
         input.value = newValue;
-        populateSidebar()
+        populateSidebar();
       }
     }
   };
-
   map.observe(observer);
 
   return {
