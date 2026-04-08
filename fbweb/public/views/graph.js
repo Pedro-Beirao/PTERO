@@ -7,6 +7,7 @@ const graphCanvas = new LGraphCanvas(canvas, window.graph);
 resizeCanvas()
 window.addEventListener('resize', resizeCanvas);
 
+// TODO way too big to be in a main script like this one
 graphCanvas.showShowNodePanel = function (node) {
   this.SELECTED_NODE = node;
 	this.closePanels();

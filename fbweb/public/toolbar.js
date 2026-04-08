@@ -20,6 +20,7 @@ async function sendCommandToBackend(messages) {
     }
 }
 
+// TODO the messages should be created in the backend. right?
 async function deploy() {
   const data = graph.serialize();
 

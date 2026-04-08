@@ -19,15 +19,8 @@ provider.on('status', event => {
   }
 });
 
-// const editor = CodeMirror.fromTextArea(
-//   document.getElementById("#xml-editor"),
-//   { mode: "xml", lineNumbers: true }
-// );
-
-// window.binding = new CodemirrorBinding(ytext, editor, provider.awareness);
-
-
-
+// TODO deliver the nodes using yjs, not a fetch request
+// TODO all the data is already available in window.fbs
 fetch('/nodes')
   .then(res => res.json())
   .then(fbs => {

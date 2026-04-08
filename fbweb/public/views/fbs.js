@@ -1,6 +1,7 @@
 import * as Y from "https://esm.sh/yjs@13.6.0";
 import { CodemirrorBinding } from "https://esm.sh/y-codemirror@3.0.1?deps=yjs@13.6.0";
 
+// TODO This is a lot, maybe separate into a few files?
 const fbs_list = document.getElementById("fbs-list");
 const fbs_toolbar = document.getElementById("fbs-toolbar");
 const fbs_editor = document.getElementById('fbs-editor');
@@ -22,7 +23,6 @@ window.py_editorview = CodeMirror(py_editor, {
   mode: "python"
 });
 
-const fb_names = window.ydoc.getArray('fb-names');
 window.fbs.observe(() => {
   populateSidebar();
 });
@@ -32,6 +32,8 @@ document.getElementById("add").addEventListener("click", () => {
   newFB();
 });
 
+// TODO figure out what the uuid is good for here
+// TODO show what is the active tab
 function populateSidebar() {
   fbs_list.innerHTML = "";
 
@@ -50,6 +52,7 @@ function populateSidebar() {
   });
 };
 
+// TODO Put the default texts in a separate file
 function newFB() {
   for (let i = 0; i < 1000; i++) {
     const new_name = `NEW_FB_${i}`;
@@ -110,10 +113,9 @@ function newFB() {
   }
 }
 
-function deleteFB() {
-
-}
-
+// TODO This function doesnt have to be abstract
+// TODO Make it work on the whole fbs-toolbar
+// TODO Simplify it a lot
 function InputBind(uuid, key, div) {
   const fb = fbs.get(uuid);
 
@@ -123,7 +125,9 @@ function InputBind(uuid, key, div) {
   const deleteBtn = div.querySelector("button");
 
   const onInput = () => {
-    fb.set(key, input.value);
+    window.ydoc.transact(() => {
+      fb.set(key, input.value);
+    });
     populateSidebar();
   }
   input.addEventListener('input', onInput);
@@ -156,6 +160,7 @@ function InputBind(uuid, key, div) {
   };
 }
 
+// TODO rename name_binding since it now affects the whole fbs-toolbar
 function bindTextEditors(uuid) {
   const fb = fbs.get(uuid);
 
@@ -184,6 +189,7 @@ function bindTextEditors(uuid) {
   window.py_editorview.refresh();
 }
 
+// TODO put this somewhere nicer
 // Resize handle
 
 let isDragging = false;
