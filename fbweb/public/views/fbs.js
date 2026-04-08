@@ -33,15 +33,30 @@ document.getElementById("add").addEventListener("click", () => {
 function populateSidebar() {
   fbs_list.innerHTML = "";
 
-  fb_names.forEach(fb => {
+  fb_names.forEach((fb_name, index) => {
     const div = document.createElement("div");
     div.className = "fb-item";
-    div.textContent = fb;
 
-    div.addEventListener("click", () => {
-      bindTextEditors(fb);
-    });
+    const label = document.createElement("span");
+    label.textContent = fb_name;
 
+    // 2. The Edit Button
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "✎";
+    editBtn.className = "btn-edit";
+
+    editBtn.onclick = (e) => {
+      e.stopPropagation();
+      enterEditMode(index, fb_name, div, label);
+    };
+
+    div.onclick = () => bindTextEditors(fb_name);
+
+    if (!fbs_list.hasChildNodes())
+      bindTextEditors(fb_name);
+
+    div.appendChild(label);
+    div.appendChild(editBtn);
     fbs_list.appendChild(div);
   });
 };
@@ -58,6 +73,54 @@ function newFB() {
       break;
     }
   }
+}
+
+function enterEditMode(index, oldName, container, spanToReplace) {
+  // Prevent double-inputs if already editing
+  if (container.querySelector('input')) return;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = oldName;
+  input.className = "fb-edit-input";
+
+  // Hide the original span and show the input
+  spanToReplace.style.display = "none";
+  container.prepend(input);
+  input.focus();
+  input.select();
+
+  const finished = (shouldSave) => {
+    const newName = input.value.trim();
+    if (shouldSave && newName && newName !== oldName) {
+      updateFBName(index, newName);
+    } else {
+      // If cancelled or empty, just put the span back
+      input.remove();
+      spanToReplace.style.display = "inline";
+    }
+  };
+
+  // Event Listeners
+  input.onblur = () => finished(true);
+  input.onkeydown = (e) => {
+    if (e.key === "Enter") finished(true);
+    if (e.key === "Escape") finished(false);
+  };
+}
+
+function updateFBName(index, newName) {
+  window.ydoc.transact(() => {
+    const oldData = fb_names.get(index);
+
+    fb_names.delete(index, 1);
+    fb_names.insert(index, [newName]);
+
+    // fb_names.insert(index, [{
+    //   ...oldData,
+    //   name: newName
+    // }]);
+  });
 }
 
 function bindTextEditors(name) {
