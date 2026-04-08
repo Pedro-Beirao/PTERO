@@ -1,5 +1,7 @@
 const canvas = document.getElementById("graphCanvas");
 
+LiteGraph.clearRegisteredTypes();
+window.graph = new LGraph();
 const graphCanvas = new LGraphCanvas(canvas, window.graph);
 
 resizeCanvas()
