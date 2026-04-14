@@ -87,7 +87,10 @@ function switchTab(el) {
     requestAnimationFrame(() => resizeCanvas());
   }
   else if (panelId === 'panel-fbs' && window.xml_editorview) {
-    window.xml_editorview.refresh()
-    window.py_editorview.refresh()
+    window.xml_editorview.refresh();
+    window.py_editorview.refresh();
+  }
+  else if (panelId === 'panel-deployment' && window.com_editorview) {
+    window.com_editorview.refresh();
   }
 }

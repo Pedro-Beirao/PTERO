@@ -2,6 +2,12 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const net = require('net');
+const Y = require('yjs')
+const { WebsocketProvider } = require('y-websocket')
+
+const doc = new Y.Doc()
+const provider = new WebsocketProvider('ws://localhost:1234', 'room', doc)
+const communication = doc.getText("communication")
 
 const app = express();
 const PORT = 3000;
@@ -72,15 +78,17 @@ app.post('/deploy', async (req, res) => {
       });
     });
 
+    communication.delete(0, communication.length);
+
     // Process all messages using the same connection
     for (const r of req.body) {
       const message = buildMessage(r.message, r.config);
       const response = await new Promise((resolve, reject) => {
         tcpClient.write(message);
-        console.log('Sent to DINASORE:', message.toString("utf-8"));
+        communication.insert(communication.length, message.toString("utf-8") + "\n");
 
         tcpClient.once('data', (data) => {
-          console.log('Raw data received:', data.toString("utf-8"));
+          communication.insert(communication.length, data.toString("utf-8") + "\n");
           resolve(data.toString("utf-8"));
         });
       });

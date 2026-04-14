@@ -2,6 +2,7 @@
 @import url("toolbar.css");
 @import url("views/graph.css");
 @import url("views/fbs.css");
+@import url("views/deployment.css");
 
 *, *::before, *::after {
   box-sizing: border-box;
