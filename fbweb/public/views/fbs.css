@@ -7,7 +7,7 @@
 }
 
 .fb-item {
-  padding: 1em 1em 1em 1em;
+  padding: 1em;
 }
 
 .fb-item:hover {
@@ -15,7 +15,7 @@
   cursor: pointer;
 }
 
-#add {
+#add-fb {
   text-align: center;
 }
 

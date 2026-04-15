@@ -6,6 +6,7 @@ window.ydoc = new Y.Doc();
 // const indexeddbProvider = new IndexeddbPersistence('room', ydoc)
 window.provider = new WebsocketProvider("ws://localhost:1234", "room", ydoc);
 window.fbs = window.ydoc.getMap('fbs');
+window.resources = window.ydoc.getMap('resources');
 
 const not_connected = document.getElementById('not-connected');
 provider.on('synced', (isSynced) => {

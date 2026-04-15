@@ -5,17 +5,53 @@
 }
 
 #config {
-  flex: 1;
   height: 100%;
   overflow: auto;
+  flex: 1;
+}
+
+#resources-list {
+  height: auto;
+  align-self: center;
+}
+
+.resource-item {
+  padding: 1em;
+  border-radius: 0.5em;
+  background-color: #111;
+  width: 21em;
+  margin: 1em 10% 1em 10%;
+}
+
+#add-resource {
+  text-align: center;
+  width: 5em;
+  height: 3.5em;
+  background-color: #111;
+  cursor: pointer;
+}
+
+#add-resource:hover {
+  background-color: #181818;
+}
+
+.color-input {
+  height: 4em;
+  width: 8em;
+  background: #ff0000;
+  cursor: pointer;
+}
+
+.resource-item input {
+  width: 15em;
+  height: 2em;
 }
 
 #communication {
   flex: 1;
   overflow: auto;
-  margin: 0.5em;
 }
 
 #communication .CodeMirror {
-  padding: 1em;
+ padding: 0.5em;
 }

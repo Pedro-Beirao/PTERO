@@ -28,8 +28,8 @@ window.fbs.observe(() => {
 });
 populateSidebar();
 
-document.getElementById("add").addEventListener("click", () => {
-  newFB();
+document.getElementById("add-fb").addEventListener("click", () => {
+  add_fb();
 });
 
 // TODO figure out what the uuid is good for here
@@ -53,7 +53,7 @@ function populateSidebar() {
 };
 
 // TODO Put the default texts in a separate file
-function newFB() {
+function add_fb() {
   for (let i = 0; i < 1000; i++) {
     const new_name = `NEW_FB_${i}`;
 
