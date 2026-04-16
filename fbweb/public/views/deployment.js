@@ -47,7 +47,8 @@ function populateConfig() {
     left.appendChild(ip);
 
     const right = document.createElement("div");
-    right.className = "color-input"
+    right.className = "color-input";
+    right.style.background = resource.get("color");
 
     const color = document.createElement("input");
     color.type = "color";
@@ -59,6 +60,7 @@ function populateConfig() {
     right.onclick = () => color.click();
     color.oninput = () => {
       right.style.background = color.value;
+      resource.set("color", color.value);
     };
 
     div.appendChild(left);
@@ -73,7 +75,7 @@ function add_resource() {
   const resource = new Y.Map();
   resource.set('name', "EMB_RES");
   resource.set('ip', "localhost:61499");
-  resource.set('color', "#454545");
+  resource.set('color', "#ff0000");
 
   window.resources.set(uuid, resource);
 
