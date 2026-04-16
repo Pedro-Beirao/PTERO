@@ -39,9 +39,15 @@ function populateConfig() {
 
     const name = document.createElement("input");
     name.value = resource.get("name");
+    name.oninput = () => {
+      resource.set("name", name.value);
+    };
 
     const ip = document.createElement("input");
     ip.value = resource.get("ip");
+    ip.oninput = () => {
+      resource.set("ip", ip.value);
+    };
 
     left.appendChild(name);
     left.appendChild(ip);

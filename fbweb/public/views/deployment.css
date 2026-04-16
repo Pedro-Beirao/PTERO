@@ -6,8 +6,8 @@
 
 #config {
   height: 100%;
+  width: 27em;
   overflow: auto;
-  flex: 1;
 }
 
 #resources-list {
@@ -48,7 +48,6 @@
 }
 
 #communication {
-  flex: 1;
   overflow: auto;
 }
 
