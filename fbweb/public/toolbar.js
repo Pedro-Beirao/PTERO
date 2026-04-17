@@ -1,5 +1,5 @@
 function exportGraph() {
-  const data = graph.serialize();
+  const data = window.litegraph.serialize();
   const json = JSON.stringify(data, null, 2);
   console.log(json);
 }
@@ -22,7 +22,7 @@ async function sendCommandToBackend(messages) {
 
 // TODO the messages should be created in the backend. right?
 async function deploy() {
-  const data = graph.serialize();
+  const data = window.litegraph.serialize();
 
   const messages = []
 
@@ -83,7 +83,7 @@ function switchTab(el) {
   const panelId = el.dataset.panel;
   if (panelId) document.getElementById(panelId).classList.add('active');
 
-  if (panelId === 'panel-graph' && window.graph) {
+  if (panelId === 'panel-graph' && window.litegraph) {
     requestAnimationFrame(() => resizeCanvas());
   }
   else if (panelId === 'panel-fbs' && window.xml_editorview) {
