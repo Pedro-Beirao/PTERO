@@ -21,6 +21,7 @@
   background-color: #111;
   width: 21em;
   margin: 1em 10% 1em 10%;
+  position: relative;
 }
 
 #add-resource {
@@ -40,11 +41,20 @@
   width: 8em;
   background: #ff0000;
   cursor: pointer;
+  border: 0.2em solid #444;
+  box-sizing: border-box;
 }
 
 .resource-item input {
   width: 15em;
   height: 2em;
+}
+
+.delete-resource {
+  position: absolute;
+  top: 0.05em;
+  right: 0.2em;
+  cursor: pointer;
 }
 
 #communication {

@@ -61,16 +61,26 @@ function populateConfig() {
     color.value = resource.get("color");
     color.hidden = true;
 
-    right.appendChild(color);
-
     right.onclick = () => color.click();
     color.oninput = () => {
       right.style.background = color.value;
       resource.set("color", color.value);
     };
 
+    const del_res = document.createElement("div");
+    del_res.textContent = "x";
+    del_res.className = "delete-resource";
+    del_res.onclick = () => {
+      window.ydoc.transact(() => {
+        window.resources.delete(id);
+      });
+    };
+
+    right.appendChild(color);
+
     div.appendChild(left);
     div.appendChild(right);
+    div.appendChild(del_res);
     resources_list.appendChild(div);
   });
 }
