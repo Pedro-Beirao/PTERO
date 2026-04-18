@@ -8,7 +8,7 @@ window.ydoc = new Y.Doc();
 // const indexeddbProvider = new IndexeddbPersistence('room', ydoc)
 window.provider = new WebsocketProvider("ws://localhost:1234", "room", ydoc);
 window.nodes = window.ydoc.getMap('nodes');
-window.links = window.ydoc.getMap('links');
+window.links = window.ydoc.getArray('links');
 window.fbs = window.ydoc.getMap('fbs');
 window.resources = window.ydoc.getMap('resources');
 
@@ -44,6 +44,34 @@ provider.on('synced', (isSynced) => {
           }
         });
       });
+    });
+
+    window.links.observe((event) => {
+      if (event.transaction.origin === 'local') return;
+
+      event.changes.delta.forEach((delta) => {
+        if (delta.insert) {
+          delta.insert.forEach((edge) => {
+            const originNode = window.litegraph.getNodeById(edge.origin_id);
+            const targetNode = window.litegraph.getNodeById(edge.target_id);
+            if (originNode && targetNode) {
+              originNode.connect(edge.origin_slot, targetNode, edge.target_slot);
+            }
+          });
+        }
+        if (delta.delete) {
+          // Find and remove links that no longer exist in links
+          const edgeIds = new Set(window.links.toArray().map(e => e.id));
+          Object.values(window.litegraph.links).forEach((link) => {
+            const key = `${link.origin_id}:${link.origin_slot}-${link.target_id}:${link.target_slot}`;
+            if (!edgeIds.has(key)) {
+              window.litegraph.removeLink(link.id);
+            }
+          });
+        }
+      });
+
+      window.litegraph.setDirtyCanvas(true, true);
     });
   }
 });
@@ -87,6 +115,42 @@ window.litegraph.onNodeRemoved = function(node) {
   }, 'programmatic');
 };
 
+window.litegraph.onNodeConnectionChange = function(type, node, slot, target_node, target_slot) {
+  if (type != LiteGraph.OUTPUT) return;
+
+  window.ydoc.transact(() => {
+    // TODO should we instead loop thru all outputs? and not just in the slot one?
+    node.outputs[slot].links?.forEach((linkId) => {
+      const link = window.litegraph.links[linkId];
+      if (!link) return;
+      const edgeKey = `${link.origin_id}:${link.origin_slot}-${link.target_id}:${link.target_slot}`;
+      // Check if already stored
+      const exists = window.links.toArray().some(e => e.id === edgeKey);
+      if (!exists) {
+        window.links.push([{
+          id: edgeKey,
+          origin_id: link.origin_id,
+          origin_slot: link.origin_slot,
+          target_id: link.target_id,
+          target_slot: link.target_slot
+        }]);
+      }
+    });
+
+    // Remove links that no longer exist
+    const currentLinkIds = new Set(
+      Object.values(window.litegraph.links).map(l =>
+        `${l.origin_id}:${l.origin_slot}-${l.target_id}:${l.target_slot}`
+      )
+    );
+    window.links.toArray().forEach((edge, i) => {
+      if (!currentLinkIds.has(edge.id)) {
+        window.links.delete(i, 1);
+      }
+    });
+  }, 'local');
+};
+
 function populateGraph() {
   window.nodes.forEach((node_map, id) => {
     if(!window.litegraph.getNodeById(id)) {
@@ -96,6 +160,14 @@ function populateGraph() {
       node.pos = [node_map.get("x"), node_map.get("y")];
       window.litegraph.add(node);
       console.log(node_map)
+    }
+  });
+
+  window.links.toArray().forEach((link) => {
+    const originNode = window.litegraph.getNodeById(link.origin_id);
+    const targetNode = window.litegraph.getNodeById(link.target_id);
+    if (originNode && targetNode) {
+      originNode.connect(link.origin_slot, targetNode, link.target_slot);
     }
   });
 }
