@@ -18,28 +18,31 @@ provider.on('synced', (isSynced) => {
     not_connected.style.display = 'none';
     syncNodes();
     populateGraph();
-    window.nodes.observe((event) => {
-      console.log(event.transaction.origin);
-      // TODO dont need the origin cuz the id cant be the same when adding. is this good enough?
-      // if (event.transaction.origin == 'programmatic') return;
-      event.changes.keys.forEach((change, id) => {
-        if (change.action === 'add') {
-          var node_map = window.nodes.get(id);
-          if(!window.litegraph.getNodeById(id)) {
-            var node = LiteGraph.createNode(node_map.get("type"));
-            node.id = id;
+
+    window.nodes.observeDeep((events) => {
+      events.forEach(event => {
+        // TODO dont need the origin cuz the id cant be the same when adding. is this good enought?
+        // if (event.transaction.origin == 'programmatic') return;
+        event.changes.keys.forEach((change, id) => {
+          if (change.action === 'add') {
+            var node_map = window.nodes.get(id);
+            if(!window.litegraph.getNodeById(id)) {
+              var node = LiteGraph.createNode(node_map.get("type"));
+              node.id = id;
+              node.title = node_map.get("title");
+              node.pos = [node_map.get("x"), node_map.get("y")];
+              window.litegraph.add(node);
+            }
+          } else if (change.action === 'update' && event.target != window.nodes) {
+            const node_map = event.target;
+            const node = window.litegraph.getNodeById(node_map.get("id")); // TODO the id is stored in the node_map, i dont like that
             node.title = node_map.get("title");
             node.pos = [node_map.get("x"), node_map.get("y")];
-            window.litegraph.add(node);
+            window.litegraph.setDirtyCanvas(true, true);
+          } else if (change.action === 'delete') {
+            window.litegraph.remove(window.litegraph.getNodeById(id))
           }
-        } else if (change.action === 'update') {
-          var node_map = window.nodes.get(id);
-          var node = window.litegraph.getNodeById(id);
-          node.title = node_map.get("title");
-          node.pos = [node_map.get("x"), node_map.get("y")];
-        } else if (change.action === 'delete') {
-          window.litegraph.remove(window.litegraph.getNodeById(id))
-        }
+        });
       });
     });
   }
@@ -50,13 +53,12 @@ provider.on('status', event => {
   }
 });
 
-
-
 window.litegraph.onNodeAdded = function(node) {
   if (!node) return;
 
   window.ydoc.transact(() => {
     const node_map = new Y.Map();
+    node_map.set("id", node.id);
     node_map.set("type", node.type);
     node_map.set("title", node.title);
     node_map.set("x", node.pos[0]);
@@ -67,6 +69,7 @@ window.litegraph.onNodeAdded = function(node) {
 
 window.litegraph.afterChange = function(node) {
   if (!node) return;
+  console.log(node)
 
   window.ydoc.transact(() => {
     const node_map = window.nodes.get(node.id);
@@ -85,14 +88,14 @@ window.litegraph.onNodeRemoved = function(node) {
 };
 
 function populateGraph() {
-  window.nodes.forEach((node, id) => {
+  window.nodes.forEach((node_map, id) => {
     if(!window.litegraph.getNodeById(id)) {
-      var node_map = window.nodes.get(id);
       var node = LiteGraph.createNode(node_map.get("type"));
       node.id = id;
       node.title = node_map.get("title");
       node.pos = [node_map.get("x"), node_map.get("y")];
       window.litegraph.add(node);
+      console.log(node_map)
     }
   });
 }
