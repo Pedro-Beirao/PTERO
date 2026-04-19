@@ -41,7 +41,7 @@ graphCanvas.showShowNodePanel = function (node) {
                 node.setProperty(name,value);
                 break;
         }
-        graphcanvas.graph.afterChange();
+        graphcanvas.graph.afterChange(node);
         graphcanvas.dirty_canvas = true;
       };
 

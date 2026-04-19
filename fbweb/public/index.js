@@ -24,7 +24,32 @@ provider.on('synced', (isSynced) => {
         // TODO dont need the origin cuz the id cant be the same when adding. is this good enought?
         // if (event.transaction.origin == 'programmatic') return;
         event.changes.keys.forEach((change, id) => {
-          if (change.action === 'add') {
+          // Node Updated
+          if (event.target != window.nodes) {
+            const node_map = event.target;
+            const id = node_map.get("id");
+
+            // If the map has an id, then its the node itself
+            if (id) {
+              const node = window.litegraph.getNodeById(id); // TODO the id is stored in the node_map, i dont like that
+              node.title = node_map.get("title");
+              node.pos = [node_map.get("x"), node_map.get("y")];
+            }
+
+            // If not, it is the properties
+            else {
+              const node = window.litegraph.getNodeById(event.path[0]);
+              Object.keys(node.properties).forEach((key) => {
+                const new_value = node_map.get(key);
+                if (new_value)
+                  node.properties[key] = new_value;
+              });
+            }
+            window.litegraph.setDirtyCanvas(true, true);
+          }
+
+          // Node Added
+          else if (change.action === 'add') {
             var node_map = window.nodes.get(id);
             if(!window.litegraph.getNodeById(id)) {
               var node = LiteGraph.createNode(node_map.get("type"));
@@ -33,13 +58,10 @@ provider.on('synced', (isSynced) => {
               node.pos = [node_map.get("x"), node_map.get("y")];
               window.litegraph.add(node);
             }
-          } else if (change.action === 'update' && event.target != window.nodes) {
-            const node_map = event.target;
-            const node = window.litegraph.getNodeById(node_map.get("id")); // TODO the id is stored in the node_map, i dont like that
-            node.title = node_map.get("title");
-            node.pos = [node_map.get("x"), node_map.get("y")];
-            window.litegraph.setDirtyCanvas(true, true);
-          } else if (change.action === 'delete') {
+          }
+
+          // Node Deleted
+          else if (change.action === 'delete') {
             window.litegraph.remove(window.litegraph.getNodeById(id))
           }
         });
@@ -48,7 +70,8 @@ provider.on('synced', (isSynced) => {
 
     window.links.observe((event) => {
       if (event.transaction.origin === 'local') return;
-
+// TODO really dislike this whole logic
+// TODO nothing should be named edge
       event.changes.delta.forEach((delta) => {
         if (delta.insert) {
           delta.insert.forEach((edge) => {
@@ -60,7 +83,6 @@ provider.on('synced', (isSynced) => {
           });
         }
         if (delta.delete) {
-          // Find and remove links that no longer exist in links
           const edgeIds = new Set(window.links.toArray().map(e => e.id));
           Object.values(window.litegraph.links).forEach((link) => {
             const key = `${link.origin_id}:${link.origin_slot}-${link.target_id}:${link.target_slot}`;
@@ -91,13 +113,13 @@ window.litegraph.onNodeAdded = function(node) {
     node_map.set("title", node.title);
     node_map.set("x", node.pos[0]);
     node_map.set("y", node.pos[1]);
+    node_map.set("properties", new Y.Map());
     window.nodes.set(node.id, node_map);
   }, 'programmatic');
 }
 
 window.litegraph.afterChange = function(node) {
   if (!node) return;
-  console.log(node)
 
   window.ydoc.transact(() => {
     const node_map = window.nodes.get(node.id);
@@ -105,6 +127,10 @@ window.litegraph.afterChange = function(node) {
     node_map.set("title", node.title);
     node_map.set("x", node.pos[0]);
     node_map.set("y", node.pos[1]);
+    const prop_map = node_map.get("properties");
+    Object.entries(node.properties).forEach(([key, value]) => {
+      prop_map.set(key, value);
+    });
   }, 'programmatic');
 };
 
@@ -158,8 +184,12 @@ function populateGraph() {
       node.id = id;
       node.title = node_map.get("title");
       node.pos = [node_map.get("x"), node_map.get("y")];
+      Object.keys(node.properties).forEach((key) => {
+        const new_value = node_map.get("properties").get(key);
+        if (new_value)
+          node.properties[key] = new_value;
+      });
       window.litegraph.add(node);
-      console.log(node_map)
     }
   });
 
