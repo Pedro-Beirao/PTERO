@@ -75,6 +75,44 @@ graphCanvas.showShowNodePanel = function (node) {
 		this.canvas.parentNode.appendChild( panel );
 };
 
+graphCanvas.getNodeMenuOptions = function (node) {
+  return [
+    {
+      content: "Name",
+      callback: LGraphCanvas.onShowPropertyEditor,
+    },
+    {
+      content: "Inputs",
+      has_submenu: true,
+      callback: LGraphCanvas.onShowMenuNodeProperties,
+    },
+    {
+      content: "Map to",
+      has_submenu: true,
+      callback: LGraphCanvas.onMenuNodeColors,
+    },
+    null,
+    {
+      content: "Resize",
+      callback: LGraphCanvas.onMenuResizeNode,
+    },
+    {
+      content: "Collapse",
+      callback: LGraphCanvas.onMenuNodeCollapse,
+    },
+    null,
+    {
+      content: "Clone",
+      callback: LGraphCanvas.onMenuNodeClone,
+    },
+    {
+      content: "Remove",
+      disabled: !(node.removable !== false && !node.block_delete),
+      callback: LGraphCanvas.onMenuNodeRemove,
+    },
+  ];
+}
+
 function resizeCanvas() {
   const canvas = document.getElementById('graphCanvas');
   const panel = document.getElementById('panel-graph');

@@ -11656,6 +11656,7 @@ LGraphNode.prototype.executeAction = function(action)
     }
 
     function setValue(value) {
+      graphcanvas.graph.beforeChange(node);
       if (item.type == "Number") {
         value = Number(value);
       } else if (item.type == "Boolean") {
@@ -11665,6 +11666,8 @@ LGraphNode.prototype.executeAction = function(action)
       if (dialog.parentNode) {
         dialog.parentNode.removeChild(dialog);
       }
+
+      graphcanvas.graph.afterChange(node);
       node.setDirtyCanvas(true, true);
     }
   };
@@ -12546,6 +12549,8 @@ LGraphNode.prototype.executeAction = function(action)
     }
 
     function setValue(value) {
+      LGraphCanvas.active_canvas.graph.beforeChange(node);
+
       if (
         info &&
         info.values &&
@@ -12569,6 +12574,8 @@ LGraphNode.prototype.executeAction = function(action)
       }
       if (options.onclose) options.onclose();
       dialog.close();
+
+      LGraphCanvas.active_canvas.graph.afterChange(node);
       node.setDirtyCanvas(true, true);
     }
 
