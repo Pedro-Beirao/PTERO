@@ -43,12 +43,18 @@ graphCanvas.getNodeMenuOptions = function (node) {
   ];
 }
 
-window.resizeCanvas = function() {
+const resizeCanvas = function() {
   const canvas = document.getElementById('graphCanvas');
   const panel = document.getElementById('panel-graph');
   canvas.width = panel.clientWidth;
   canvas.height = panel.clientHeight;
+  graphCanvas.draw(true);
 }
 
-window.resizeCanvas()
-window.addEventListener('resize', window.resizeCanvas);
+resizeCanvas()
+window.addEventListener('resize', resizeCanvas);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    resizeCanvas();
+  }
+});
