@@ -5,9 +5,9 @@ const net = require('net');
 const Y = require('yjs')
 const { WebsocketProvider } = require('y-websocket')
 
-const doc = new Y.Doc()
-const provider = new WebsocketProvider('ws://localhost:1234', 'room', doc)
-const communication = doc.getText("communication")
+const ydoc = new Y.Doc()
+const provider = new WebsocketProvider('ws://localhost:1234', 'room', ydoc, { connect: true, resyncInterval: 5000 })
+const communication = ydoc.getText("communication")
 
 const app = express();
 const PORT = 3000;
@@ -51,17 +51,25 @@ app.post('/deploy', async (req, res) => {
       });
     });
 
-    communication.delete(0, communication.length);
+    ydoc.transact(() => {
+      communication.delete(0, communication.length);
+    });
 
     // Process all messages using the same connection
     for (const r of req.body) {
       const message = buildMessage(r.message, r.config);
       const response = await new Promise((resolve, reject) => {
         tcpClient.write(message);
-        communication.insert(communication.length, message.toString("utf-8") + "\n");
+        console.log(message.toString("utf-8"))
+        ydoc.transact(() => {
+          communication.insert(communication.length, message.toString("utf-8") + "\n");
+        });
 
         tcpClient.once('data', (data) => {
-          communication.insert(communication.length, data.toString("utf-8") + "\n");
+          console.log(data.toString("utf-8"))
+          ydoc.transact(() => {
+            communication.insert(communication.length, data.toString("utf-8") + "\n");
+          });
           resolve(data.toString("utf-8"));
         });
       });

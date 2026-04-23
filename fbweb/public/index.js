@@ -15,8 +15,6 @@ window.links = window.ydoc.getArray('links');
 window.fbs = window.ydoc.getMap('fbs');
 window.resources = window.ydoc.getMap('resources');
 
-// TODO if i right click a node input, it prompts me to rename the input. need to remove that
-
 const not_connected = document.getElementById('not-connected');
 provider.on('synced', (isSynced) => {
   if (isSynced) {
