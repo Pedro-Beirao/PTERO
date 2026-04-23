@@ -8930,11 +8930,14 @@ LGraphNode.prototype.executeAction = function(action)
             ctx.rect(pos[0] + 2, pos[1] + 2, 2, 2);
             doStroke = false;
           } else {
-            if (low_quality)
-              ctx.rect(pos[0] - 4, pos[1] - 4, 8, 8); //faster
-            else ctx.arc(pos[0], pos[1], 4, 0, Math.PI * 2);
+            ctx.rect(pos[0] - 4, pos[1] - 4, 8, 8)
           }
           ctx.fill();
+
+          if (!low_quality && doStroke) {
+            ctx.strokeStyle = "lightgrey";
+            ctx.stroke();
+          }
 
           //render name
           if (render_text) {
@@ -9021,8 +9024,7 @@ LGraphNode.prototype.executeAction = function(action)
             ctx.rect(pos[0] + 2, pos[1] + 2, 2, 2);
             doStroke = false;
           } else {
-            if (low_quality) ctx.rect(pos[0] - 4, pos[1] - 4, 8, 8);
-            else ctx.arc(pos[0], pos[1], 4, 0, Math.PI * 2);
+            ctx.rect(pos[0] - 4, pos[1] - 4, 8, 8)
           }
 
           //trigger
@@ -9031,7 +9033,10 @@ LGraphNode.prototype.executeAction = function(action)
 
           //if(slot.links != null && slot.links.length)
           ctx.fill();
-          if (!low_quality && doStroke) ctx.stroke();
+          if (!low_quality && doStroke) {
+            ctx.strokeStyle = "lightgrey";
+            ctx.stroke();
+          }
 
           //render output name
           if (render_text) {

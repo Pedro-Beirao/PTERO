@@ -2,6 +2,9 @@ import * as Y from "https://esm.sh/yjs@13.6.0";
 import { WebsocketProvider } from "https://esm.sh/y-websocket@3.0.0?deps=yjs@13.6.0";
 // import { IndexeddbPersistence } from "https://esm.sh/y-indexeddb@9.0.12?deps=yjs@13.6.0";
 
+LiteGraph.NODE_TITLE_COLOR = "#BBB"
+LiteGraph.NODE_TEXT_COLOR = "#CCC"
+LiteGraph.NODE_DEFAULT_BOXCOLOR = "#AAA"
 window.litegraph = new LGraph();
 
 window.ydoc = new Y.Doc();
@@ -11,6 +14,8 @@ window.nodes = window.ydoc.getMap('nodes');
 window.links = window.ydoc.getArray('links');
 window.fbs = window.ydoc.getMap('fbs');
 window.resources = window.ydoc.getMap('resources');
+
+// TODO if i right click a node input, it prompts me to rename the input. need to remove that
 
 const not_connected = document.getElementById('not-connected');
 provider.on('synced', (isSynced) => {
