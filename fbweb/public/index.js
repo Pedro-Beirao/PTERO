@@ -260,6 +260,7 @@ function registerNode(fbt_doc) {
     }
   }
   CustomNode.title = name;
+  // TODO add width
 
   CustomNode.prototype.onDrawForeground = function(ctx, graphcanvas)
   {
@@ -281,6 +282,12 @@ function registerNode(fbt_doc) {
 
     ctx.restore();
   }
+
+  // Dont want "Rename Slot" to appear
+  CustomNode.prototype.getSlotMenuOptions = function (slot)
+  {
+    return []
+  };
 
   LiteGraph.registerNodeType("custom/" + name, CustomNode);
 }
