@@ -16,7 +16,7 @@ FROM python:3.8
 WORKDIR /sinf
 
 # Clone from github
-RUN git clone https://github.com/Pedro-Beirao/dinasore.git #--branch dinasore-lite
+RUN git clone https://github.com/Pedro-Beirao/dinasore.git
 
 WORKDIR /sinf/dinasore
 
