@@ -224,41 +224,41 @@ function registerNode(fbt_doc) {
     this.properties = {}
 
     // First add the events
-    let inputs = fbt_doc.querySelectorAll("EventInputs > Event");
-    let outputs = fbt_doc.querySelectorAll("EventOutputs > Event");
+    let inputs = [...fbt_doc.querySelectorAll("EventInputs > Event"), ...fbt_doc.querySelectorAll("InputVars > VarDeclaration")];
+    let outputs = [...fbt_doc.querySelectorAll("EventOutputs > Event"), ...fbt_doc.querySelectorAll("OutputVars > VarDeclaration")];
 
     for (let i = 0; i < inputs.length; i++) {
       const input = this.addInput(inputs[i].getAttribute("Name"), inputs[i].getAttribute("Type"));
-      input.color_off = "#470000"
-      input.color_on = "#ff0000"
+      if (inputs[i].getAttribute("Type") == "Event") {
+        input.color_off = "#470000"
+        input.color_on = "#ff0000"
+      }
+      else {
+        input.color_off = "#000047"
+        input.color_on = "#0000ff"
+        this.properties[inputs[i].getAttribute("Name")] = ""
+      }
     }
 
     for (let i = 0; i < outputs.length; i++) {
       const output = this.addOutput(outputs[i].getAttribute("Name"), outputs[i].getAttribute("Type"));
-      output.color_off = "#470000"
-      output.color_on = "#ff0000"
+      if (outputs[i].getAttribute("Type") == "Event") {
+        output.color_off = "#470000"
+        output.color_on = "#ff0000"
+      }
+      else {
+        output.color_off = "#000047"
+        output.color_on = "#0000ff"
+      }
     }
 
-    // Now the variables
-    inputs = fbt_doc.querySelectorAll("InputVars > VarDeclaration");
-    outputs = fbt_doc.querySelectorAll("OutputVars > VarDeclaration");
-
-    for (let i = 0; i < inputs.length; i++) {
-      const input = this.addInput(inputs[i].getAttribute("Name"), inputs[i].getAttribute("Type"));
-      input.color_off = "#000047"
-      input.color_on = "#0000ff"
-
-      this.properties[inputs[i].getAttribute("Name")] = ""
-    }
-
-    for (let i = 0; i < outputs.length; i++) {
-      const output = this.addOutput(outputs[i].getAttribute("Name"), outputs[i].getAttribute("Type"));
-      output.color_off = "#000047"
-      output.color_on = "#0000ff"
-    }
+    // TODO the width still doenst work correctly, for example the fb name can break
+    // Investigate that lower/upper makes a difference
+    this.resizable = false;
+    this.size = [this.size[0] + 25, this.size[1]];
   }
+
   CustomNode.title = name;
-  // TODO add width
 
   CustomNode.prototype.onDrawForeground = function(ctx, graphcanvas)
   {
