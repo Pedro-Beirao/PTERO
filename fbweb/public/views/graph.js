@@ -23,15 +23,6 @@ graphCanvas.getNodeMenuOptions = function (node) {
     },
     null,
     {
-      content: "Resize",
-      callback: LGraphCanvas.onMenuResizeNode,
-    },
-    {
-      content: "Collapse",
-      callback: LGraphCanvas.onMenuNodeCollapse,
-    },
-    null,
-    {
       content: "Clone",
       callback: LGraphCanvas.onMenuNodeClone,
     },
