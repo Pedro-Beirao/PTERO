@@ -37,6 +37,10 @@ provider.on('synced', (isSynced) => {
               const node = window.litegraph.getNodeById(id); // TODO the id is stored in the node_map, i dont like that
               node.title = node_map.get("title");
               node.pos = [node_map.get("x"), node_map.get("y")];
+              node.mappedto = node_map.get("mappedto");
+              const color = window.resources.get(node.mappedto)?.get("color");
+              node.color = color;
+              node.bgcolor = color;
             }
 
             // If not, it is the properties
@@ -59,6 +63,10 @@ provider.on('synced', (isSynced) => {
               node.id = id;
               node.title = node_map.get("title");
               node.pos = [node_map.get("x"), node_map.get("y")];
+              node.mappedto = node_map.get("mappedto");
+              const color = window.resources.get(node.mappedto)?.get("color");
+              node.color = color;
+              node.bgcolor = color;
               window.litegraph.add(node);
             }
           }
@@ -116,6 +124,7 @@ window.litegraph.onNodeAdded = function(node) {
     node_map.set("title", node.title);
     node_map.set("x", node.pos[0]);
     node_map.set("y", node.pos[1]);
+    node_map.set("mappedto", node.mappedto);
     node_map.set("properties", new Y.Map());
     window.nodes.set(node.id, node_map);
   }, 'programmatic');
@@ -124,12 +133,16 @@ window.litegraph.onNodeAdded = function(node) {
 window.litegraph.afterChange = function(node) {
   if (!node) return;
 
+  console.log(node)
+
   window.ydoc.transact(() => {
     const node_map = window.nodes.get(node.id);
     node_map.set("type", node.type);
     node_map.set("title", node.title);
     node_map.set("x", node.pos[0]);
     node_map.set("y", node.pos[1]);
+    // node_map.delete("mappedto");
+    node_map.set("mappedto", node.mappedto);
     const prop_map = node_map.get("properties");
     Object.entries(node.properties).forEach(([key, value]) => {
       prop_map.set(key, value);
@@ -187,6 +200,10 @@ function populateGraph() {
       node.id = id;
       node.title = node_map.get("title");
       node.pos = [node_map.get("x"), node_map.get("y")];
+      node.mappedto = node_map.get("mappedto");
+      const color = window.resources.get(node.mappedto)?.get("color");
+      node.color = color;
+      node.bgcolor = color;
       Object.keys(node.properties).forEach((key) => {
         const new_value = node_map.get("properties").get(key);
         if (new_value)

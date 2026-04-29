@@ -2654,6 +2654,10 @@
       o.shape = this.shape;
     }
 
+    if (this.mappedto) {
+      o.mappedto = this.mappedto;
+    }
+
     if (this.onSerialize) {
       if (this.onSerialize(o)) {
         console.warn(

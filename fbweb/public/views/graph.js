@@ -76,17 +76,21 @@ graphCanvas.onMenuNodeMapTo = function (value, options, e, menu, node) {
     var color = v.value ? window.resources.get(v.id).get("color") : null;
 
     var fApplyColor = function (node) {
+      node.graph.beforeChange(node);
       if (color) {
         if (node.constructor === LiteGraph.LGraphGroup) {
           node.color = color;
         } else {
           node.color = color;
           node.bgcolor = color;
+          node.mappedto = v.id;
         }
       } else {
         delete node.color;
         delete node.bgcolor;
+        delete node.mappedto;
       }
+      node.graph.afterChange(node);
     };
 
     var graphcanvas = LGraphCanvas.active_canvas;
