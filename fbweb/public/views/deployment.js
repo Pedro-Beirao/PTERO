@@ -83,6 +83,16 @@ function populateConfig() {
     div.appendChild(del_res);
     resources_list.appendChild(div);
   });
+
+
+  window.nodes.forEach((node, id) => {
+    // If the resource is deleted, delete the pointing mappedto
+    if (node.get("mappedto") && !window.resources.has(node.get("mappedto"))) {
+      node.delete("mappedto");
+    }
+    // TODO if the resource color is changed, change the color of the nodes
+    // Currently every user has to reload the page
+  });
 }
 
 function add_resource() {
