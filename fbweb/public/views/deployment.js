@@ -101,7 +101,7 @@ function add_resource() {
   const resource = new Y.Map();
   resource.set('name', "EMB_RES");
   resource.set('ip', "localhost:61499");
-  resource.set('color', "#ff0000");
+  resource.set('color', "#000077");
 
   window.resources.set(uuid, resource);
 
