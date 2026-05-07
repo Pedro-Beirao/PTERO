@@ -1,28 +1,9 @@
-%% FEUP THESIS template for `feupteses.sty`
-%%
-%% Read the documentation inline and at the included `README` file 
-%%
-
 \documentclass[11pt,a4paper]{report}
-
 %% For two-sided printing (for dead-tree output) comment previous line
 %% and uncomment the next line
 %\documentclass[11pt,a4paper,twoside,openright]{report}
 
-%% Source text uses in UTF-8 encoding
 \usepackage[utf8]{inputenc}
-
-%% The package feupteses.sty may take several options
-%% There are options for specific FEUP programmes/degrees
-%% When no programme specification is given, a generic thesis format is used
-%%
-%% option  degree/programme
-%% -----------------------------
-%% meec    Master's degree in Electrical and Computer Engineering
-%% meic    Master's degree in Informatics Engineering and Computation
-%% mem     Master's degree in Mechanical Engineering
-%% mesw    Master's degree in Software Engineering
-%% mci     Master's degree in Information Science
 
 %% In general, the dissertation goes through several stages
 %%
@@ -41,21 +22,8 @@
 %% backrefs     include back references from bibliography to citation place
 %% iso          format references according to ISO 690 standard
 
-%% for Portuguese, find lines with the "PT" comment
-
-%% Generic format (for other degrees, including Ph.D. programmes)
-%\usepackage{feupteses}
-
-%% For each of the next, comment previous line
-
-%% PT
-%\usepackage[portugues]{feupteses}
-
-%% MEIC working version
 \usepackage[meic]{feupteses}
-%% MEIC jury version
 %\usepackage[meic,juri]{feupteses}
-%% MEIC final PDF version
 %\usepackage[meic,final]{feupteses}
 
 %% Packages loaded by feupteses.sty:
@@ -67,7 +35,6 @@
 \usepackage{cleveref}
 
 %% Use folder ``figures'' to keep all your figures
-%% Path to the figures directory
 \graphicspath{{figures/}}
 
 %% Use folder ``backmatter'' to keep all your bibliography files
@@ -78,40 +45,21 @@
 %%========================================
 \begin{document}
 
-%%----------------------------------------
-%% Information about the work
-%%----------------------------------------
 \title{IEC 61499 Compliant Web-based IDE for Function Block Design}
 \author{Pedro da Cunha Teixeira e Faro Beirão}
-
-%% Uncomment next line for PRODEI
-%\degree{Programa Doutoral em Engenharia Informática}
 
 %% Uncomment next line for date of submission
 %\thesisdate{July 31, 2008}
 
-%% Comment next line copyright text if not used
-\copyrightnotice{Pedro Beirão, 2025}
-%\copyrightnotice{$<$Nome do Autor, 2008$>$}
+\copyrightnotice{Pedro Beirão, 2026}
 
 \supervisor{Supervisor}{Prof.\ Rui Pinto}
-%\supervisor{Orientador}{Prof.\ $<$Name of the Supervisor$>$}
-
-%% Uncomment next line if necessary
-%\supervisor{Second Supervisor}{Prof.\ $<$Name of the Supervisor$>$}
-%\supervisor{Segundo Orientador}{Prof.\ $<$Name of the Supervisor$>$}
 
 %% Comment committee stuff for final version, if not used
-\committeetext{Approved in oral examination by the committee:}
-\committeemember{President}{Prof.\ $<$Name of the Professor$>$}
-\committeemember{Referee}{Prof.\ $<$Name of the Professor$>$}
-\committeemember{Referee}{Prof.\ $<$Name of the Professor$>$}
-
-%% PT
-%\committeetext{Aprovado em provas públicas pelo Júri:}
-%\committeemember{Presidente}{Prof.\ $<$Nome do presidente do júri$>$}
-%\committeemember{Arguente}{Prof.\ $<$Nome do arguente do júri$>$}
-%\committeemember{Vogal}{Prof.\ $<$Nome do vogal do júri$>$}
+% \committeetext{Approved in oral examination by the committee:}
+% \committeemember{President}{Prof.\ $<$Name of the Professor$>$}
+% \committeemember{Referee}{Prof.\ $<$Name of the Professor$>$}
+% \committeemember{Referee}{Prof.\ $<$Name of the Professor$>$}
 
 %% uncomment next line to draw a line for handwritten signature if needed
 %\signature
@@ -122,19 +70,12 @@
 %% Uncomment next line for additional text below the author's name (front page)
 %\additionalfronttext{$<$Additional text$>$}
 
-%%----------------------------------------
-%% Preliminary materials
-%%----------------------------------------
-
-% comment or remove unnecessary \include{} commands
 \begin{Prolog}
   %\include{frontmatter/abstract} % the abstract
   %\include{frontmatter/un-sdg}   % United Nations Sustainable Development Goals (SGD)
   %\include{frontmatter/acknows}  % the acknowledgments
   %\include{frontmatter/quote}    % initial quotation if needed
   \cleardoublepage
-  %% PT: Uncomment next line for PT
-  %\renewcommand{\contentsname}{Índice}
   \pdfbookmark[0]{Table of Contents}{contents}
   \tableofcontents
   \cleardoublepage
@@ -143,27 +84,16 @@
   \cleardoublepage
   % \pdfbookmark[0]{List of Tables}{tables}
   % \listoftables
-  \include{frontmatter/abbrevs}  % the list of acronyms used if needed
+  \include{frontmatter/abbrevs}
 \end{Prolog}
 
-%%----------------------------------------
-%% Body
-%%----------------------------------------
 \StartBody
 
-%% Use a separate file for each chapter
 \include{body/chapter1}
 \include{body/chapter2}
 \include{body/chapter3}
 \include{body/chapter4}
-%% Uncomment to see a listing example for option meic (meic.cfg loaded)
-%\include{body/chapter45-listing}
 
-%%----------------------------------------
-%% Final materials
-%%----------------------------------------
-
-%% Bibliography
 \PrintBib
 
 %% comment next 2 commands if numbered appendices are not used
