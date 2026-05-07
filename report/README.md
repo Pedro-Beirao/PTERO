@@ -1,3 +1,5 @@
+<!--TODO rewrite this readme-->
+
 1. Distributions
 
 The style file "feupteses.sty" defines setups for dissertations presented at FEUP.

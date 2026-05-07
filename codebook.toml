@@ -1,0 +1,16 @@
+words = [
+    "cho",
+    "cpps",
+    "diac",
+    "fbd",
+    "modularity",
+    "monostori",
+    "noauthor",
+    "nodate",
+    "plc",
+    "scalable",
+    "sorokin",
+    "textit",
+    "zoitl",
+]
+min_word_length = 4
