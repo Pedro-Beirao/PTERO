@@ -1,7 +1,9 @@
+name: dinasore${FB_PORT}
+
 services:
   dinasore:
-    container_name: dinasore
-    hostname: dinasore
+    container_name: dinasore${FB_PORT}
+    hostname: dinasore${FB_PORT}
 
     build:
       dockerfile: dinasore/Dockerfile
@@ -10,8 +12,8 @@ services:
     pull_policy: always
 
     ports:
-      - "4840:4840"
-      - "61499:61499"
+      - "${OPCUA_PORT:-4840}:4840"
+      - "${FB_PORT:-61499}:61499"
 
     healthcheck:
       test: ["CMD-SHELL", "python3 /sinf/dinasore/tests/__init__.py"]
@@ -21,60 +23,3 @@ services:
 
     volumes:
       - ./data:/data
-
-  postgres:
-    container_name: postgres
-    hostname: postgres
-    image: postgres:17-alpine
-
-    restart: unless-stopped
-    pull_policy: always
-
-    shm_size: 256mb
-
-    environment:
-      - POSTGRES_PASSWORD
-      - POSTGRES_HOST
-      - POSTGRES_USER
-      - POSTGRES_DB
-
-    ports:
-      - 5432:5432
-
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
-      interval: 1s
-      timeout: 5s
-      retries: 10
-
-  pgadmin:
-    container_name: pgadmin
-    hostname: pgadmin
-    image: dpage/pgadmin4
-
-    restart: unless-stopped
-
-    environment:
-      - PGADMIN_DEFAULT_EMAIL
-      - PGADMIN_DEFAULT_PASSWORD
-
-    ports:
-      - 8080:80
-
-    depends_on:
-      - postgres
-
-  grafana:
-    container_name: grafana
-    hostname: grafana
-    image: grafana/grafana:main
-
-    restart: unless-stopped
-
-    environment:
-      - GF_SERVER_HTTP_PORT=3000
-      - GF_SECURITY_ADMIN_PASSWORD
-      - GF_SECURITY_ADMIN_USER
-
-    ports:
-      - 8081:3000
