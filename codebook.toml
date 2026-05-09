@@ -2,8 +2,14 @@ words = [
     "artifact",
     "cho",
     "cpps",
+    "cref",
     "diac",
+    "dinasore",
     "fbd",
+    "gantt",
+    "ganttchart",
+    "isodate",
+    "itemize",
     "modularity",
     "monostori",
     "noauthor",
@@ -12,6 +18,7 @@ words = [
     "scalable",
     "sorokin",
     "textit",
+    "workplan",
     "zoitl",
 ]
 min_word_length = 4
