@@ -1,16 +1,17 @@
 \chapter{State of the Art} \label{chap:state-of-the-art}
 
-This chapter provides a comprehensive analysis of the current landscape of development environments for \ac{CPPS} and the \textit{IEC 61499} standard. It categorizes existing solutions into desktop-based and web-based development tools, while analyzing a possible gap in the ecosystem.
+This chapter provides a comprehensive analysis of the current landscape of development environments for \ac{CPPS} and the \textit{IEC 61499} standard. It categorises and critically examines the existing development tools, while looking for possible gaps in the ecosystem.
 
-\section{Development Ecosystem}
+\section{Ecosystem Summary}
 
-Currently, the development ecosystem is dominated by desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations.
+Currently, the development ecosystem is composed only by desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations.
+% TODO talk more about the ecosystem
+% Each of the members of the development team must install the resource intensive program and set it up on par with the rest of the team.
 
 \subsection{Open-Source}
-The most prominent open-source implementation is the \textit{Eclipse 4diac} framework. It consists of the \textit{4diac \ac{IDE}} (based on the \textit{Eclipse} framework) and the \textit{4diac FORTE} (a run-time environment), although it can also use different \acp{RTE} like \textit{DINASORE}. This \ac{IDE} is very feature rich at the cost of significant system resources and increased complexity, resulting in a steep learning curve, which makes it more difficult to use \cite{weber_usability_2019}.
+The most prominent open-source implementation is the \textit{Eclipse 4diac} \ac{IDE} (based on the \textit{Eclipse} framework) which supports a variety of \acp{RTE} such as \textit{4diac FORTE} and \textit{DINASORE}. This \ac{IDE} is very feature rich at the cost of significant system resources and increased complexity, resulting in a steep learning curve, which makes it more difficult to use \cite{weber_usability_2019}.
 
-An alternative is \textit{Jetbrains FBME} which is a much simpler modeling environment which also relies on \textit{4diac FORTE} as the \ac{RTE} \cite{sorokin_novel_2022}.
-
+An alternative is \textit{Jetbrains FBME} which is a much simpler modelling environment \cite{sorokin_novel_2022}. While easier to use than 4diac \ac{IDE}, it still is a local-first development environment. The importance of this will be explained in \Cref{sec:localfirst}.
 
 \begin{figure}[h!]
   \includegraphics[width=0.5\linewidth]{4diac-logo.jpg}
@@ -25,13 +26,19 @@ An alternative is \textit{Jetbrains FBME} which is a much simpler modeling envir
 \end{figure}
 
 \subsection{Commercial}
-The commercial side is dominated by \textit{EcoStruxure Automation Expert}, \textit{ISaGRAF Workbench} and other monolithic desktop based environments, usually with a built-in proprietary \ac{RTE}. This makes them often very complete production ready tools, but they are not very flexible and not the best fit for many needs.
+The commercial side is occupied by \textit{EcoStruxure Automation Expert}, \textit{ISaGRAF Workbench} and other development environments that usually have their own built-in proprietary \ac{RTE}. This makes them often very complete production ready tools, but they are not very flexible and may not be the best fit for many needs.
+
+\section{Local-first development environments} \label{sec:localfirst}
+% TODO mention local first it a problem
+% TODO talk about not having a middleware to the dinasores
 
 \section{Evolution of Web-Based Engineering Tools}
-
+% TODO dont mention web based
 The software engineering domain has seen a massive shift from desktop \acp{IDE} to cloud-native environments. This trend is now influencing the domain of \ac{ICS}, and while recent studies have proposed a \ac{SOA} to integrate \textit{IEC 61499} with cloud layers \cite{torres_literature_2025}, the engineering tools themselves remain largely desktop-bound.
 
 \subsection{Web-Based IDEs in Software Development}
+% TODO vscode can use git, but fbs shouldnt
+% TODO dont mention web based
 In general software development, tools like \textit{Visual Studio Code} have started offering web-based counterparts (as seen in \Cref{fig:vscode-web}) to their desktop applications \cite{noauthor_vscode_nodate} in search of a more flexible user experience. In fact, newer development environments like \textit{Zed} make it a key goal of their products to have web platform support \cite{noauthor_zed_nodate}.
 
 \begin{figure}[h!]
@@ -41,9 +48,9 @@ In general software development, tools like \textit{Visual Studio Code} have sta
 \end{figure}
 
 \section{Gap Analysis}
-
 Current \textit{IEC 61499} tools face significant limitations that hinder modern \ac{CPPS} development:
 
+% TODO need to rewrite these. make it a bigger list
 \begin{itemize}
     \item \textbf{Platform Dependency:} Existing solutions are monolithic desktop applications, lacking the accessibility and portability of web-based environments.
 
