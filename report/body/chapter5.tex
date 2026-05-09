@@ -1,3 +1,13 @@
 \chapter{Prototype Development}
 
-To be able to prove the proposed solution viable and will address the gap identified, a prototype needs to be developed and
+To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. % TODO add a bit more here
+
+\section{Server}
+The design begins by setting up a server that will serve the \ac{IDE} interface as a webpage, store and manage all the data and handle communication with the \acp{RTE}. Taking into account the features we plan on implementing, \textit{JavaScript} running on \textit{Node.js} were chosen due to the extensive library ecosystem. For real-time collaboration we will need a library to run in both the server and the frontend, since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
+
+
+
+
+
+
+\section{Real-Time Collaboration} \label{sec:real-time-collaboration}
