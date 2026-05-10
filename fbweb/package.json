@@ -1,14 +1,13 @@
 {
   "name": "fbweb",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Web-based IDE for IEC 61499",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["IEC 61499", "IDE", "Web-based"],
+  "author": "Pedro-Beirão",
+  "license": "GPL-2.0-only",
   "type": "commonjs",
   "dependencies": {
     "@codemirror/lang-python": "^6.2.1",
