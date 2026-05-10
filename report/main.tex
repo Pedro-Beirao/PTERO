@@ -66,7 +66,7 @@
 %\signature
 
 %% Specify cover logo (in folder ``figures'') if needed
-%\logo{logo.pdf}
+% \logo{logo.pdf}
 
 %% Uncomment next line for additional text below the author's name (front page)
 %\additionalfronttext{$<$Additional text$>$}
@@ -83,8 +83,12 @@
   \pdfbookmark[0]{List of Figures}{figures}
   \listoffigures
   \cleardoublepage
-  % \pdfbookmark[0]{List of Tables}{tables}
-  % \listoftables
+  \pdfbookmark[0]{List of Tables}{tables}
+  \listoftables
+  \cleardoublepage
+  \pdfbookmark[0]{List of Listings}{listings}
+  \renewcommand{\lstlistlistingname}{List of Listings}
+  \lstlistoflistings
   \include{frontmatter/abbrevs}
 \end{Prolog}
 

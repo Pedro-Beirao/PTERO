@@ -6,10 +6,12 @@ To be able to prove the proposed solution is viable and will successfully addres
 % Firstly some decisions need to be made to choose the most appropriate technologies to support this work.
 
 \section{Runtime Environment}
-Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration). It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of commercial \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}. Other open-source \acp{RTE} were considered, but none was as well-suited as \textit{DINASORE}. \textit{4diac FORTE} for example was way too extensive and complicated to be able to easily study it's source code.
+Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration). It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of commercial \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}. Other open-source \acp{RTE} were considered, but none was as well-suited as \textit{DINASORE}. \textit{4diac FORTE} for example was way too extensive and complicated to be able to easily study its source code.
 % TODO maybe talk about the use of python both in dinasores code and the fbs code
 
 By default, \textit{DINASORE} uses the port \textit{61499} to receive commands from the \ac{IDE} and send responses. This is important to note as it is the port that will be used as example throughout this document. The exact details of the communication implementation will be explained further in \Cref{sec:deployment}.
+
+% TODO mention that dinasore is not supported in newer versions of 4diac ide, which means it doesnt run on mac. maybe mention it in another section
 
 \begin{figure}[h!]
   \includegraphics[width=0.5\linewidth]{dinasore-logo.png}
@@ -39,7 +41,7 @@ Being the middleware, there are 4 different types of network communications that
 % TODO talk about changes made to DINASORE? ask the supervisor
 
 \section{Frontend}
-The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} programs. It consists of a 3 views.
+The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} programs. It consists of 3 views.
 % TODO want to talk a bit more about what a frontend is
 
 \subsection{Devices Configuration View}
@@ -53,8 +55,7 @@ Each \textit{DINASORE} should have three fields that the team can configure:
   \item \textbf{Color}: The color associated with this \textit{DINASORE} instance, providing a visual distinction in the \textit{Graph View} between function blocks mapped to different instances.
 \end{itemize}
 
-where other
-Local-first
+With the existence of the middleware, this solution removes the requirement for each team member to configure the available \textit{DINASORE} instances in their own \ac{IDE}, and instead keeps a shared configuration in the server database.
 
 \begin{figure}[H]
   \includegraphics[width=0.7\linewidth]{devices-configuration.jpg}
@@ -63,8 +64,52 @@ Local-first
 \end{figure}
 
 \subsection{Function Blocks Editor View}
+This is where individual function blocks are defined. It allows the team to specify the interface of each function block, its input and output data ports and events, as well as write the internal algorithm that dictates its behaviour. This separation of interface and implementation follows the \textit{IEC 61499} model of encapsulation, where a function block exposes a well-defined interface while keeping its internal logic self-contained.
+
+Like in the other \acp{RTE}, the interface of the function block is defined in a \textit{xml} format file with the \textit{.fbt} extension, as seen in \Cref{lst:fb-xml} which results in \Cref{fig:example-fb}.
+
+\begin{lstlisting}[language=XML, caption={Example \textit{xml} definition of a function block}, label={lst:fb-xml}]
+<FBType Name="NEW_FB_1">
+  <InterfaceList>
+    <EventInputs>
+      <Event Name="INIT" Type="Event"/>
+      <Event Name="READ" Type="Event">
+        <With Var="VARIABLE_1"/>
+      </Event>
+    </EventInputs>
+    <EventOutputs>
+      <Event Name="INIT_O" Type="Event"/>
+      <Event Name="READ_O" Type="Event">
+        <With Var="DATA_1"/>
+      </Event>
+    </EventOutputs>
+    <InputVars>
+      <VarDeclaration Name="VARIABLE_1" Type="STRING"/>
+      <VarDeclaration Name="VARIABLE_2" Type="REAL"/>
+      <VarDeclaration Name="VARIABLE_3" Type="INT"/>
+    </InputVars>
+    <OutputVars>
+      <VarDeclaration Name="DATA_1" Type="STRING"/>
+    </OutputVars>
+  </InterfaceList>
+</FBType>
+\end{lstlisting}
+
+\begin{figure}[H]
+  \includegraphics[width=0.7\linewidth]{example-fb.jpg}
+  \caption{Example function block defined via \textit{xml}}
+  \label{fig:example-fb}
+\end{figure}
+
+\subsubsection{Synchronise with DINASOREs}
 
 \subsection{Graph View}
+% The Graph View is the primary workspace for composing \ac{FBD} applications.
+% Function blocks are placed on a canvas and connected together by drawing
+% connections between their data and event ports, forming the application network.
+% Each function block can also be mapped to a \textit{DINASORE} instance, with the
+% color coding defined in the Devices Configuration View providing an immediate
+% visual indication of how the application is distributed across the available devices.
 
 
 
