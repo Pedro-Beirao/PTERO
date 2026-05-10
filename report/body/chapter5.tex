@@ -2,12 +2,51 @@
 
 To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. % TODO add a bit more here
 
+% \section{Technology Selection}
+% Firstly some decisions need to be made to choose the most appropriate technologies to support this work.
+
+\section{Runtime Environment}
+Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration). It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of commercial \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}. Other open-source \acp{RTE} were considered, but none was as well-suited as \textit{DINASORE}. \textit{4diac FORTE} for example was way too extensive and complicated to be able to easily study it's source code.
+% TODO maybe talk about the use of python both in dinasores code and the fbs code
+
+\begin{figure}[h!]
+  \includegraphics[width=0.5\linewidth]{dinasore-logo.png}
+  \caption{\textit{DINASORE} logo}
+  \label{fig:dinasore-logo}
+\end{figure}
+
+
 \section{Server}
 The design begins by setting up a server that will serve the \ac{IDE} interface as a webpage, store and manage all the data and handle communication with the \acp{RTE}. Taking into account the features we plan on implementing, \textit{JavaScript} running on \textit{Node.js} were chosen due to the extensive library ecosystem. For real-time collaboration we will need a library to run in both the server and the frontend, since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
 
+Being the middleware, there are 4 different types of network communications that the server will need to handle, each with it's own requirements:
 
+\begin{itemize}
+  \item \textbf{Serve webpage}: Communicates via \textit{GET} requests to deliver the \textit{html}, \textit{css} and \textit{js} files that make up the \ac{IDE} interface.
+  \item \textbf{Real-Time Collaboration}: Constant atomic updates via a library.
+  \item \textbf{Requested deployment}: A team member sends a \textit{POST} request, that tells the server to deploy.
+  \item \textbf{Deployment sockets}: Communicates via sockets with each \ac{RTE} to send commands and receive the corresponding responses.
+\end{itemize}
 
+\begin{figure}[h!]
+  \includegraphics[width=1\linewidth]{ide-server-rte.jpg}
+  \caption{Communication through the Middleware}
+  \label{fig:ide-server-rte}
+\end{figure}
+
+\section{Frontend}
+The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} programs. It consists of a 3 views.
+
+\subsection{Devices Configuration}
+
+\subsection{Function Blocks Editor View}
+
+\subsection{Graph View}
 
 
 
 \section{Real-Time Collaboration} \label{sec:real-time-collaboration}
+
+
+\section{Deployment}
+\subsection{Deployment Console}
