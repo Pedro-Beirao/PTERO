@@ -9,6 +9,8 @@ To be able to prove the proposed solution is viable and will successfully addres
 Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration). It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of commercial \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}. Other open-source \acp{RTE} were considered, but none was as well-suited as \textit{DINASORE}. \textit{4diac FORTE} for example was way too extensive and complicated to be able to easily study it's source code.
 % TODO maybe talk about the use of python both in dinasores code and the fbs code
 
+By default, \textit{DINASORE} uses the port \textit{61499} to receive commands from the \ac{IDE} and send responses. This is important to note as it is the port that will be used as example throughout this document. The exact details of the communication implementation will be explained further in \Cref{sec:deployment}.
+
 \begin{figure}[h!]
   \includegraphics[width=0.5\linewidth]{dinasore-logo.png}
   \caption{\textit{DINASORE} logo}
@@ -28,16 +30,37 @@ Being the middleware, there are 4 different types of network communications that
   \item \textbf{Deployment sockets}: Communicates via sockets with each \ac{RTE} to send commands and receive the corresponding responses.
 \end{itemize}
 
-\begin{figure}[h!]
-  \includegraphics[width=1\linewidth]{ide-server-rte.jpg}
+\begin{figure}[H]
+  \includegraphics[width=0.7\linewidth]{ide-server-rte.jpg}
   \caption{Communication through the Middleware}
   \label{fig:ide-server-rte}
 \end{figure}
 
+% TODO talk about changes made to DINASORE? ask the supervisor
+
 \section{Frontend}
 The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} programs. It consists of a 3 views.
+% TODO want to talk a bit more about what a frontend is
 
-\subsection{Devices Configuration}
+\subsection{Devices Configuration View}
+In the interest of distributed \ac{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so we need a clean way to define the resources that are available. % TODO something more?
+
+Each \textit{DINASORE} should have three fields that the team can configure:
+
+\begin{itemize}
+  \item \textbf{Name}: Human friendly name to quickly identify what device this is
+  \item \textbf{Endpoint}: The IP address of the device and the port where \textit{DINASORE} is running
+  \item \textbf{Color}: The color associated with this \textit{DINASORE} instance, providing a visual distinction in the \textit{Graph View} between function blocks mapped to different instances.
+\end{itemize}
+
+where other
+Local-first
+
+\begin{figure}[H]
+  \includegraphics[width=0.7\linewidth]{devices-configuration.jpg}
+  \caption{Devices Configuration View}
+  \label{fig:devices-configuration}
+\end{figure}
 
 \subsection{Function Blocks Editor View}
 
@@ -48,5 +71,5 @@ The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} 
 \section{Real-Time Collaboration} \label{sec:real-time-collaboration}
 
 
-\section{Deployment}
+\section{Deployment} \label{sec:deployment}
 \subsection{Deployment Console}
