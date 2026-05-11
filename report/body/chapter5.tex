@@ -64,10 +64,11 @@ With the existence of the middleware, this solution removes the requirement for 
 \end{figure}
 
 \subsection{Function Blocks Editor View}
-This is where individual function blocks are defined. It allows the team to specify the interface of each function block, its input and output data ports and events, as well as write the internal algorithm that dictates its behaviour. This separation of interface and implementation follows the \textit{IEC 61499} model of encapsulation, where a function block exposes a well-defined interface while keeping its internal logic self-contained.
+This is where individual function blocks are defined. It allows the team to specify the interface of each function block, its input and output data ports and events, as well as program the internal behaviour. This separation of interface and implementation follows the \textit{IEC 61499} model of encapsulation, where a function block exposes a well-defined interface while keeping its internal logic self-contained.
 
-Like in the other \acp{RTE}, the interface of the function block is defined in a \textit{xml} format file with the \textit{.fbt} extension, as seen in \Cref{lst:fb-xml} which results in \Cref{fig:example-fb}.
+Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function block is defined in a \textit{xml} format file with a \textit{.fbt} extension, as seen in \Cref{lst:fb-xml} which results in \Cref{fig:example-fb}. % TODO talk about the format
 
+\clearpage
 \begin{lstlisting}[language=XML, caption={Example \textit{xml} definition of a function block}, label={lst:fb-xml}]
 <FBType Name="NEW_FB_1">
   <InterfaceList>
@@ -75,6 +76,8 @@ Like in the other \acp{RTE}, the interface of the function block is defined in a
       <Event Name="INIT" Type="Event"/>
       <Event Name="READ" Type="Event">
         <With Var="VARIABLE_1"/>
+        <With var="VARIABLE_2"/>
+        <With var="VARIABLE_3"/>
       </Event>
     </EventInputs>
     <EventOutputs>
@@ -96,9 +99,35 @@ Like in the other \acp{RTE}, the interface of the function block is defined in a
 \end{lstlisting}
 
 \begin{figure}[H]
-  \includegraphics[width=0.7\linewidth]{example-fb.jpg}
+  \includegraphics[width=0.65\linewidth]{example-fb.jpg}
   \caption{Example function block defined via \textit{xml}}
   \label{fig:example-fb}
+\end{figure}
+
+This view contains a text editor to modify the \textit{.fbt} files, which are kept in the server database. It would be possible to create a visual editor for designing these interfaces, but the added complexity would not be justified at this prototyping stage. The \textit{xml} format is sufficiently structured that a text editor provides an adequate experience, and a dedicated visual interface remains a natural direction for future development.
+
+The internal behaviour of the function blocks in \textit{DINASORE} is programmed in \textit{Python}, by creating a \textit{.py} file right next to where the \textit{.fbt} file is. In this prototype this is handled automatically in the server database, removing the need to manually move files like it is needed in \textit{4diac IDE}. To edit the \textit{Python} code the prototype offers a code text editor in a split view with the interface text editor.
+
+% TODO list of listings probably doesnt work?
+\begin{lstlisting}[language=Python, caption={Example \textit{Python} code of a function block}, label={lst:fb-py}]
+class NEW_FB_1:
+  def __init__(self):
+    pass
+
+  def schedule(self, event_name, event_value, variable_1, variable_2, variable_3):
+    if event_name == "INIT":
+      return [event_value, None, ""]
+
+    elif event_name == "READ":
+      return [None, event_value, ""]
+\end{lstlisting}
+
+% TODO talk about the file manager
+
+\begin{figure}[H]
+  \includegraphics[width=0.9\linewidth]{fbs-editor.jpg}
+  \caption{Function Blocks Editor View}
+  \label{fig:fbs-editor}
 \end{figure}
 
 \subsubsection{Synchronise with DINASOREs}

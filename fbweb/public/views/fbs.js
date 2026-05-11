@@ -73,6 +73,8 @@ function add_fb() {
       <Event Name="INIT" Type="Event"/>
       <Event Name="READ" Type="Event">
         <With Var="VARIABLE_1"/>
+        <With var="VARIABLE_2"/>
+        <With var="VARIABLE_3"/>
       </Event>
     </EventInputs>
     <EventOutputs>

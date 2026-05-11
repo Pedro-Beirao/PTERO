@@ -1,3 +1,8 @@
+For code syntax highlighting to work, Pygments must be installed in the system.
+
+
+
+
 <!--TODO rewrite this readme-->
 
 1. Distributions
