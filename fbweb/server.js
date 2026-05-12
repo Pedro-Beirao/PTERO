@@ -29,10 +29,10 @@ app.use(express.json());
 app.post('/deploy', async (req, res) => {
   exportFBs();
 
-  sendToDINASORE();
+  sendToDINASORE(req, res);
 });
 
-async function sendToDINASORE() {
+async function sendToDINASORE(req, res) {
   const tcpClient = new net.Socket();
   const DINASORE_HOST = 'localhost';
   const DINASORE_PORT = 61499;
@@ -117,11 +117,10 @@ function buildMessage(message, config) {
 
 const FBS_DIR = './sync/fbs'
 function exportFBs() {
-  exporting = true
+  fs.rmSync(FBS_DIR, { recursive: true, force: true })
+  fs.mkdirSync(FBS_DIR, { recursive: true })
   fbs.forEach((fb, id) => {
-    console.log(fb.get("xml"));
     fs.writeFileSync(path.join(FBS_DIR, `${fb.get("name").toString()}.fbt`), fb.get("xml").toString())
     fs.writeFileSync(path.join(FBS_DIR, `${fb.get("name").toString()}.py`), fb.get("py").toString())
   })
-  setTimeout(() => exporting = false, 100)
 }

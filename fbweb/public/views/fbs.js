@@ -95,17 +95,17 @@ function add_fb() {
 </FBType>`));
       fb.set('py', new Y.Text(`import random
 
-  class ${new_name}:
-    def __init__(self):
-      pass
+class ${new_name}:
+  def __init__(self):
+    pass
 
-    def schedule(self, event_name, event_value, variable_1, variable_2, variable_3):
-      if event_name == "INIT":
-        return [event_value, None, ""]
+  def schedule(self, event_name, event_value, variable_1, variable_2, variable_3):
+    if event_name == "INIT":
+      return [event_value, None, ""]
 
-      elif event_name == "READ":
-        return [None, event_value, ""]
-  `));
+    elif event_name == "READ":
+      return [None, event_value, ""]
+`));
 
       window.fbs.set(uuid, fb);
 
