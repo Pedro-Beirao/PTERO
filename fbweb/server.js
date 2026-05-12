@@ -26,6 +26,12 @@ app.get('/', (req, res) => res.render('index'));
 app.use(express.json());
 
 app.post('/deploy', async (req, res) => {
+  // exportFBs();
+
+  sendToDINASORE();
+});
+
+async function sendToDINASORE() {
   const tcpClient = new net.Socket();
   const DINASORE_HOST = 'localhost';
   const DINASORE_PORT = 61499;
@@ -83,7 +89,7 @@ app.post('/deploy', async (req, res) => {
   } finally {
     tcpClient.destroy();
   }
-});
+}
 
 function buildMessage(message, config) {
   const configBuffer = Buffer.from(config, 'utf-8');
@@ -106,4 +112,14 @@ function buildMessage(message, config) {
     header2,
     messageBuffer
   ]);
+}
+
+const FBS_DIR = './sync/fbs'
+function exportFBs() {
+  exporting = true
+  fbs.forEach((fb, id) => {
+    fs.writeFileSync(path.join(FBS_DIR, `${fb.name}.fbt`), fb.xml)
+    fs.writeFileSync(path.join(FBS_DIR, `${fb.name}.py`), fb.py)
+  })
+  setTimeout(() => exporting = false, 100)
 }

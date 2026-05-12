@@ -144,7 +144,7 @@ This view is the primary workspace for composing the application. Function block
 
 In \textit{DINASORE}, all \textit{INIT} event ports are by default assigned to \textit{EMB\_RES}, a default function block that sends an event when the application is started. This removes the need to connect the \textit{INIT} event ports, but the \textit{READ} event port is not assigned by default and therefore needs to be connected in every function block. The \texttt{schedule()} function will only be called and generate output when an event is sent to the \textit{READ} event port. The described event driven execution model is what allows an explicit specification of the execution order of function blocks. Periodic out of event execution of function blocks is also possible with the implementation of a looping function block that triggers events \cite{noauthor_iec_nodate}.
 
-A function block will have some input and output data ports, each with its own associated data type. An \textit{INT} input port will not accept data from a \textit{WORD} output port, and therefore should not be able to connect to it. It is also possible to set a default value for an input if no output is connected to it, there is an editable string field for this which gets converted to the expected data type by the \ac{RTE}. The data types supported in \textit{IEC 61499} are derived from and defined by \textit{IEC 61131-3}.
+A function block will have some input and output data ports, each with its own associated data type. An \textit{INT} input port will not accept data from a \textit{WORD} output port, and therefore should not be able to connect to it. It is also possible to set a default value for an input if no output is connected to it, there is an editable string field for this which gets converted to the expected data type by the \ac{RTE}. The data types supported by \textit{IEC 61499} are derived from and defined by \textit{IEC 61131-3}.
 
 \begin{table}[H]
     \centering
@@ -168,6 +168,8 @@ A function block will have some input and output data ports, each with its own a
     \caption{IEC 61131-3 Data Types \cite{noauthor_iec_2026}}
     \label{tab:iec-data-types}
 \end{table}
+
+% TODO a lot is missing here
 
 Each function block can also be mapped to a \textit{DINASORE} instance, with the color coding defined in the Devices Configuration View providing an immediate visual indication of how the application is distributed across the available devices.
 

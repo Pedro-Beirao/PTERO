@@ -1,0 +1,10 @@
+{
+    "master-fbs-path": "function_blocks",
+    "dinasores": [
+        {
+            "address": "localhost",
+            "dinasore-path": "C:/Users/Rafael/Documents/dinasore-cluster/dinasore-2/dinasore-ua"
+        }
+    ],
+    "strategy": ""
+}
