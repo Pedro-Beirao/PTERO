@@ -1,6 +1,10 @@
 # Dinasore
 
 ```bash
+cd dinasore_docker
+export FB_PORT=61499; export OPCUA_PORT=4840; export SSH_PORT=22
+docker compose down; docker builder prune -a; docker compose up -d
+
 # Build and start all services
 docker compose -f docker/docker-compose.yml up -d --build
 

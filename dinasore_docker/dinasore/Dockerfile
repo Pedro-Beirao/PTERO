@@ -1,16 +1,15 @@
-###########################################################
-# DOCKERFILE - DINASORE
-#
-# This Dockerfile contains Dinasore's base image for SINF.
-#
-# Author:
-#   Luís Vilaça [luis.vilaca@fe.up.pt]
-###########################################################
-
 FROM python:3.8
 
-# -------------------------------------
-# Add Dinasore
+# Install openssh
+RUN apt-get update && apt-get install -y openssh-server
+
+# Setup ssh
+RUN echo 'root:dinasore' | chpasswd
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+RUN ssh-keygen -A
+RUN mkdir -p /var/run/sshd
+EXPOSE 22
 
 # Move to base location
 WORKDIR /sinf
@@ -40,4 +39,4 @@ COPY --chmod=0700 dinasore/docker-entrypoint.sh .
 # Ports: no need to expose because we are using the host's NIC
 #   4DIAC-IDE: 61499
 #   OPC-UA: 4840
-ENTRYPOINT [ "/sinf/docker-entrypoint.sh" ]
+CMD ["/bin/bash", "-c", "/usr/sbin/sshd -D & /sinf/docker-entrypoint.sh"]
