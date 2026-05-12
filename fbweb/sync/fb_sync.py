@@ -14,25 +14,26 @@ class FBSync():
             'dinasore-path' not in dinasore:
             logging.warning('Can\'t synchronize without dinasore path.')
             return
-        
+
         address = dinasore.get('address')
+
+        port = 22
+        if "port" in dinasore:
+          port = int(dinasore.get('port'))
+
         dinasore_path = dinasore.get('dinasore-path') + '/resources/function_blocks'
 
         sync_obj = None
 
-        if address == 'localhost' or\
-            address == '127.0.0.1':
+        if (address == 'localhost' or address == '127.0.0.1') and port == -1:
             sync_obj = local_sync.LocalSync(self.master_fbs_path, dinasore_path)
         else:
             username = getpass.getuser() if 'username' not in dinasore else dinasore.get('username')
             password = None if 'password' not in dinasore else dinasore.get('password')
-            sync_obj = remote_sync.RemoteSync(self.master_fbs_path, address, dinasore_path, username, password)
+            sync_obj = remote_sync.RemoteSync(self.master_fbs_path, address, port, dinasore_path, username, password)
 
         strategies = self.strategy.split(' ')
         if 'wipe' in strategies:
             sync_obj.wipe()
-        
+
         sync_obj.synchronize()
-
-        
-
