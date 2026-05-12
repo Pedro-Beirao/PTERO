@@ -15,6 +15,8 @@ window.links = window.ydoc.getArray('links');
 window.fbs = window.ydoc.getMap('fbs');
 window.resources = window.ydoc.getMap('resources');
 
+localStorage.clear(); // TODO needed? there was a bug where local storage was screwing it up
+
 const not_connected = document.getElementById('not-connected');
 provider.on('synced', (isSynced) => {
   if (isSynced) {

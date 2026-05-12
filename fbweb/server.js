@@ -8,6 +8,7 @@ const { WebsocketProvider } = require('y-websocket')
 const ydoc = new Y.Doc()
 const provider = new WebsocketProvider('ws://localhost:1234', 'room', ydoc, { connect: true, resyncInterval: 5000 })
 const communication = ydoc.getText("communication")
+const fbs = ydoc.getMap("fbs")
 
 const app = express();
 const PORT = 3000;
@@ -26,7 +27,7 @@ app.get('/', (req, res) => res.render('index'));
 app.use(express.json());
 
 app.post('/deploy', async (req, res) => {
-  // exportFBs();
+  exportFBs();
 
   sendToDINASORE();
 });
@@ -118,8 +119,9 @@ const FBS_DIR = './sync/fbs'
 function exportFBs() {
   exporting = true
   fbs.forEach((fb, id) => {
-    fs.writeFileSync(path.join(FBS_DIR, `${fb.name}.fbt`), fb.xml)
-    fs.writeFileSync(path.join(FBS_DIR, `${fb.name}.py`), fb.py)
+    console.log(fb.get("xml"));
+    fs.writeFileSync(path.join(FBS_DIR, `${fb.get("name").toString()}.fbt`), fb.get("xml").toString())
+    fs.writeFileSync(path.join(FBS_DIR, `${fb.get("name").toString()}.py`), fb.get("py").toString())
   })
   setTimeout(() => exporting = false, 100)
 }
