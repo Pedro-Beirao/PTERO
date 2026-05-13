@@ -1,13 +1,13 @@
 {
-    "master-fbs-path": "sync/fbs",
-    "dinasores": [
-        {
-            "address": "localhost",
-            "port": 22,
-            "username": "root",
-            "password": "dinasore",
-            "dinasore-path": "/sinf/dinasore"
-        }
-    ],
-    "strategy": "wipe"
+  "master-fbs-path": "sync/fbs",
+  "dinasores": [
+    {
+      "address": "localhost",
+      "port": 22,
+      "username": "root",
+      "password": "dinasore",
+      "dinasore-path": "/sinf/dinasore"
+    }
+  ],
+  "strategy": "wipe"
 }

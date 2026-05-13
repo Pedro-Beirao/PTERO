@@ -4,11 +4,13 @@ const fs = require("fs");
 const net = require('net');
 const Y = require('yjs')
 const { WebsocketProvider } = require('y-websocket')
+const { spawn } = require('child_process')
 
 const ydoc = new Y.Doc()
 const provider = new WebsocketProvider('ws://localhost:1234', 'room', ydoc, { connect: true, resyncInterval: 5000 })
 const communication = ydoc.getText("communication")
 const fbs = ydoc.getMap("fbs")
+const resources = ydoc.getMap("resources")
 
 const app = express();
 const PORT = 3000;
@@ -28,6 +30,7 @@ app.use(express.json());
 
 app.post('/deploy', async (req, res) => {
   exportFBs();
+  syncFBs();
 
   sendToDINASORE(req, res);
 });
@@ -123,4 +126,28 @@ function exportFBs() {
     fs.writeFileSync(path.join(FBS_DIR, `${fb.get("name").toString()}.fbt`), fb.get("xml").toString())
     fs.writeFileSync(path.join(FBS_DIR, `${fb.get("name").toString()}.py`), fb.get("py").toString())
   })
+}
+
+function syncFBs() {
+  var config = {
+    "master-fbs-path": "sync/fbs",
+    "dinasores": [],
+    "strategy": "wipe"
+  };
+
+  resources.forEach((resouce, id) => {
+    const [address, port] = resouce.get("ip").split(':');
+    config.dinasores.push({
+          "address": address,
+          "port": 22,
+          "username": "root",
+          "password": "dinasore",
+          "dinasore-path": "/sinf/dinasore"
+      })
+  })
+
+  fs.rmSync('./sync/config.json', { force: true });
+  fs.writeFileSync('./sync/config.json', JSON.stringify(config, null, 2));
+
+  spawn('python3', ['./sync/synchronize.py'], { stdio: 'ignore' });
 }
