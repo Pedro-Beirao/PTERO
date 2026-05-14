@@ -135,8 +135,6 @@ window.litegraph.onNodeAdded = function(node) {
 window.litegraph.afterChange = function(node) {
   if (!node) return;
 
-  console.log(node)
-
   window.ydoc.transact(() => {
     const node_map = window.nodes.get(node.id);
     node_map.set("type", node.type);
@@ -176,7 +174,9 @@ window.litegraph.onNodeConnectionChange = function(type, node, slot, target_node
           origin_id: link.origin_id,
           origin_slot: link.origin_slot,
           target_id: link.target_id,
-          target_slot: link.target_slot
+          target_slot: link.target_slot,
+          origin_slot_name: node.outputs[link.origin_slot].name,
+          target_slot_name: window.litegraph.getNodeById(link.target_id).outputs[link.target_slot].name
         }]);
       }
     });

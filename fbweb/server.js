@@ -9,6 +9,8 @@ const { spawn } = require('child_process')
 const ydoc = new Y.Doc()
 const provider = new WebsocketProvider('ws://localhost:1234', 'room', ydoc, { connect: true, resyncInterval: 5000 })
 const communication = ydoc.getText("communication")
+const nodes = ydoc.getMap('nodes');
+const links = ydoc.getArray('links');
 const fbs = ydoc.getMap("fbs")
 const resources = ydoc.getMap("resources")
 
@@ -39,11 +41,64 @@ app.post('/deploy', async (req, res) => {
   exportFBs();
   await syncFBs();
 
-  sendToDINASORE(req, res);
+  const messages = prepareMessages();
+  sendToDINASORE(messages, res);
   deploying = false;
 });
 
-async function sendToDINASORE(req, res) {
+function prepareMessages() {
+  const messages = []
+
+  messages.push({ message: `<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`, config: "" });
+  let message_id = 1;
+
+  messages.push({ message: `<Request Action="CREATE" ID="1"><FB Name="EMB_RES" Type="EMB_RES"/></Request>`, config: "" });
+  message_id++;
+
+  nodes.forEach((node_map, id) => {
+    const fbtype = node_map.get("type").split("/").pop();
+    const fbname = node_map.get("title") || fbtype;
+
+    messages.push({ message: `<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`, config: "EMB_RES" });
+    // console.log(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`);
+    message_id++;
+
+
+    node_map.get("properties").forEach((value, key) => {
+      if (value != "") {
+        messages.push({ message: `<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`, config: "EMB_RES" });
+        // console.log(`<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`)
+        message_id++;
+      }
+    });
+  });
+
+  links.forEach((link_map, id) => {
+    // [link_id, source_id, source_slot, destination_id, destination_slot, data_type]
+
+    // TODO Is it possible that link[1] - 1 isnt always correct?
+    // const source_fbtype = data["nodes"][link[1] - 1]["type"].split("/")[1]
+    // const destination_fbtype = data["nodes"][link[3] - 1]["type"].split("/")[1]
+    const source = nodes.get(link_map.origin_id);
+    const destination = nodes.get(link_map.target_id);
+
+    const source_name = source.get("title")
+    const destination_name = destination.get("title")
+
+    const source_str = `${source_name}.${link_map.origin_slot_name}`;
+    const destination_str = `${destination_name}.${link_map.target_slot_name}`;
+
+    messages.push({ message: `<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`, config: "EMB_RES" });
+    // console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
+    message_id++;
+  });
+
+  messages.push({ message: `<Request Action="START" ID="${message_id}"/>`, config: "EMB_RES" });
+
+  return messages;
+}
+
+async function sendToDINASORE(messages, res) {
   const tcpClient = new net.Socket();
   const DINASORE_HOST = 'localhost';
   const DINASORE_PORT = 61499;
@@ -70,7 +125,7 @@ async function sendToDINASORE(req, res) {
     });
 
     // Process all messages using the same connection
-    for (const r of req.body) {
+    for (const r of messages) {
       const message = buildMessage(r.message, r.config);
       const response = await new Promise((resolve, reject) => {
         tcpClient.write(message);
