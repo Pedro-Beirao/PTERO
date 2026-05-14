@@ -29,11 +29,12 @@ class RemoteSync(base_sync.BaseSync):
             client.close()
 
         except Exception as e:
-            logging.warning(e)
+            logging.error(e)
             try:
                 client.close()
             except:
                 pass
+            exit(1)
 
     def synchronize(self):
         try:
@@ -70,12 +71,13 @@ class RemoteSync(base_sync.BaseSync):
             t.close()
 
         except Exception as e:
-            logging.warning(e)
+            logging.error(e)
             try:
                 client.close()
                 t.close()
             except:
                 pass
+            exit(1)
 
     def scantree(self, path):
         for entry in os.scandir(path):

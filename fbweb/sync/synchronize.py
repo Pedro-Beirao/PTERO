@@ -10,7 +10,7 @@ try:
     f = open(f_path)
 except FileNotFoundError:
     logging.error('Could not find configuration file.')
-    exit()    
+    exit()
 data = json.load(f)
 f.close()
 
@@ -27,10 +27,6 @@ synchronizer = fb_sync.FBSync(data.get('master-fbs-path'), strategy)
 
 dinasores = data.get('dinasores')
 # loop over dinasores
-print('Starting copying process')
 for dinasore in dinasores:
     synchronizer.synchronize(dinasore)
-print('Copying process concluded')
 print('Synchronized {} DINASOREs'.format(len(dinasores)))
-
-

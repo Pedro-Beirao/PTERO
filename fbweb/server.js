@@ -28,11 +28,19 @@ app.get('/', (req, res) => res.render('index'));
 // Middleware to parse JSON and XML
 app.use(express.json());
 
+var deploying = false;
 app.post('/deploy', async (req, res) => {
+  if (deploying) return;
+
+  deploying = true;
+  ydoc.transact(() => {
+    communication.delete(0, communication.length);
+  });
   exportFBs();
-  syncFBs();
+  await syncFBs();
 
   sendToDINASORE(req, res);
+  deploying = false;
 });
 
 async function sendToDINASORE(req, res) {
@@ -59,10 +67,6 @@ async function sendToDINASORE(req, res) {
         tcpClient.destroy();
         reject(err);
       });
-    });
-
-    ydoc.transact(() => {
-      communication.delete(0, communication.length);
     });
 
     // Process all messages using the same connection
@@ -128,7 +132,7 @@ function exportFBs() {
   })
 }
 
-function syncFBs() {
+async function syncFBs() {
   var config = {
     "master-fbs-path": "sync/fbs",
     "dinasores": [],
@@ -149,5 +153,44 @@ function syncFBs() {
   fs.rmSync('./sync/config.json', { force: true });
   fs.writeFileSync('./sync/config.json', JSON.stringify(config, null, 2));
 
-  spawn('python3', ['./sync/synchronize.py'], { stdio: 'ignore' });
+  function promise_sync() {
+    return new Promise((resolve, reject) => {
+      ydoc.transact(() => {
+        communication.insert(0, "python3 ./sync/synchronize.py\n");
+      });
+
+      const child = spawn('python3.12', ['./sync/synchronize.py']);
+
+      child.stdout.on('data', (data) => {
+        ydoc.transact(() => {
+          communication.insert(communication.length, data.toString());
+        });
+      });
+
+      child.stderr.on('data', (data) => {
+        ydoc.transact(() => {
+          communication.insert(communication.length, data.toString());
+        });
+      });
+
+      child.on('close', (code) => {
+        if (code !== 0) {
+          ydoc.transact(() => {
+            communication.insert(communication.length, `\nSync failed.\nMake sure the server machine has SSH access to each DINASORE.`);
+          });
+        }
+
+        resolve();
+      });
+
+      child.on('error', (err) => {
+        ydoc.transact(() => {
+          communication.insert(communication.length, err.toString());
+        });
+        reject(err);
+      });
+    });
+  }
+
+  await promise_sync();
 }

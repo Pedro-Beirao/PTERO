@@ -21,7 +21,7 @@ class FBSync():
         if "port" in dinasore:
           port = int(dinasore.get('port'))
 
-        dinasore_path = dinasore.get('dinasore-path') + '/resources/function_blocks'
+        dinasore_path = dinasore.get('dinasore-path') + '/resources/function_blocks/CUSTOM'
 
         sync_obj = None
 
@@ -34,6 +34,10 @@ class FBSync():
 
         strategies = self.strategy.split(' ')
         if 'wipe' in strategies:
+            print('Starting wiping process')
             sync_obj.wipe()
+            print('Wiping process completed')
 
+        print('Starting copying process')
         sync_obj.synchronize()
+        print('Copying process completed')
