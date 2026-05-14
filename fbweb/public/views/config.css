@@ -56,11 +56,3 @@
   right: 0.2em;
   cursor: pointer;
 }
-
-#communication {
-  overflow: auto;
-}
-
-#communication .CodeMirror {
- padding: 0.5em;
-}
