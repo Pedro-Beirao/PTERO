@@ -84,7 +84,7 @@ function add_resource() {
   const uuid = crypto.randomUUID();
 
   const resource = new Y.Map();
-  resource.set('name', "EMB_RES");
+  resource.set('name', "DINASORE");
   resource.set('ip', "localhost:61499");
   resource.set('color', "#000077");
 

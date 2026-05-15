@@ -17,8 +17,10 @@
 <body>
   <!-- TODO I want this smaller, to not take over the whole screen -->
   <div id="not-connected">
-    <div class="spinner"></div>
-    <p>Not synced. Make sure the server is running and give it some time to sync all changes.</p>
+    <div class="not-connected-msg">
+      <div class="spinner"></div>
+      <p>Not synced. Make sure the server is running and give it some time to sync all changes.</p>
+    </div>
   </div>
 
   <%- include("partials/toolbar") -%>

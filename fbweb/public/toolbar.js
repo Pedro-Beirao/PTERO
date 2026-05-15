@@ -20,7 +20,6 @@ async function sendCommandToBackend(messages) {
   }
 }
 
-// TODO the messages should be created in the backend. right?
 async function deploy() {
   try {
     const response = await fetch('/deploy', {
