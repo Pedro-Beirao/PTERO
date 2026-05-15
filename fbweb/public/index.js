@@ -176,7 +176,7 @@ window.litegraph.onNodeConnectionChange = function(type, node, slot, target_node
           target_id: link.target_id,
           target_slot: link.target_slot,
           origin_slot_name: node.outputs[link.origin_slot].name,
-          target_slot_name: window.litegraph.getNodeById(link.target_id).outputs[link.target_slot].name
+          target_slot_name: window.litegraph.getNodeById(link.target_id).inputs[link.target_slot].name
         }]);
       }
     });
@@ -199,19 +199,26 @@ function populateGraph() {
   window.nodes.forEach((node_map, id) => {
     if(!window.litegraph.getNodeById(id)) {
       var node = LiteGraph.createNode(node_map.get("type"));
-      node.id = id;
-      node.title = node_map.get("title");
-      node.pos = [node_map.get("x"), node_map.get("y")];
-      node.mappedto = node_map.get("mappedto");
-      const color = window.resources.get(node.mappedto)?.get("color");
-      node.color = color;
-      node.bgcolor = color;
-      Object.keys(node.properties).forEach((key) => {
-        const new_value = node_map.get("properties").get(key);
-        if (new_value)
-          node.properties[key] = new_value;
-      });
-      window.litegraph.add(node);
+      if (node == null) {
+        window.ydoc.transact(() => {
+          window.nodes.delete(id);
+        });
+      }
+      else {
+        node.id = id;
+        node.title = node_map.get("title");
+        node.pos = [node_map.get("x"), node_map.get("y")];
+        node.mappedto = node_map.get("mappedto");
+        const color = window.resources.get(node.mappedto)?.get("color");
+        node.color = color;
+        node.bgcolor = color;
+        Object.keys(node.properties).forEach((key) => {
+          const new_value = node_map.get("properties").get(key);
+          if (new_value)
+            node.properties[key] = new_value;
+        });
+        window.litegraph.add(node);
+      }
     }
   });
 
@@ -273,8 +280,7 @@ function registerNode(fbt_doc) {
 
     // TODO the width still doenst work correctly, for example the fb name can break
     // Investigate that lower/upper makes a difference
-    this.resizable = false;
-    this.size = [this.size[0] + 25, this.size[1]];
+    this.size = [this.size[0] + 50, this.size[1]];
   }
 
   CustomNode.title = name;
