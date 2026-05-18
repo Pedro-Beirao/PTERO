@@ -249,7 +249,7 @@ The serialized data for the graph structure can be divided into 2 maps (using th
 The deployment process is responsible for taking the application defined in the \textit{Graph View} and bringing it to life across the configured \textit{DINASORE} instances. It is broken down into a sequence of steps, each of which is described in the following subsections.
 
 \subsection{Synchronise with DINASOREs}
-The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this we can use the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. First, \texttt{master-fbs-path} dictates where in the server filesystem the function block files that will be sent are located, then an array of \texttt{dinasores} with the configurations defined in the \textit{Devices Configuration View}. The \texttt{port} used here will be the \textit{SSH} port, the \textit{DINASORE} must have an open \textit{SSH} channel that the server is able to connect to via this port.
+The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this we can use the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration file needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. First, \texttt{master-fbs-path} dictates where in the server filesystem the function block files that will be sent are located, then an array of \texttt{dinasores} with the configurations defined in the \textit{Devices Configuration View}. The \texttt{port} used here will be the \textit{SSH} port, the \textit{DINASORE} must have an open \textit{SSH} channel that the server is able to connect to via this port.
 
 \begin{lstlisting}[language=JSON, caption={Sync configuration}, label={lst:sync-config}]
 {
@@ -260,14 +260,14 @@ The first step is to ensure that each \textit{DINASORE} instance has access to t
       port: 22,
       username: 'root',
       password: 'dinasore',
-      dinasore-path: '/dinasore'
+      dinasore-path: '/root/dinasore'
     },
     {
       address: 'y.y.y.y',
       port: 22,
       username: 'root',
       password: 'dinasore',
-      dinasore-path: '/dinasore'
+      dinasore-path: '/root/dinasore'
     }
   ]
 }
@@ -276,9 +276,9 @@ The first step is to ensure that each \textit{DINASORE} instance has access to t
 \subsection{Send Commands}
 Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these commands are issued is important, as connections can only be established between existing nodes.
 
-First we need to send 2 commands to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} function block which will be automatically connected to all other function blocks to initialize them.
+First we need to send the 2 commands in \Cref{lst:deploy-setup} to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} function block which will be automatically connected to all other function blocks to initialize them.
 
-\begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-query}]
+\begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-setup}]
 <Request Action="QUERY" ID="0">
   <FB Name="*" Type="*"/>
 </Request>
@@ -288,7 +288,33 @@ First we need to send 2 commands to every device. A \texttt{QUERY} request and a
 </Request>
 \end{lstlisting}
 
-Next we \texttt{CREATE} all the function blocks and \texttt{WRITE} the initial input values
+Next, depending on which commands are mapped to each machine, we \texttt{CREATE} all the mapped function blocks and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}.
+
+\begin{lstlisting}[language=XML, caption={\texttt{CREATE} nodes deployment commands}, label={lst:deploy-create-nodes}]
+<Request Action="CREATE" ID="2">
+  <FB Name="SENSOR_SIMULATOR" Type="SENSOR_SIMULATOR"/>
+</Request>
+
+<Request Action="CREATE" ID="3">
+  <FB Name="MOVING_AVERAGE" Type="MOVING_AVERAGE"/>
+</Request>
+
+<Request Action="WRITE" ID="4">
+  <Connection Destination="MOVING_AVERAGE.WINDOW" Source="5"/>
+</Request>
+\end{lstlisting}
+
+Then the connections are mapped on which commands are mapped to each machine, we \texttt{CREATE} all the mapped function blocks and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-links}.
+
+\begin{lstlisting}[language=XML, caption={\texttt{CREATE} links deployment commands}, label={lst:deploy-create-links}]
+<Request Action="CREATE" ID="5">
+  <Connection Destination="SENSOR_SIMULATOR.READ_0" Source="MOVING_AVERAGE.RUN"/>
+</Request>
+
+<Request Action="CREATE" ID="4">
+  <Connection Destination="SENSOR_SIMULATOR.VALUE" Source="MOVING_AVERAGE.VALUE"/>
+</Request>
+\end{lstlisting}
 
 \subsection{Console}
 To give the team visibility into the deployment process, a console is provided in the \ac{IDE} that displays a live log of each action taken during deployment. As commands are sent and responses are received, they are streamed to the console in the browser, allowing the team to monitor progress and quickly identify any errors that may occur.
