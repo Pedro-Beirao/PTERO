@@ -15,5 +15,3 @@ window.com_binding = new CodemirrorBinding(
   window.com_editorview,
   provider.awareness
 );
-
-window.com_editorview.refresh();

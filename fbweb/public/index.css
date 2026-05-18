@@ -3,6 +3,7 @@
 @import url("views/graph.css");
 @import url("views/fbs.css");
 @import url("views/config.css");
+@import url("views/console.css");
 
 *, *::before, *::after {
   box-sizing: border-box;

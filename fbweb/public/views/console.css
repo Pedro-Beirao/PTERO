@@ -1,11 +1,3 @@
-.resource-item input {
-  width: 15em;
-  height: 2em;
-}
-
-.delete-resource {
-  position: absolute;
-  top: 0.05em;
-  right: 0.2em;
-  cursor: pointer;
+#communication {
+  height: 100%;
 }

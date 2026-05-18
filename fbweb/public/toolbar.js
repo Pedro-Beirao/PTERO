@@ -46,7 +46,7 @@ function switchTab(el) {
     window.xml_editorview.refresh();
     window.py_editorview.refresh();
   }
-  else if (panelId === 'panel-config' && window.com_editorview) {
+  else if (panelId === 'panel-console' && window.com_editorview) {
     window.com_editorview.refresh();
   }
 }
