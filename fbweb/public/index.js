@@ -127,7 +127,11 @@ window.litegraph.onNodeAdded = function(node) {
     node_map.set("x", node.pos[0]);
     node_map.set("y", node.pos[1]);
     node_map.set("mappedto", node.mappedto);
-    node_map.set("properties", new Y.Map());
+    const prop_map = new Y.Map()
+    Object.entries(node.properties).forEach(([key, value]) => {
+      prop_map.set(key, value);
+    });
+    node_map.set("properties", prop_map);
     window.nodes.set(node.id, node_map);
   }, 'programmatic');
 }
@@ -212,10 +216,8 @@ function populateGraph() {
         const color = window.resources.get(node.mappedto)?.get("color");
         node.color = color;
         node.bgcolor = color;
-        Object.keys(node.properties).forEach((key) => {
-          const new_value = node_map.get("properties").get(key);
-          if (new_value)
-            node.properties[key] = new_value;
+        node_map.get("properties").forEach((value, key) => {
+          node.properties[key] = value;
         });
         window.litegraph.add(node);
       }

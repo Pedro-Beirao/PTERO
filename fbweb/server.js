@@ -211,7 +211,7 @@ async function syncFBs() {
   function promise_sync() {
     return new Promise((resolve, reject) => {
       ydoc.transact(() => {
-        communication.insert(0, "python3 ./sync/synchronize.py\n");
+        communication.insert(0, "python3.12 ./sync/synchronize.py\n");
       });
 
       const child = spawn('python3.12', ['./sync/synchronize.py']);
