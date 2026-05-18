@@ -194,14 +194,13 @@ async function syncFBs() {
     "strategy": "wipe"
   };
 
-  resources.forEach((resouce, id) => {
-    const [address, port] = resouce.get("ip").split(':');
+  resources.forEach((resource, id) => {
     config.dinasores.push({
-          "address": address,
-          "port": 22,
-          "username": "root",
-          "password": "dinasore",
-          "dinasore-path": "/sinf/dinasore"
+          "address": resource.get("Address"),
+          "port": resource.get("SSH port"),
+          "username": resource.get("SSH user"),
+          "password": resource.get("SSH password"),
+          "dinasore-path": resource.get("SSH path to DINASORE")
       })
   })
 

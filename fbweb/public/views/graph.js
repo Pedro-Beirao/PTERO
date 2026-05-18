@@ -49,14 +49,14 @@ graphCanvas.onMenuNodeMapTo = function (value, options, e, menu, node) {
   window.resources.forEach((resource, id) => {
     var color = {
       id: id,
-      value: resource.get("name"),
+      value: resource.get("Name"),
       content:
         "<span style='display: block; color: #999; padding-left: 4px; border-left: 8px solid " +
         resource.get("color") +
         "; background-color:" +
         "black" +
         "'>" +
-        resource.get("name") +
+        resource.get("Name") +
         "</span>",
     };
     colors.push(color);

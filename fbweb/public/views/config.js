@@ -22,35 +22,41 @@ function populateConfig() {
 
     const left = document.createElement("div");
 
-    const name = document.createElement("input");
-    name.value = resource.get("name");
-    name.oninput = () => {
-      resource.set("name", name.value);
-    };
+    const names = ["Name", "Address", "DINASORE port", "color", "SSH port", "SSH user", "SSH password", "SSH path to DINASORE"]
 
-    const ip = document.createElement("input");
-    ip.value = resource.get("ip");
-    ip.oninput = () => {
-      resource.set("ip", ip.value);
-    };
+    for (var i = 0; i < names.length; i++) {
+      const name = names[i];
+      const span = document.createElement("span");
+      const div = document.createElement("div");
+      div.textContent = name;
+      span.appendChild(div);
 
-    left.appendChild(name);
-    left.appendChild(ip);
+      const input = document.createElement("input");
 
-    const right = document.createElement("div");
-    right.className = "color-input";
-    right.style.background = resource.get("color");
+      if (name == "color") {
+        input.type = "color";
+        input.value = resource.get("color");
+        input.hidden = true;
 
-    const color = document.createElement("input");
-    color.type = "color";
-    color.value = resource.get("color");
-    color.hidden = true;
+        div.className = "color-input";
+        div.style.background = resource.get("color");
 
-    right.onclick = () => color.click();
-    color.oninput = () => {
-      right.style.background = color.value;
-      resource.set("color", color.value);
-    };
+        div.onclick = () => input.click();
+        input.oninput = () => {
+          div.style.background = input.value;
+          resource.set("color", input.value);
+        };
+      }
+      else {
+        input.value = resource.get(name);
+        input.oninput = () => {
+          resource.set(name, input.value);
+        };
+      }
+
+      span.appendChild(input);
+      left.appendChild(span);
+    }
 
     const del_res = document.createElement("div");
     del_res.textContent = "x";
@@ -61,10 +67,7 @@ function populateConfig() {
       });
     };
 
-    right.appendChild(color);
-
     div.appendChild(left);
-    div.appendChild(right);
     div.appendChild(del_res);
     resources_list.appendChild(div);
   });
@@ -80,12 +83,18 @@ function populateConfig() {
   });
 }
 
+const names = ["Name", "Address", "DINASORE port", "", "SSH port", "SSH user", "SSH password", "SSH path to DINASORE"]
 function add_resource() {
   const uuid = crypto.randomUUID();
 
   const resource = new Y.Map();
-  resource.set('name', "DINASORE");
-  resource.set('ip', "localhost:61499");
+  resource.set('Name', "DINASORE");
+  resource.set('Address', "localhost");
+  resource.set('DINASORE port', "61499");
+  resource.set('SSH port', "22");
+  resource.set('SSH user', "root");
+  resource.set('SSH password', "dinasore");
+  resource.set('SSH path to DINASORE', "/root/dinasore");
   resource.set('color', "#000077");
 
   window.resources.set(uuid, resource);

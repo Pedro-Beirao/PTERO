@@ -1,44 +1,21 @@
-.split-view {
-  display: flex;
-  height: 100%;
-  width: auto;
-}
-
-#config {
-  height: 100%;
-  width: 27em;
-  overflow: auto;
-}
-
 #resources-list {
-  height: auto;
   align-self: center;
+  margin-bottom: 1em;
 }
 
 .resource-item {
   padding: 1em;
   border-radius: 0.5em;
   background-color: #111;
-  width: 21em;
-  margin: 1em 10% 1em 10%;
+  width: 40em;
+  height: auto;
+  margin: 1em 0 1em 0;
   position: relative;
-}
-
-#add-resource {
-  text-align: center;
-  width: 5em;
-  height: 3.5em;
-  background-color: #111;
-  cursor: pointer;
-}
-
-#add-resource:hover {
-  background-color: #181818;
 }
 
 .color-input {
   height: 4em;
-  width: 8em;
+  width: 4em;
   background: #ff0000;
   cursor: pointer;
   border: 0.2em solid #444;
@@ -46,7 +23,7 @@
 }
 
 .resource-item input {
-  width: 15em;
+  width: 38em;
   height: 2em;
 }
 
@@ -55,4 +32,17 @@
   top: 0.05em;
   right: 0.2em;
   cursor: pointer;
+}
+
+#add-resource {
+  text-align: center;
+  width: 5em;
+  height: 3.5em;
+  background-color: #111;
+  cursor: pointer;
+  align-self: center;
+}
+
+#add-resource:hover {
+  background-color: #181818;
 }
