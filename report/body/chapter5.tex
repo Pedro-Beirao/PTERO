@@ -192,17 +192,20 @@ Among these alternatives, \textit{LiteGraph.js} presented the best balance betwe
 
 % TODO a lot
 
+\subsection{Console}
+This view will display the console logs that are generated when deploying. The contents of it will be discussed in detail in \Cref{sec:deployment}.
+
 \section{Real-Time Collaboration} \label{sec:real-time-collaboration}
 One of the main goals of the proposed solution is to support collaborative development of \textit{IEC 61499} applications. Since \ac{CPPS} projects are often developed by multiple team members simultaneously, the code collaboration system must accommodate for this. Traditional version control systems such as \textit{Git} are not well suited for collaborative editing of structured graph based data represented in formats such as \textit{json} or \textit{xml}. Although these formats are text based, small logical modifications in the application model can produce large text changes due to formatting changes, element reordering or nested structure updates. As a result, merge conflicts become frequent and difficult to resolve, especially when multiple team members edit the a graph at the same time. This limitation makes real time collaborative editing impractical, motivating the use of synchronisation approaches based on shared data structures and conflict free replication mechanisms such as \acp{CRDT}.
 
 In this prototype the collaborative editing system was implemented using \textit{Yjs}, a \ac{CRDT} framework designed for distributed collaborative applications. \ac{CRDT} based systems allow users to concurrently edit shared data structures while automatically resolving conflicts in a deterministic manner.
 
+% TODO talk about sync of the config
 % TODO talk about sync of the code editors
 
-The graph structure in \textit{LiteGraph.js} representing the \textit{IEC 61499} application is synchronised through shared \textit{Yjs} data structures. Operations such as creating function blocks, deleting connections, modifying inputs or moving nodes are propagated in real time to all connected clients. Each user therefore observes the same graph state with minimal delay. To integrate collaboration into this editor, the internal state changes of the graph were connected to the shared \textit{Yjs} document. Whenever a local modification occurs in the graph, the corresponding operation is serialized and applied to the shared collaborative state. Likewise, remote updates received from other users are reflected back into the local graph editor instance.
+The graph structure in \textit{LiteGraph.js} representing the \ac{FBD} application is synchronised through shared \textit{Yjs} data structures. Operations such as creating function blocks, deleting connections, modifying inputs or moving nodes are propagated in real time to all connected clients. Each user therefore observes the same graph state with minimal delay. To integrate collaboration into this editor, the internal state changes of the graph were connected to the shared \textit{Yjs} document. Whenever a local modification occurs in the graph, the corresponding operation is serialized and applied to the shared collaborative state. Likewise, remote updates received from other users are reflected back into the local graph editor instance.
 
-The serialized data for the graph structure can be divided into 2 maps (using the \texttt{Y.Map} structure):
-
+The serialized data for the graph structure can be divided into 2 maps (using the \texttt{Y.Map} structure), one for the nodes (shown in \Cref{lst:serialize-nodes}) and one for the links (shown in \Cref{lst:serialize-links}). In the nodes map, since the \texttt{title} of each node can be modified and the \texttt{type} can be the same across multiple nodes, we need to define a unique persistent id for each. Besides these, we need to also store the position of the node defined as \texttt{x} and \texttt{y} coordinates, the id of the \textit{DINASORE} that this node is \texttt{mappedto} and the default \texttt{inputs} in case some data input slot is not being fed data from any link. As for the links map, each link must also have a unique persistent id, and then store the origin (represented by the \texttt{origin\_id} node and the \texttt{origin\_slot}) and the target (represented by the \texttt{target\_id} node and the \texttt{target\_slot})
 
 \begin{lstlisting}[language=JSON, caption={Structure of the Nodes serialized map}, label={lst:serialize-nodes}]
 {
@@ -210,20 +213,20 @@ The serialized data for the graph structure can be divided into 2 maps (using th
     type: 'SENSOR_SIMULATOR',
     title: 'SENSOR_SIMULATOR_1',
     x: 139, y: 526,
-    mappedto: 'DINASORE_1',
-    properties: { OFFSET: '' }
+    mappedto: 'dinasore_id_1',
+    inputs: { OFFSET: '' }
   },
   'node_id_2': {
     type: 'MOVING_AVERAGE',
     title: 'MOVING_AVERAGE_1',
     x: 487, y: 551,
-    mappedto: 'DINASORE_1',
-    properties: { WINDOW: '5', VALUE: '' }
+    mappedto: 'dinasore_id_1',
+    inputs: { WINDOW: '5', VALUE: '' }
   }
 }
 \end{lstlisting}
 
-\begin{lstlisting}[language=JSON, caption={Structure of the Links serialized map}, label={lst:serialize-nodes}]
+\begin{lstlisting}[language=JSON, caption={Structure of the Links serialized map}, label={lst:serialize-links}]
 {
   'link_id_1': {
     origin_id: 'node_id_1',
@@ -240,12 +243,55 @@ The serialized data for the graph structure can be divided into 2 maps (using th
 }
 \end{lstlisting}
 
-% TODO explain the maps
-
-Another challenge was avoiding synchronisation loops between local editor updates and remote collaborative updates. To solve this issue, the system differentiates between locally generated actions and externally received changes, preventing redundant graph updates and unnecessary network propagation. % TODO worth saying this?
+% TODO surely theres something more to talk about the serialized data
 
 \section{Deployment} \label{sec:deployment}
+The deployment process is responsible for taking the application defined in the \textit{Graph View} and bringing it to life across the configured \textit{DINASORE} instances. It is broken down into a sequence of steps, each of which is described in the following subsections.
+
 \subsection{Synchronise with DINASOREs}
+The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this we can use the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. First, \texttt{master-fbs-path} dictates where in the server filesystem the function block files that will be sent are located, then an array of \texttt{dinasores} with the configurations defined in the \textit{Devices Configuration View}. The \texttt{port} used here will be the \textit{SSH} port, the \textit{DINASORE} must have an open \textit{SSH} channel that the server is able to connect to via this port.
+
+\begin{lstlisting}[language=JSON, caption={Sync configuration}, label={lst:sync-config}]
+{
+  master-fbs-path: 'sync/fbs',
+  dinasores: [
+    {
+      address: 'x.x.x.x',
+      port: 22,
+      username: 'root',
+      password: 'dinasore',
+      dinasore-path: '/dinasore'
+    },
+    {
+      address: 'y.y.y.y',
+      port: 22,
+      username: 'root',
+      password: 'dinasore',
+      dinasore-path: '/dinasore'
+    }
+  ]
+}
+\end{lstlisting}
+
 \subsection{Send Commands}
-\subsection{Deployment Console}
+Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these commands are issued is important, as connections can only be established between existing nodes.
+
+First we need to send 2 commands to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} function block which will be automatically connected to all other function blocks to initialize them.
+
+\begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-query}]
+<Request Action="QUERY" ID="0">
+  <FB Name="*" Type="*"/>
+</Request>
+
+<Request Action="CREATE" ID="1">
+  <FB Name="EMB_RES" Type="EMB_RES"/>
+</Request>
+\end{lstlisting}
+
+Next we \texttt{CREATE} all the function blocks and \texttt{WRITE} the initial input values
+
+\subsection{Console}
+To give the team visibility into the deployment process, a console is provided in the \ac{IDE} that displays a live log of each action taken during deployment. As commands are sent and responses are received, they are streamed to the console in the browser, allowing the team to monitor progress and quickly identify any errors that may occur.
+
 \subsection{Watch}
+Once the application is running, the \textit{Watch} view allows the team to monitor it in real time. The values of function block variables are continuously retrieved from the \textit{DINASORE} instances and displayed in the \ac{IDE}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development.

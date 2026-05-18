@@ -13,6 +13,8 @@ words = [
     "ganttchart",
     "isodate",
     "itemize",
+    "lstlisting",
+    "mappedto",
     "modularity",
     "monostori",
     "natively",
