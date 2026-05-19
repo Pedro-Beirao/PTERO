@@ -250,6 +250,7 @@ function registerNode(fbt_doc) {
   // Define the LiteGraph Node
   function CustomNode() {
     this.properties = {}
+    this.watches = {}
 
     // First add the events
     let inputs = [...fbt_doc.querySelectorAll("EventInputs > Event"), ...fbt_doc.querySelectorAll("InputVars > VarDeclaration")];
@@ -277,6 +278,7 @@ function registerNode(fbt_doc) {
       else {
         output.color_off = "#000047"
         output.color_on = "#0000ff"
+        this.watches[outputs[i].getAttribute("Name")] = ""
       }
     }
 
@@ -302,6 +304,18 @@ function registerNode(fbt_doc) {
 
         const y = LiteGraph.NODE_SLOT_HEIGHT * (i + 0.5) + 9;
         ctx.fillText(property, -7, y);
+      }
+    }
+
+    for (let i = 0; i < this.outputs.length; i++) {
+      var watch = this.watches[this.outputs[i]["name"]]
+      if (watch != null && watch != "") {
+        ctx.font = "14px monospace";
+        ctx.fillStyle = "gray";
+        ctx.textAlign = "left";
+
+        const y = LiteGraph.NODE_SLOT_HEIGHT * (i + 0.5) + 9;
+        ctx.fillText(watch, this.size[0] + 7, y);
       }
     }
 

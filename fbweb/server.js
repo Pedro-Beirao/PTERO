@@ -13,6 +13,10 @@ const nodes = ydoc.getMap('nodes');
 const links = ydoc.getArray('links');
 const fbs = ydoc.getMap("fbs")
 const resources = ydoc.getMap("resources")
+const watch = ydoc.getMap("watch")
+// TODO use keymapvalue
+
+var tcp_sockets = [];
 
 const app = express();
 const PORT = 3000;
@@ -30,11 +34,7 @@ app.get('/', (req, res) => res.render('index'));
 // Middleware to parse JSON and XML
 app.use(express.json());
 
-var deploying = false;
 app.post('/deploy', async (req, res) => {
-  if (deploying) return;
-
-  deploying = true;
   ydoc.transact(() => {
     communication.delete(0, communication.length);
   });
@@ -42,8 +42,9 @@ app.post('/deploy', async (req, res) => {
   await syncFBs();
 
   const messages = prepareMessages();
-  sendToDINASORE(messages, res);
-  deploying = false;
+  await sendToDINASORE(messages, res);
+
+  watchDINASORE(0);
 });
 
 function prepareMessages() {
@@ -99,9 +100,16 @@ function prepareMessages() {
 }
 
 async function sendToDINASORE(messages, res) {
+  for (const tcpClient of tcp_sockets) {
+    tcpClient.destroy();
+  }
+  tcp_sockets = [];
+
   const tcpClient = new net.Socket();
+  tcp_sockets.push(tcpClient);
   const DINASORE_HOST = 'localhost';
   const DINASORE_PORT = 61499;
+  // TODO multiple dinasores
 
   try {
     // Connect to DINASORE once
@@ -114,7 +122,9 @@ async function sendToDINASORE(messages, res) {
 
       tcpClient.connect(DINASORE_PORT, DINASORE_HOST, () => {
         console.log('Connected to DINASORE');
-        resolve();
+        setTimeout(() => {
+          resolve();
+        }, 500);
       });
 
       tcpClient.on('error', (err) => {
@@ -129,13 +139,11 @@ async function sendToDINASORE(messages, res) {
       const message = buildMessage(r.message, r.config);
       const response = await new Promise((resolve, reject) => {
         tcpClient.write(message);
-        console.log(message.toString("utf-8"))
         ydoc.transact(() => {
           communication.insert(communication.length, message.toString("utf-8") + "\n");
         });
 
         tcpClient.once('data', (data) => {
-          console.log(data.toString("utf-8"))
           ydoc.transact(() => {
             communication.insert(communication.length, data.toString("utf-8") + "\n");
           });
@@ -149,9 +157,51 @@ async function sendToDINASORE(messages, res) {
   } catch (err) {
     console.error('Error:', err);
     res.status(500).send('Error processing messages');
-  } finally {
-    tcpClient.destroy();
   }
+}
+
+async function watchDINASORE(id) {
+  for (const tcpClient of tcp_sockets) {
+    if (id == 0) {
+      for (const [nk, node_map] of nodes.entries()) {
+        var address = tcpClient.remoteAddress;
+        if (address === '::1' || address === '127.0.0.1' || address === '::ffff:127.0.0.1') {
+          address = 'localhost';
+        }
+        if (address == resources.get(node_map.get("mappedto")).get("Address") &&
+            tcpClient.remotePort == resources.get(node_map.get("mappedto")).get("DINASORE port")) {
+          for (const [key, value] of node_map.get("properties").entries()) {
+            await new Promise((resolve, reject) => {
+              tcpClient.write(buildMessage(`<Request ID="${id}" Action="CREATE"><Watch Source="${node_map.get('title')}.VALUE" Destination="*"/></Request>`, "EMB_RES"));
+              id++;
+              tcpClient.once('data', (data) => {
+                ydoc.transact(() => {
+                  communication.insert(communication.length, data.toString("utf-8") + "\n");
+                });
+                resolve();
+              });
+            });
+          };
+        }
+      };
+    }
+
+    await new Promise((resolve, reject) => {
+      tcpClient.write(buildMessage(`<Request ID="${id}" Action="READ"><Watches/></Request>`, ""));
+      ydoc.transact(() => {
+        communication.insert(communication.length, `<Request ID="${id}" Action="READ"><Watches/></Request>` + "\n");
+      });
+      id++;
+      tcpClient.once('data', (data) => {
+        ydoc.transact(() => {
+          communication.insert(communication.length, data.toString("utf-8") + "\n");
+        });
+        resolve();
+      });
+    });
+  }
+
+  setTimeout(watchDINASORE, 1000, id);
 }
 
 function buildMessage(message, config) {
@@ -190,8 +240,7 @@ function exportFBs() {
 async function syncFBs() {
   var config = {
     "master-fbs-path": "sync/fbs",
-    "dinasores": [],
-    "strategy": "wipe"
+    "dinasores": []
   };
 
   resources.forEach((resource, id) => {
