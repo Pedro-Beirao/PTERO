@@ -281,6 +281,10 @@ The first step is to ensure that each \textit{DINASORE} instance has access to t
 }
 \end{lstlisting}
 
+This file is generated from the configured fields in the \textit{Devices Configuration View}. When the script is ran, it will read the contents of this file in order to connect and send the files to each \textit{DINASORE}.
+
+% TODO idk what else there is about sync
+
 \subsection{Send Commands}
 Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these commands are issued is important, as connections can only be established between existing nodes.
 
@@ -323,6 +327,8 @@ Then the connections are mapped on which commands are mapped to each machine, we
   <Connection Destination="SENSOR_SIMULATOR.VALUE" Source="MOVING_AVERAGE.VALUE"/>
 </Request>
 \end{lstlisting}
+
+% TODO how the messages are built (header)
 
 \subsection{Console}
 To give the team visibility into the deployment process, a console is provided in the \ac{IDE} that displays a live log of each action taken during deployment. As commands are sent and responses are received, they are streamed to the console in the browser, allowing the team to monitor progress and quickly identify any errors that may occur.
