@@ -44,23 +44,31 @@ Being the middleware, there are 4 different types of network communications that
 The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} programs.
 % TODO want to talk a bit more about what a frontend is
 
-Each subsection will first explain and describe what an \ac{IDE} should implement, and follow by showing how the prototype solved the proposed requirements.
+Each subsection will first explain and describe what an \ac{IDE} should implement and follow by showing how the prototype solved the proposed requirements.
 
 \subsection{Devices Configuration View}
-In the interest of distributed \ac{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so we need a clean way to define the resources that are available. % TODO something more?
+In the interest of distributed \ac{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so we need a clean way to define the resources that are available. Both the \textit{DINASORE} port and the \textit{SSH} port need to be defined for each defined since deployment communication will be made through both.
+% TODO need to mention sync
+% TODO something more
 
-Each \textit{DINASORE} should have three fields that the team can configure:
+Each device should have several fields that the team can configure:
 
 \begin{itemize}
   \item \textbf{Name}: Human friendly name to quickly identify what device this is
-  \item \textbf{Endpoint}: The IP address of the device and the port where \textit{DINASORE} is running
+  \item \textbf{Address}: The address of the device
+  \item \textbf{DINASORE port}: The port where \textit{DINASORE} is running
   \item \textbf{Color}: The color associated with this \textit{DINASORE} instance, providing a visual distinction in the \textit{Graph View} between function blocks mapped to different instances.
+  \item \textbf{SSH port}: The open \textit{SSH} port of the device.
+  \item \textbf{SSH user} and \textbf{SSH password}: The \textit{SSH} login credentials.
+  \item \textbf{SSH path to DINASORE}: Path in the \textit{SSH} filesystem pointing to where \textit{DINASORE} is located.
 \end{itemize}
 
 With the existence of the middleware, this solution removes the requirement for each team member to configure the available \textit{DINASORE} instances in their own \ac{IDE}, and instead keeps a shared configuration in the server database.
 
+% TODO mention that the following is the ui of the prototype
+
 \begin{figure}[H]
-  \includegraphics[width=0.7\linewidth]{devices-configuration.jpg}
+  \includegraphics[width=0.9\linewidth]{devices-configuration.jpg}
   \caption{Devices Configuration View}
   \label{fig:devices-configuration}
 \end{figure}

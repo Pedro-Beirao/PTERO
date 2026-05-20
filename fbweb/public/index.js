@@ -26,17 +26,15 @@ provider.on('synced', (isSynced) => {
 
     window.nodes.observeDeep((events) => {
       events.forEach(event => {
-        // TODO dont need the origin cuz the id cant be the same when adding. is this good enought?
-        // if (event.transaction.origin == 'programmatic') return;
         event.changes.keys.forEach((change, id) => {
           // Node Updated
           if (event.target != window.nodes) {
             const node_map = event.target;
             const id = node_map.get("id");
 
-            // If the map has an id, then its the node itself
-            if (id) {
-              const node = window.litegraph.getNodeById(id); // TODO the id is stored in the node_map, i dont like that
+            // If the map has an id, type and title, then its the node itself
+            if (id && node_map.get("type") && node_map.get("title")) {
+              const node = window.litegraph.getNodeById(id);
               node.title = node_map.get("title");
               node.pos = [node_map.get("x"), node_map.get("y")];
               node.mappedto = node_map.get("mappedto");
@@ -88,8 +86,8 @@ provider.on('synced', (isSynced) => {
 
     window.links.observe((event) => {
       if (event.transaction.origin === 'local') return;
-// TODO really dislike this whole logic
-// TODO nothing should be named edge
+// really dislike this whole logic
+// nothing should be named edge
       event.changes.delta.forEach((delta) => {
         if (delta.insert) {
           delta.insert.forEach((edge) => {
@@ -175,7 +173,6 @@ window.litegraph.onNodeConnectionChange = function(type, node, slot, target_node
   if (type != LiteGraph.OUTPUT) return;
 
   window.ydoc.transact(() => {
-    // TODO should we instead loop thru all outputs? and not just in the slot one?
     node.outputs[slot].links?.forEach((linkId) => {
       const link = window.litegraph.links[linkId];
       if (!link) return;
@@ -295,7 +292,7 @@ function registerNode(fbt_doc) {
       }
     }
 
-    // TODO the width still doenst work correctly, for example the fb name can break
+    // TODO the width still doenst work correctly, for example a big fb name can break
     // Investigate that lower/upper makes a difference
     this.size = [this.size[0] + 50, this.size[1]];
   }

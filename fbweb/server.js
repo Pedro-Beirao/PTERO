@@ -61,14 +61,12 @@ function prepareMessages() {
     const fbname = node_map.get("title") || fbtype;
 
     messages.push({ message: `<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`, config: "EMB_RES" });
-    // console.log(`<Request Action="CREATE" ID="${message_id}"><FB Name="${fbname}" Type="${fbtype}"/></Request>`);
     message_id++;
 
 
     node_map.get("properties").forEach((value, key) => {
       if (value != "") {
         messages.push({ message: `<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`, config: "EMB_RES" });
-        // console.log(`<Request Action="WRITE" ID="${message_id}"><Connection Destination="${fbname}.${key}" Source="${value}"/></Request>`)
         message_id++;
       }
     });
@@ -76,10 +74,6 @@ function prepareMessages() {
 
   links.forEach((link_map, id) => {
     // [link_id, source_id, source_slot, destination_id, destination_slot, data_type]
-
-    // TODO Is it possible that link[1] - 1 isnt always correct?
-    // const source_fbtype = data["nodes"][link[1] - 1]["type"].split("/")[1]
-    // const destination_fbtype = data["nodes"][link[3] - 1]["type"].split("/")[1]
     const source = nodes.get(link_map.origin_id);
     const destination = nodes.get(link_map.target_id);
 
