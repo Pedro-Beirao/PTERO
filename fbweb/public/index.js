@@ -45,13 +45,18 @@ provider.on('synced', (isSynced) => {
               node.bgcolor = color;
             }
 
-            // If not, it is the properties
+            // If not, it is the properties or watches
             else {
               const node = window.litegraph.getNodeById(event.path[0]);
               Object.keys(node.properties).forEach((key) => {
                 const new_value = node_map.get(key);
                 if (new_value)
                   node.properties[key] = new_value;
+              });
+              Object.keys(node.watches).forEach((key) => {
+                const new_value = node_map.get(key);
+                if (new_value)
+                  node.watches[key] = new_value;
               });
             }
             window.litegraph.setDirtyCanvas(true, true);
@@ -132,6 +137,11 @@ window.litegraph.onNodeAdded = function(node) {
       prop_map.set(key, value);
     });
     node_map.set("properties", prop_map);
+    const watch_map = new Y.Map()
+    Object.entries(node.watches).forEach(([key, value]) => {
+      watch_map.set(key, value);
+    });
+    node_map.set("watches", watch_map);
     window.nodes.set(node.id, node_map);
   }, 'programmatic');
 }
@@ -219,6 +229,9 @@ function populateGraph() {
         node_map.get("properties").forEach((value, key) => {
           node.properties[key] = value;
         });
+        node_map.get("watches").forEach((value, key) => {
+          node.watches[key] = value;
+        });
         window.litegraph.add(node);
       }
     }
@@ -235,8 +248,8 @@ function populateGraph() {
 
 function syncNodes() {
   LiteGraph.clearRegisteredTypes();
+  const parser = new DOMParser();
   window.fbs.forEach((fb, id) => {
-    const parser = new DOMParser();
     const fbt_doc = parser.parseFromString(fb.get("xml"), "text/xml");
     registerNode(fbt_doc)
   });
@@ -311,7 +324,7 @@ function registerNode(fbt_doc) {
       var watch = this.watches[this.outputs[i]["name"]]
       if (watch != null && watch != "") {
         ctx.font = "14px monospace";
-        ctx.fillStyle = "gray";
+        ctx.fillStyle = "white";
         ctx.textAlign = "left";
 
         const y = LiteGraph.NODE_SLOT_HEIGHT * (i + 0.5) + 9;

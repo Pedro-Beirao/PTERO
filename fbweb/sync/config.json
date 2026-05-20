@@ -10,7 +10,7 @@
     },
     {
       "address": "localhost",
-      "port": "23",
+      "port": "22",
       "username": "root",
       "password": "dinasore",
       "dinasore-path": "/sinf/dinasore"

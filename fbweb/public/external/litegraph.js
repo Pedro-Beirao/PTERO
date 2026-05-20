@@ -43,9 +43,9 @@
     WIDGET_TEXT_COLOR: "#DDD",
     WIDGET_SECONDARY_TEXT_COLOR: "#999",
 
-    LINK_COLOR: "#9A9",
-    EVENT_LINK_COLOR: "#A86",
-    CONNECTING_LINK_COLOR: "#AFA",
+    LINK_COLOR: "#787",
+    EVENT_LINK_COLOR: "#864",
+    CONNECTING_LINK_COLOR: "#8D8",
 
     MAX_NUMBER_OF_NODES: 1000, //avoid infinite loops
     DEFAULT_POSITION: [100, 100], //default node position
@@ -9706,10 +9706,10 @@ LGraphNode.prototype.executeAction = function(action)
       color = link.color || LGraphCanvas.link_type_colors[link.type];
     }
     if (!color) {
-      color = this.default_link_color;
+      color = "#464";
     }
     if (link != null && this.highlighted_links[link.id]) {
-      color = "#FFF";
+      color = "#686";
     }
 
     start_dir = start_dir || LiteGraph.RIGHT;

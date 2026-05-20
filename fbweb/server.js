@@ -2,9 +2,10 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const net = require('net');
-const Y = require('yjs')
-const { WebsocketProvider } = require('y-websocket')
-const { spawn } = require('child_process')
+const Y = require('yjs');
+const { WebsocketProvider } = require('y-websocket');
+const { spawn } = require('child_process');
+const { DOMParser } = require('@xmldom/xmldom');
 
 const ydoc = new Y.Doc()
 const provider = new WebsocketProvider('ws://localhost:1234', 'room', ydoc, { connect: true, resyncInterval: 5000 })
@@ -13,7 +14,6 @@ const nodes = ydoc.getMap('nodes');
 const links = ydoc.getArray('links');
 const fbs = ydoc.getMap("fbs")
 const resources = ydoc.getMap("resources")
-const watch = ydoc.getMap("watch")
 // TODO use keymapvalue
 
 var tcp_sockets = [];
@@ -170,14 +170,11 @@ async function watchDINASORE(id) {
         }
         if (address == resources.get(node_map.get("mappedto")).get("Address") &&
             tcpClient.remotePort == resources.get(node_map.get("mappedto")).get("DINASORE port")) {
-          for (const [key, value] of node_map.get("properties").entries()) {
+          for (const [key, value] of node_map.get("watches").entries()) {
             await new Promise((resolve, reject) => {
-              tcpClient.write(buildMessage(`<Request ID="${id}" Action="CREATE"><Watch Source="${node_map.get('title')}.VALUE" Destination="*"/></Request>`, "EMB_RES"));
+              tcpClient.write(buildMessage(`<Request ID="${id}" Action="CREATE"><Watch Source="${node_map.get('title')}.${key}" Destination="*"/></Request>`, "EMB_RES"));
               id++;
               tcpClient.once('data', (data) => {
-                ydoc.transact(() => {
-                  communication.insert(communication.length, data.toString("utf-8") + "\n");
-                });
                 resolve();
               });
             });
@@ -188,14 +185,32 @@ async function watchDINASORE(id) {
 
     await new Promise((resolve, reject) => {
       tcpClient.write(buildMessage(`<Request ID="${id}" Action="READ"><Watches/></Request>`, ""));
-      ydoc.transact(() => {
-        communication.insert(communication.length, `<Request ID="${id}" Action="READ"><Watches/></Request>` + "\n");
-      });
       id++;
       tcpClient.once('data', (data) => {
-        ydoc.transact(() => {
-          communication.insert(communication.length, data.toString("utf-8") + "\n");
-        });
+        const parser = new DOMParser();
+        const data_str = data.toString("utf-8");
+        const doc = parser.parseFromString(data_str.slice(data_str.indexOf('<')), 'text/xml');
+
+        const fbsEls = doc.getElementsByTagName('FB');
+         for (let i = 0; i < fbsEls.length; i++) {
+           const fbEl = fbsEls[i];
+           const fbName = fbEl.getAttribute('name');
+           const nodeMap = Array.from(nodes.values()).find(v => v.get("title") === fbName);
+
+           const portsEls = fbEl.getElementsByTagName('Port');
+           for (let j = 0; j < portsEls.length; j++) {
+             const portEl = portsEls[j];
+             const portName = portEl.getAttribute('name');
+
+             const data = portEl.getElementsByTagName('Data')[0];
+             const value = data.getAttribute('value');
+
+             ydoc.transact(() => {
+               nodeMap.get("watches").set(portName, value);
+             });
+           }
+         }
+
         resolve();
       });
     });
