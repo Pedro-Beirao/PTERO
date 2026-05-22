@@ -12,6 +12,7 @@ Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will foc
 By default, \textit{DINASORE} uses the port \textit{61499} to receive commands from the \ac{IDE} and send responses. This is important to note as it is the port that will be used as example throughout this document. The exact details of the communication implementation will be explained further in \Cref{sec:deployment}.
 
 % TODO mention that dinasore is not supported in newer versions of 4diac ide, which means it doesnt run on mac. maybe mention it in another section
+% TODO mention that the communication with 4diac ide was studied
 
 \begin{figure}[h!]
   \includegraphics[width=0.5\linewidth]{dinasore-logo.png}
@@ -78,7 +79,6 @@ This is where individual function blocks are defined. It allows the team to spec
 
 Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function block is defined in a \textit{xml} format file with a \textit{.fbt} extension, as seen in \Cref{lst:fb-xml} which results in \Cref{fig:example-fb}. % TODO talk about the format
 
-\clearpage
 \begin{lstlisting}[language=XML, caption={Example \textit{xml} definition of a function block}, label={lst:fb-xml}]
 <FBType Name="NEW_FB_1">
   <InterfaceList>
@@ -169,8 +169,8 @@ A function block will have some input and output data ports, each with its own a
         \texttt{LREAL}   & Long floating point  & 64-bit \\
         \texttt{STRING}  & ASCII string         & Variable \\
         \texttt{WSTRING} & Unicode string       & Variable \\
-        \texttt{TIME}    & Time interval        & —      \\
-        \texttt{DATE}    & Date                 & —      \\
+        \texttt{TIME}    & Time interval        &        \\
+        \texttt{DATE}    & Date                 &        \\
         \hline
     \end{tabular}
     \caption{IEC 61131-3 Data Types \cite{noauthor_iec_2026}}
@@ -200,8 +200,10 @@ Among these alternatives, \textit{LiteGraph.js} presented the best balance betwe
 
 % TODO a lot
 
-\subsection{Console}
+\subsection{Console View}
 This view will display the console logs that are generated when deploying. The contents of it will be discussed in detail in \Cref{sec:deployment}.
+
+% TODO add image
 
 \section{Real-Time Collaboration} \label{sec:real-time-collaboration}
 One of the main goals of the proposed solution is to support collaborative development of \textit{IEC 61499} applications. Since \ac{CPPS} projects are often developed by multiple team members simultaneously, the code collaboration system must accommodate for this. Traditional version control systems such as \textit{Git} are not well suited for collaborative editing of structured graph based data represented in formats such as \textit{json} or \textit{xml}. Although these formats are text based, small logical modifications in the application model can produce large text changes due to formatting changes, element reordering or nested structure updates. As a result, merge conflicts become frequent and difficult to resolve, especially when multiple team members edit the a graph at the same time. This limitation makes real time collaborative editing impractical, motivating the use of synchronisation approaches based on shared data structures and conflict free replication mechanisms such as \acp{CRDT}.
@@ -286,7 +288,7 @@ This file is generated from the configured fields in the \textit{Devices Configu
 % TODO idk what else there is about sync
 
 \subsection{Send Commands}
-Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these messages are issued is important, as connections can only be established between existing nodes.
+Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these messages are issued is important, as connections can only be established between existing nodes. The following two subsections describe how the messages are constructed and what they contain.
 
 \subsubsection{Build messages}
 Before the messages can be sent, they need to be built into the format that \textit{DINASORE} is expecting. It consists of a two part message: the first part refers to the configuration name, explained later in \Cref{subsubsec:send-messages}, while the second is the actual message payload containing the wanted command. Each of these parts are preceded by a 3-byte header composed of a \texttt{0x50} byte followed by 2 bytes indicating the size of the corresponding content. A representation of this format is presented in \Cref{fig:build-message}.
@@ -345,11 +347,9 @@ function build_message(message_payload, configuration_name) {
 \end{lstlisting}
 
 \subsubsection{Send Messages} \label{subsubsec:send-messages}
-% TODO talk about each message requiring a configuration name
+Now that we have defined how to build the messages, we can explore the sequence of commands that need to be sent to each \textit{DINASORE} instance and what configuration name should be used in each. The server connects to each instance and transmits these messages sequentially. The order of message transmission is critical, as connections can only be established between existing nodes. The configuration name used in each message will be determined by whether the command is bound to any resource. In \textit{DINASORE} the existing resource is \textit{EMB\_RES} as mentioned before.
 
-% TODO explain how it connects and how it send messages
-
-First we need to send the 2 commands in \Cref{lst:deploy-setup} to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them.
+First we need to send the 2 commands in \Cref{lst:deploy-setup} to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
 
 \begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-setup}]
 <Request Action="QUERY" ID="0">
@@ -361,7 +361,7 @@ First we need to send the 2 commands in \Cref{lst:deploy-setup} to every device.
 </Request>
 \end{lstlisting}
 
-Next, depending on which commands are mapped to each machine, we \texttt{CREATE} all the mapped nodes and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}.
+Next, depending on which commands are mapped to each machine, we \texttt{CREATE} all the mapped nodes and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}. The configuration name in these and all following commands will be "\textit{EMB\_RES}" as they need to be bound to it in order to be initialised and ran.
 
 \begin{lstlisting}[language=XML, caption={\texttt{CREATE} nodes deployment commands}, label={lst:deploy-create-nodes}]
 <Request Action="CREATE" ID="2">
@@ -393,20 +393,27 @@ Then the connections are created between the mapped nodes. A \texttt{Source} a \
 </Request>
 \end{lstlisting}
 
-Finally the \texttt{START} command in \Cref{lst:deploy-start} can be issued, which will request for the start of the program execution.
+Finally the \texttt{START} command in \Cref{lst:deploy-start} can be issued, which will request for the start of the program execution. For this command the configuration name used will also be "\textit{EMB\_RES}" as it is this resource that will begin the execution of the program.
 
 \begin{lstlisting}[language=XML, caption={\texttt{START} deployment command}, label={lst:deploy-start}]
 <Request Action="START" ID="8"/>
 \end{lstlisting}
 
-After each request is sent, a response will be returned by the \textit{DINASORE}. It is important for the \ac{IDE} to listen for these responses and only send the next request once the response corresponding to the previous request is received. The responses have the format shown in \Cref{lst:deploy-response}. The \texttt{ID} of the response will be the same of the associated request.
+After each request is sent, a response will be returned by the \textit{DINASORE}. It is important for the \ac{IDE} to listen for these responses and only send the next request once the response corresponding to the previous request is received. The responses have the format shown in \Cref{lst:deploy-response}. The \texttt{ID} of the response will be the same of the associated request. The format of the responses is the same as the requests and the configuration name that is used is empty.
 
 \begin{lstlisting}[language=XML, caption={\texttt{Response} after a deployment command is sent}, label={lst:deploy-response}]
 <Response ID="4"/>
 \end{lstlisting}
 
 \subsection{Console}
-To give the team visibility into the deployment process, a console is provided in the \ac{IDE} that displays a live log of each action taken during deployment. As commands are sent and responses are received, they are streamed to the console in the browser, allowing the team to monitor progress and quickly identify any errors that may occur.
+To give the team visibility into the deployment process right from the \ac{IDE}, without having to log into the server, a console is provided in the \textit{Console View} that displays a live log of each action taken during deployment. There are 2 main things being logged:
+
+\begin{itemize}
+  \item \textbf{Synchronise}: The output of running the \textit{Python} script is displayed so that the team see that the \textit{SSH} communication is being done properly.
+  \item \textbf{Send Commands}: As commands are sent and responses are received, they are displayed, allowing the team to make sure each command is formulated correctly, being processed and a response is issued.
+\end{itemize}
+
+% TODO add listing with logs?
 
 \subsection{Watch}
 Once the application is running, the \textit{Watch} view allows the team to monitor it in real time. The values of function block variables are continuously retrieved from the \textit{DINASORE} instances and displayed in the \ac{IDE}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development.
