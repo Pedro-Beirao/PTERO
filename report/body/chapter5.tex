@@ -2,6 +2,8 @@
 
 To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. % TODO add a bit more here
 
+% TODO talk about how the requirements were explored as code was developed
+
 % \section{Technology Selection}
 % Firstly some decisions need to be made to choose the most appropriate technologies to support this work.
 
@@ -402,7 +404,7 @@ Finally the \texttt{START} command in \Cref{lst:deploy-start} can be issued, whi
 After each request is sent, a response will be returned by the \textit{DINASORE}. It is important for the \ac{IDE} to listen for these responses and only send the next request once the response corresponding to the previous request is received. The responses have the format shown in \Cref{lst:deploy-response}. The \texttt{ID} of the response will be the same of the associated request. The format of the responses is the same as the requests and the configuration name that is used is empty.
 
 \begin{lstlisting}[language=XML, caption={\texttt{Response} after a deployment command is sent}, label={lst:deploy-response}]
-<Response ID="4"/>
+<Response ID="8"/>
 \end{lstlisting}
 
 \subsection{Console}
@@ -416,4 +418,47 @@ To give the team visibility into the deployment process right from the \ac{IDE},
 % TODO add listing with logs?
 
 \subsection{Watch}
-Once the application is running, the \textit{Watch} view allows the team to monitor it in real time. The values of function block variables are continuously retrieved from the \textit{DINASORE} instances and displayed in the \ac{IDE}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development.
+Once the application is running, the values of the node outputs are continuously retrieved from the \textit{DINASORE} instances and displayed in the \textit{Graph View}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development. In order to get these values, the \ac{IDE} must tell \textit{DINASORE} instances which output slots it wants to watch and then request the values. In this prototype, for simplicity, all data outputs are watched and we need to send a watch creation request for each. Note in \Cref{lst:deploy-create-watch} that the \texttt{ID} is reset after deploying.
+
+\begin{lstlisting}[language=XML, caption={\texttt{CREATE} watches after deploying}, label={lst:deploy-create-watch}]
+<Request ID="0" Action="CREATE">
+  <Watch Source="SENSOR_SIMULATOR.VALUE" Destination="*" />
+</Request>
+
+<Request ID="1" Action="CREATE">
+  <Watch Source="MOVING_AVERAGE.VALUE_MA" Destination="*" />
+</Request>
+\end{lstlisting}
+
+After creating the watches we can send a request to receive the values using the command in \Cref{lst:deploy-read-watch}. This will return the response in \Cref{lst:deploy-watch}, which by parsing the values, allows the prototype to display them in the \textit{Graph View}, on the right side of the corresponding output slots, demonstrated in \Cref{fig:display-watch}.
+
+\begin{lstlisting}[language=XML, caption={Request to \texttt{READ} watches}, label={lst:deploy-read-watch}]
+<Request ID="2" Action="READ">
+  <Watches/>
+</Request>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={Response to \texttt{READ} watches}, label={lst:deploy-watch}]
+<Response ID="2">
+	<Watches>
+		<Resource name="EMB_RES">
+			<FB name="SENSOR_SIMULATOR">
+				<Port name="VALUE">
+					<Data value="13.75" />
+				</Port>
+			</FB>
+			<FB name="MOVING_AVERAGE">
+				<Port name="VALUE">
+					<Data value="13.3" />
+				</Port>
+			</FB>
+		</Resource>
+	</Watches>
+</Response>
+\end{lstlisting}
+
+\begin{figure}[H]
+  \includegraphics[width=0.7\linewidth]{display-watch.jpg}
+  \caption{Watching an output slot in the \textit{Graph View}}
+  \label{fig:display-watch}
+\end{figure}
