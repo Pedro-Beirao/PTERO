@@ -150,7 +150,7 @@ This view contains a split view text editor: a side for the \textit{.fbt} file a
 \subsection{Graph View}
 This view is the primary workspace for composing the application. Function blocks are placed on the canvas and connected together by drawing connections between their data and event ports, forming the application network. Event ports are commonly color coded red, while data ports are color coded blue. % TODO talk about coloring
 
-In \textit{DINASORE}, all \textit{INIT} event ports are by default assigned to \textit{EMB\_RES}, a default function block that sends an event when the application is started. This removes the need to connect the \textit{INIT} event ports, but the \textit{READ} event port is not assigned by default and therefore needs to be connected in every function block. The \texttt{schedule()} function will only be called and generate output when an event is sent to the \textit{READ} event port. The described event driven execution model is what allows an explicit specification of the execution order of function blocks. Periodic out of event execution of function blocks is also possible with the implementation of a looping function block that triggers events \cite{noauthor_iec_nodate}.
+In \textit{DINASORE}, all \textit{INIT} event ports are by default assigned to \textit{EMB\_RES}, the default resource that sends an event when the application is started. This removes the need to connect the \textit{INIT} event ports, but the \textit{READ} event port is not assigned by default and therefore needs to be connected in every function block. The \texttt{schedule()} function will only be called and generate output when an event is sent to the \textit{READ} event port. The described event driven execution model is what allows an explicit specification of the execution order of function blocks. Periodic out of event execution of function blocks is also possible with the implementation of a looping function block that triggers events \cite{noauthor_iec_nodate}.
 
 A function block will have some input and output data ports, each with its own associated data type. For example, an \textit{INT} input port will not accept data from a \textit{WORD} output port, and therefore should not be able to connect to it. It is also possible to set a default value for an input if no output is connected to it, there is an editable string field for this which gets converted to the expected data type by the \ac{RTE}. The data types supported by \textit{IEC 61499} are derived from and defined by \textit{IEC 61131-3}.
 
@@ -289,10 +289,67 @@ This file is generated from the configured fields in the \textit{Devices Configu
 Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these messages are issued is important, as connections can only be established between existing nodes.
 
 \subsubsection{Build messages}
-Before the messages can be sent, they need to be built into the format that \textit{DINASORE} is expecting.
+Before the messages can be sent, they need to be built into the format that \textit{DINASORE} is expecting. It consists of a two part message: the first part refers to the configuration name, explained later in \Cref{subsubsec:send-messages}, while the second is the actual message payload containing the wanted command. Each of these parts are preceded by a 3-byte header composed of a \texttt{0x50} byte followed by 2 bytes indicating the size of the corresponding content. A representation of this format is presented in \Cref{fig:build-message}.
 
-\subsubsection{Send messages}
-First we need to send the 2 commands in \Cref{lst:deploy-setup} to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} function block which will be automatically connected to all other function block nodes to initialize them.
+\begin{figure}[H]
+  \includegraphics[width=0.9\linewidth]{build-message.png}
+  \caption{\textit{DINASORE} communication format}
+  \label{fig:build-message}
+\end{figure}
+
+The \textit{4diac\_simulator.py} file, part of the \textit{tests/} folder of \textit{DINASORE}, implements this method in \textit{Python} as shown in \Cref{lst:build-message-py}. For this prototype, it was necessary to implement it in \textit{JavaScript}, as shown in \Cref{lst:build-message-js}.
+
+\begin{lstlisting}[language=Python, caption={build\_message() in Python}, label={lst:build-message-py}]
+def build_message(message_payload, configuration_name):
+  # build the first part of the header
+  hex_input = '{:04x}'.format(len(configuration_name))
+  second_byte = int(hex_input[0:2], 16)
+  third_byte = int(hex_input[2:4], 16)
+  response_len = struct.pack('BB', second_byte, third_byte)
+  response_header_1 = b''.join([b'\x50', response_len])
+
+  # build the second part of the header
+  hex_input = '{:04x}'.format(len(message_payload))
+  second_byte = int(hex_input[0:2], 16)
+  third_byte = int(hex_input[2:4], 16)
+  response_len = struct.pack('BB', second_byte, third_byte)
+  response_header_2 = b''.join([b'\x50', response_len])
+
+  # join the 3 parts
+  response = b''.join([response_header_1, configuration_name, response_header_2, message_payload])
+  return response
+\end{lstlisting}
+
+\begin{lstlisting}[language=JavaScript, caption={build\_message() in JavaScript}, label={lst:build-message-js}]
+function build_message(message_payload, configuration_name) {
+  const configBuffer = Buffer.from(configuration_name, 'utf-8');
+  const messageBuffer = Buffer.from(message_payload, 'utf-8');
+
+  // Header 1: [0x50][len_hi][len_lo]
+  const header1 = Buffer.alloc(3);
+  header1[0] = 0x50;
+  header1.writeUInt16BE(configBuffer.length, 1);
+
+  // Header 2: [0x50][len_hi][len_lo]
+  const header2 = Buffer.alloc(3);
+  header2[0] = 0x50;
+  header2.writeUInt16BE(messageBuffer.length, 1);
+
+  return Buffer.concat([
+    header1,
+    configBuffer,
+    header2,
+    messageBuffer
+  ]);
+}
+\end{lstlisting}
+
+\subsubsection{Send Messages} \label{subsubsec:send-messages}
+% TODO talk about each message requiring a configuration name
+
+% TODO explain how it connects and how it send messages
+
+First we need to send the 2 commands in \Cref{lst:deploy-setup} to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them.
 
 \begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-setup}]
 <Request Action="QUERY" ID="0">
