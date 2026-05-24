@@ -1,21 +1,23 @@
 <div id="toolbar">
-  <div class="tab active" data-panel="panel-graph" onclick="switchTab(this)">
+  <div class="tab active" data-panel="panel-graph" onclick="window.switchTab(this)">
     Graph
   </div>
-  <div class="tab" data-panel="panel-fbs" onclick="switchTab(this)">
+  <div class="tab" data-panel="panel-fbs" onclick="window.switchTab(this)">
     Function Blocks
   </div>
-  <div class="tab" data-panel="panel-config" onclick="switchTab(this)">
+  <div class="tab" data-panel="panel-config" onclick="window.switchTab(this)">
     Config
   </div>
-  <div class="tab" data-panel="panel-console" onclick="switchTab(this)">
+  <div class="tab" data-panel="panel-console" onclick="window.switchTab(this)">
     Console
   </div>
 
   <div id="toolbar-actions">
-    <button class="action-btn secondary" onclick="exportGraph()">⤓ Export</button>
-    <button class="action-btn primary" onclick="deploy()">▶ Deploy</button>
+    <!--<button class="action-btn secondary" onclick="window.toolbar_exportGraph()">Export</button>-->
+    <button class="action-btn secondary" onclick="window.toolbar_clearStorage()">Clear Storage</button>
+    <button class="action-btn secondary" onclick="window.toolbar_restartDINASORE()">Restart DINASORE</button>
+    <button class="action-btn primary" onclick="window.toolbar_deploy()">▶ Deploy</button>
   </div>
 </div>
 
-<script src="toolbar.js"></script>
+<script type="module" src="toolbar.js"></script>

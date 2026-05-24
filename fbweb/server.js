@@ -34,6 +34,13 @@ app.get('/', (req, res) => res.render('index'));
 // Middleware to parse JSON and XML
 app.use(express.json());
 
+app.post('/restart_dinasore', async (req, res) => {
+  spawn('docker', ['restart', 'dinasore61499']);
+  ydoc.transact(() => {
+    communication.insert(communication.length, 'Restarting docker dinasore61499 (takes less than a minute)' + "\n");
+  });
+});
+
 var deploying = false
 app.post('/deploy', async (req, res) => {
   deploying = true

@@ -1,22 +1,42 @@
+import * as Y from "https://esm.sh/yjs@13.6.0";
+
 function exportGraph() {
   const data = window.litegraph.serialize();
   const json = JSON.stringify(data, null, 2);
   console.log(json);
 }
 
-async function sendCommandToBackend(messages) {
+function clearStorage() {
+  ydoc.transact(() => {
+    ydoc.share.forEach(type => {
+      if (type instanceof Y.Map) {
+        type.clear()
+      }
+      else if (type instanceof Y.Array) {
+        type.delete(0, type.length)
+      }
+      else if (type instanceof Y.Text) {
+        type.delete(0, type.length)
+      }
+      else if (
+        type instanceof Y.XmlFragment ||
+        type instanceof Y.XmlElement
+      ) {
+        type.delete(0, type.length)
+      }
+    })
+  })
+}
+
+async function restartDINASORE() {
   try {
-      const response = await fetch('/deploy', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(messages),
-      });
-      const result = await response.text();
-      console.log('Response from backend:', result);
+    const response = await fetch('/restart_dinasore', {
+      method: 'POST'
+    });
+    const result = await response.text();
+    console.log('Response from backend:', result);
   } catch (error) {
-      console.error('Error sending command:', error);
+    console.error('Error restarting DINASORE:', error);
   }
 }
 
@@ -50,3 +70,9 @@ function switchTab(el) {
     window.com_editorview.refresh();
   }
 }
+
+window.toolbar_exportGraph = exportGraph
+window.toolbar_clearStorage = clearStorage
+window.toolbar_restartDINASORE = restartDINASORE
+window.toolbar_deploy = deploy
+window.switchTab = switchTab
