@@ -12,12 +12,12 @@ RUN mkdir -p /var/run/sshd
 EXPOSE 22
 
 # Move to base location
-WORKDIR /sinf
+WORKDIR /root
 
 # Clone from github
 RUN git clone https://github.com/Pedro-Beirao/dinasore.git
 
-WORKDIR /sinf/dinasore
+WORKDIR /root/dinasore
 
 # Install Python requirements
 RUN pip install -r requirements.txt
@@ -26,17 +26,16 @@ RUN pip install numpy scipy argparse psycopg2 asyncua
 # -------------------------------------
 # Add Custom Function Blocks
 
-WORKDIR /sinf/dinasore/resources/function_blocks
+WORKDIR /root/dinasore/resources/function_blocks
 
-# All Custom FB blocks should be placed under "project/SINF_0/FBs/SINF"
 ADD ../data/fb/* .
 
 # -------------------------------------
 # Docker entrypoint
-WORKDIR /sinf
+WORKDIR /root
 COPY --chmod=0700 dinasore/docker-entrypoint.sh .
 
 # Ports: no need to expose because we are using the host's NIC
 #   4DIAC-IDE: 61499
 #   OPC-UA: 4840
-CMD ["/bin/bash", "-c", "/usr/sbin/sshd -D & /sinf/docker-entrypoint.sh"]
+CMD ["/bin/bash", "-c", "/usr/sbin/sshd -D & /root/docker-entrypoint.sh"]
