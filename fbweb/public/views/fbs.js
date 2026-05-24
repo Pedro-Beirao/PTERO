@@ -37,6 +37,9 @@ document.getElementById("add-fb").addEventListener("click", () => {
 function populateSidebar() {
   fbs_list.innerHTML = "";
 
+  if (window.fbs.length == 0)
+    add_fb()
+
   window.fbs.forEach((fb, id) => {
     const div = document.createElement("div");
     div.className = "fb-item";
@@ -94,6 +97,7 @@ function InputBind(uuid, key, div) {
   }
   input.addEventListener('input', onInput);
 
+  // TODO delete text when it is deleted
   const onClick = () => {
     window.ydoc.transact(() => {
       fbs.delete(uuid);

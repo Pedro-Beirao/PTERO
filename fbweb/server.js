@@ -8,7 +8,7 @@ const { spawn } = require('child_process');
 const { DOMParser } = require('@xmldom/xmldom');
 
 const ydoc = new Y.Doc()
-const provider = new WebsocketProvider('ws://localhost:1234', 'room', ydoc, { connect: true, resyncInterval: 5000 })
+const provider = new WebsocketProvider('ws://localhost:1234', 'room', ydoc, { binary: true, connect: true, resyncInterval: 5000 })
 const communication = ydoc.getText("communication")
 const nodes = ydoc.getMap('nodes');
 const links = ydoc.getArray('links');
@@ -21,7 +21,7 @@ var tcp_sockets = [];
 const app = express();
 const PORT = 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
@@ -34,7 +34,9 @@ app.get('/', (req, res) => res.render('index'));
 // Middleware to parse JSON and XML
 app.use(express.json());
 
+var deploying = false
 app.post('/deploy', async (req, res) => {
+  deploying = true
   ydoc.transact(() => {
     communication.delete(0, communication.length);
   });
@@ -43,6 +45,7 @@ app.post('/deploy', async (req, res) => {
 
   const messages = prepareMessages();
   await sendToDINASORE(messages, res);
+  deploying = false
 
   watchDINASORE(0);
 });
@@ -76,6 +79,7 @@ function prepareMessages() {
     // [link_id, source_id, source_slot, destination_id, destination_slot, data_type]
     const source = nodes.get(link_map.origin_id);
     const destination = nodes.get(link_map.target_id);
+    console.log(link_map.target_id)
 
     const source_name = source.get("title")
     const destination_name = destination.get("title")
@@ -162,8 +166,8 @@ async function watchDINASORE(id) {
         if (address === '::1' || address === '127.0.0.1' || address === '::ffff:127.0.0.1') {
           address = 'localhost';
         }
-        if (address == resources.get(node_map.get("mappedto")).get("Address") &&
-            tcpClient.remotePort == resources.get(node_map.get("mappedto")).get("DINASORE port")) {
+        if (address == resources.get(node_map.get("mappedto"))?.get("Address") &&
+            tcpClient.remotePort == resources.get(node_map.get("mappedto"))?.get("DINASORE port")) {
           for (const [key, value] of node_map.get("watches").entries()) {
             await new Promise((resolve, reject) => {
               tcpClient.write(buildMessage(`<Request ID="${id}" Action="CREATE"><Watch Source="${node_map.get('title')}.${key}" Destination="*"/></Request>`, "EMB_RES"));
@@ -210,7 +214,8 @@ async function watchDINASORE(id) {
     });
   }
 
-  setTimeout(watchDINASORE, 1000, id);
+  if (!deploying)
+    setTimeout(watchDINASORE, 1000, id);
 }
 
 function buildMessage(message, config) {
@@ -304,5 +309,5 @@ async function syncFBs() {
     });
   }
 
-  await promise_sync();
+  return await promise_sync();
 }

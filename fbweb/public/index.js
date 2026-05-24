@@ -8,8 +8,12 @@ LiteGraph.NODE_DEFAULT_BOXCOLOR = "#AAA"
 window.litegraph = new LGraph();
 
 window.ydoc = new Y.Doc();
-// const indexeddbProvider = new IndexeddbPersistence('room', ydoc)
-window.provider = new WebsocketProvider("ws://localhost:1234", "room", ydoc);
+
+const wsUrl = (window.location.hostname === 'localhost' ||
+              window.location.hostname == '127.0.0.1')
+  ? 'ws://localhost:1234'
+  : `wss://${window.location.host}`;
+window.provider = new WebsocketProvider(wsUrl, "room", ydoc, {binary: true});
 window.nodes = window.ydoc.getMap('nodes');
 window.links = window.ydoc.getArray('links');
 window.fbs = window.ydoc.getMap('fbs');
@@ -198,11 +202,12 @@ window.litegraph.onNodeConnectionChange = function(type, node, slot, target_node
         `${l.origin_id}:${l.origin_slot}-${l.target_id}:${l.target_slot}`
       )
     );
-    window.links.toArray().forEach((edge, i) => {
-      if (!currentLinkIds.has(edge.id)) {
+    const arr = window.links.toArray();
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (!currentLinkIds.has(arr[i].id)) {
         window.links.delete(i, 1);
       }
-    });
+    }
   }, 'local');
 };
 
