@@ -66,6 +66,8 @@ Each device should have several fields that the team can configure:
   \item \textbf{SSH path to DINASORE}: Path in the \textit{SSH} filesystem pointing to where \textit{DINASORE} is located.
 \end{itemize}
 
+% TODO mention that its best to edit in the ide than in the server
+
 With the existence of the middleware, this solution removes the requirement for each team member to configure the available \textit{DINASORE} instances in their own \ac{IDE}, and instead keeps a shared configuration in the server database.
 
 % TODO mention that the following is the ui of the prototype
@@ -187,6 +189,7 @@ Each function block can also be mapped to a \textit{DINASORE} instance, with the
 
 This system was achieved in the prototype with the use of the \textit{LiteGraph.js} library, a graph node editor for the browser. A lot of other libraries were considered, but this one was chosen due to the requirements of the proposed solution. Let us discuss the alternatives that were considered to understand why this choice is important:
 
+% TODO add references for each
 \begin{itemize}
   \item \textbf{Rete.js}: A very flexible and complete editor framework, but the added complexity makes it harder to integrate the desired features. It is also a more general purpose editor, meaning the multi-input and multi-output function blocks with specific data types are not as well supported.
   \item \textbf{xyflow}: A highly customizable framework composed of React Flow and Svelte Flow. While it provides excellent visual customisation and integration with frontend frameworks, it suffers from the same problems as \textit{Rete.js}. % TODO any word better than problems?
