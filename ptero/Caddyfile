@@ -1,0 +1,9 @@
+:3001
+
+handle /room {
+    reverse_proxy localhost:1234
+}
+
+handle {
+    reverse_proxy localhost:3000
+}
