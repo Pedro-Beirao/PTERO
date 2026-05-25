@@ -35,9 +35,11 @@ app.get('/', (req, res) => res.render('index'));
 app.use(express.json());
 
 app.post('/restart_dinasore', async (req, res) => {
-  spawn('docker', ['restart', 'dinasore61499']);
-  ydoc.transact(() => {
-    communication.insert(communication.length, 'Restarting docker dinasore61499 (takes less than a minute)' + "\n");
+  window.resources.forEach((resource, id) => {
+    spawn('docker', ['restart', 'dinasore'+String(Number(resource.get("DINASORE port")))]);
+    ydoc.transact(() => {
+      communication.insert(communication.length, 'Restarting docker dinasore61499 (takes less than a minute)' + "\n");
+    });
   });
 });
 
