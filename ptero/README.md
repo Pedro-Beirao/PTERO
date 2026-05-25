@@ -1,4 +1,4 @@
-# Programming Tool for Editing and Runtime Orchestration
+# PTERO
 
 Install dependencies
 ```bash

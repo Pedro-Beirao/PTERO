@@ -1,45 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>LiteGraph App</title>
-  <link rel="stylesheet" href="https://unpkg.com/litegraph.js/css/litegraph.css">
-  <script src="../external/litegraph.js"></script>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/mode/xml/xml.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/mode/python/python.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/theme/monokai.min.css">
-
+  <title>PTERO</title>
   <link rel="stylesheet" href="index.css">
-  <script type="module" src="index.js"></script>
 </head>
 <body>
-  <div id="not-connected">
-    <div class="not-connected-msg">
-      <div class="spinner"></div>
-      <p>Not synced. Make sure the server is running and give it some time to sync all changes.</p>
-    </div>
+  <div>
+    <img src="images/ptero.gif" height="80" alt="PTERO animation" />
+    <span class="title">PTERO</span>
   </div>
-
-  <%- include("partials/toolbar") -%>
-
-  <div id="tab-content">
-    <div class="tab-panel active" id="panel-graph">
-      <%- include("partials/graph") -%>
-    </div>
-
-    <div class="tab-panel" id="panel-fbs">
-      <%- include("partials/fbs") -%>
-    </div>
-
-    <div class="tab-panel" id="panel-config">
-      <%- include("partials/config") -%>
-    </div>
-
-    <div class="tab-panel" id="panel-console">
-      <%- include("partials/console") -%>
-    </div>
+  <div class="subtitle">
+    <strong><u>P</u></strong>rogramming <strong><u>T</u></strong>ool for <strong><u>E</u></strong>diting and <strong><u>R</u></strong>untime <strong><u>O</u></strong>rchestration
+  </div>
+  <div class="container">
+    <p>A web-based IDE for DINASORE. Developed as the prototype for my Master's Thesis.</p>
+    <p>This website is hosted in order to allow testing to be done remotely, with the objective of getting a higher number of votes.</p>
+    <br>
+    <p>If you are a <strong>SINF</strong> student, please first fill out <a href="https://forms.cloud.microsoft/e/sxPGsM0Fh4" target="_blank">this form</a> (5 minutes)</p>
+  </div>
+  <div class="container">
+    <h2>Validation</h2>
+    <p>Testing PTERO can be done remotely by accessing <a href="https://ptero.pedro-beirao.eu/ide" target="_blank">https://ptero.pedro-beirao.eu/ide</a></p>
+    <p>(The initial sync can take up to 1 minute)</p>
+    <br>
+    <p>This is a collaborative IDE and you are joining an active session, so, since other people may have been testing it before, you need to click "CLEAR STORAGE" in the top right.</p>
+    <img src="images/clear-storage.jpg" height="300" alt="CLEAR STORAGE" />
+    <br>
+    <p>Now you are ready to develop and deploy a program to DINASORE</p>
   </div>
 </body>
 </html>

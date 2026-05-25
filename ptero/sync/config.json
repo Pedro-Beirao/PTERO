@@ -1,4 +1,12 @@
 {
   "master-fbs-path": "sync/fbs",
-  "dinasores": []
+  "dinasores": [
+    {
+      "address": "localhost",
+      "port": "22",
+      "username": "root",
+      "password": "dinasore",
+      "dinasore-path": "/sinf/dinasore"
+    }
+  ]
 }
