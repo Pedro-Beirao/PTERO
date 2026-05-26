@@ -13,6 +13,14 @@ const resize_handle = document.getElementById('resize-handle');
 window.xml_editorview = CodeMirror(xml_editor, {
   lineNumbers: true,
   tabSize: 2,
+  indentUnit: 2,
+  indentWithTabs: false,
+  extraKeys: {
+    "Tab": function(cm) {
+      cm.replaceSelection("  ");
+    },
+    "Shift-Tab": "indentLess"
+  },
   theme: "monokai",
   mode: "xml"
 });
@@ -20,6 +28,14 @@ window.xml_editorview = CodeMirror(xml_editor, {
 window.py_editorview = CodeMirror(py_editor, {
   lineNumbers: true,
   tabSize: 2,
+  indentUnit: 2,
+  indentWithTabs: false,
+  extraKeys: {
+    "Tab": function(cm) {
+      cm.replaceSelection("  ");
+    },
+    "Shift-Tab": "indentLess"
+  },
   theme: "monokai",
   mode: "python"
 });

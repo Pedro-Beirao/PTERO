@@ -35,8 +35,8 @@ app.get('/ide', (req, res) => res.render('ide'));
 // Middleware to parse JSON and XML
 app.use(express.json());
 
-app.post('/restart_dinasore', async (req, res) => {
-  window.resources.forEach((resource, id) => {
+app.post('/restart_dinasores', async (req, res) => {
+  resources.forEach((resource, id) => {
     spawn('docker', ['restart', 'dinasore'+String(Number(resource.get("DINASORE port")))]);
     ydoc.transact(() => {
       communication.insert(communication.length, 'Restarting docker dinasore61499 (takes less than a minute)' + "\n");
@@ -89,7 +89,6 @@ function prepareMessages() {
     // [link_id, source_id, source_slot, destination_id, destination_slot, data_type]
     const source = nodes.get(link_map.origin_id);
     const destination = nodes.get(link_map.target_id);
-    console.log(link_map.target_id)
 
     const source_name = source.get("title")
     const destination_name = destination.get("title")

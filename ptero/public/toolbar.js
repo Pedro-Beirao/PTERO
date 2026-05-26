@@ -28,9 +28,9 @@ function clearStorage() {
   })
 }
 
-async function restartDINASORE() {
+async function restartDINASOREs() {
   try {
-    const response = await fetch('/restart_dinasore', {
+    const response = await fetch('/restart_dinasores', {
       method: 'POST'
     });
     const result = await response.text();
@@ -73,6 +73,6 @@ function switchTab(el) {
 
 window.toolbar_exportGraph = exportGraph
 window.toolbar_clearStorage = clearStorage
-window.toolbar_restartDINASORE = restartDINASORE
+window.toolbar_restartDINASOREs = restartDINASOREs
 window.toolbar_deploy = deploy
 window.switchTab = switchTab

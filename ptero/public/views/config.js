@@ -95,7 +95,11 @@ function add_resource() {
   resource.set('SSH user', "root");
   resource.set('SSH password', "dinasore");
   resource.set('SSH path to DINASORE', "/root/dinasore");
-  resource.set('color', "#000077");
+  const r = Math.floor(Math.random() * 128);
+  const g = Math.floor(Math.random() * 128);
+  const b = Math.floor(Math.random() * 128);
+  const c = ("#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join(""));
+  resource.set('color', c);
 
   window.resources.set(uuid, resource);
 
