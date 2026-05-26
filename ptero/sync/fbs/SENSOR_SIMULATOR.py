@@ -1,7 +1,6 @@
 import numpy as np
 import time
 
-
 def create_distribution(offset):
     # generate values based in the normal distribution
     mu, sigma = 0.5, 0.1
@@ -13,7 +12,6 @@ def create_distribution(offset):
     split_value = np.random.randint(0, 300)
     final_values = np.concatenate([values2sort[split_value:], values2sort[0:split_value]])
     return final_values
-
 
 class SENSOR_SIMULATOR:
 

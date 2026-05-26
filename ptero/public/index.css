@@ -14,8 +14,9 @@ body {
   background: #222;
   font-family: 'Verdana', sans-serif;
   color: #f2f2f2;
-  overflow: hidden;
+
   align-items: center;
+  overflow-y: scroll;
 
   margin-top: 3em;
   margin-bottom: 3em;
@@ -35,6 +36,9 @@ a:hover {
   color: var(--primary);
 }
 
+u {
+  font-weight: bold;
+}
 
 .title {
   font-size: 7em;
@@ -57,4 +61,25 @@ a:hover {
 
 .container img {
   border: 1px solid var(--primary);
+  margin-bottom: 1em;
+}
+
+.container button {
+  border: 1px solid var(--darker-primary);
+  border-radius: 0.3em;
+  color: white;
+  background: transparent;
+  padding: 0.3em;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.container button:hover {
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.container span {
+  transition: opacity 1s cubic-bezier(0.1, 0.8, 0.2, 1);
+  opacity: 0;
 }

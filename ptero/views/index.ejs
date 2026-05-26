@@ -10,23 +10,42 @@
     <span class="title">PTERO</span>
   </div>
   <div class="subtitle">
-    <strong><u>P</u></strong>rogramming <strong><u>T</u></strong>ool for <strong><u>E</u></strong>diting and <strong><u>R</u></strong>untime <strong><u>O</u></strong>rchestration
+    <u>P</u>rogramming <u>T</u>ool for <u>E</u>diting and <u>R</u>untime <u>O</u>rchestration
   </div>
   <div class="container">
     <p>A web-based IDE for DINASORE. Developed as the prototype for my Master's Thesis.</p>
-    <p>This website is hosted in order to allow testing to be done remotely, with the objective of getting a higher number of votes.</p>
+    <p>This website is hosted in order to allow testing to be done remotely, with the objective of getting a higher number of answers.</p>
     <br>
-    <p>If you are a <strong>SINF</strong> student, please first fill out <a href="https://forms.cloud.microsoft/e/sxPGsM0Fh4" target="_blank">this form</a> (5 minutes)</p>
+    <p>If you are a <u>SINF</u> student, please first fill out <a href="https://forms.cloud.microsoft/e/sxPGsM0Fh4" target="_blank">this form</a> (5 minutes)</p>
   </div>
   <div class="container">
     <h2>Validation</h2>
     <p>Testing PTERO can be done remotely by accessing <a href="https://ptero.pedro-beirao.eu/ide" target="_blank">https://ptero.pedro-beirao.eu/ide</a></p>
     <p>(The initial sync can take up to 1 minute)</p>
     <br>
-    <p>This is a collaborative IDE and you are joining an active session, so, since other people may have been testing it before, you need to click "CLEAR STORAGE" in the top right.</p>
+    <p>This is a collaborative IDE and you are joining an active session, so, since other people may have been testing it before, you need to click <u>CLEAR STORAGE</u> in the top right.</p>
     <img src="images/clear-storage.jpg" height="300" alt="CLEAR STORAGE" />
     <br>
-    <p>Now you are ready to develop and deploy a program to DINASORE</p>
+    <p>Now you are ready to develop and deploy a program to DINASORE.</p>
+    <p>First, go to the <u>CONFIG</u> tab and add a DINASORE. Leave the fields like the default.</p>
+    <p>Add another DINASORE, and this time assign the <u>DINASORE port</u> to 61500 and the <u>SSH port</u> to 23.</p>
+    <img src="images/config.jpg" height="800" alt="CONFIG" />
+    <br>
+    <p>Now move to the <u>FUNCTION BLOCKS</u> tab and create 3 items, naming them <u>SENSOR_SIMULATOR</u>, <u>MOVING_AVERAGE</u> and <u>CONCATENATE_REALS</u>. Copy and Paste the following code into the corresponding items that you have created.</p>
+    <p>(Click "Copy Code" to have the code copied into your clipboard)</p>
+    <script src="validation.js"></script>
+    <br>
+    <div>SENSOR_SIMULATOR.fbt <button onclick="copyCode('SENSOR_SIMULATOR_fbt', this)">Copy Code</button><span>Copied!</span></div>
+    <div>SENSOR_SIMULATOR.py <button onclick="copyCode('SENSOR_SIMULATOR_py', this)">Copy Code</button><span>Copied!</span></div>
+    <br>
+    <div>MOVING_AVERAGE.fbt <button onclick="copyCode('MOVING_AVERAGE_fbt', this)">Copy Code</button><span>Copied!</span></div>
+    <div>MOVING_AVERAGE.py <button onclick="copyCode('MOVING_AVERAGE_py', this)">Copy Code</button><span>Copied!</span></div>
+    <br>
+    <div>CONCATENATE_REALS.fbt <button onclick="copyCode('CONCATENATE_REALS_fbt', this)">Copy Code</button><span>Copied!</span></div>
+    <div>CONCATENATE_REALS.py <button onclick="copyCode('CONCATENATE_REALS_py', this)">Copy Code</button><span>Copied!</span></div>
+    <br>
+    <br><br><br><br>
+    <br><br><br><br>
   </div>
 </body>
 </html>
