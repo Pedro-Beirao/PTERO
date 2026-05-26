@@ -11,7 +11,7 @@ pip install -r requirements.txt
 
 In a terminal tab, run this command to start the database server, persisting the data to `./db`.
 ```bash
-YPERSISTENCE=./db npx y-websocket
+YPERSISTENCE=./db npx y-websocket --binary true
 # running at 'localhost' on port 1234
 ```
 

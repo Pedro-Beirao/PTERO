@@ -30,61 +30,64 @@ provider.on('synced', (isSynced) => {
 
     window.nodes.observeDeep((events) => {
       events.forEach(event => {
-        event.changes.keys.forEach((change, id) => {
-          // Node Updated
-          if (event.target != window.nodes) {
-            const node_map = event.target;
-            const id = node_map.get("id");
+        console.log(event.transaction)
+        if (event.transaction.origin != "programmatic") {
+          event.changes.keys.forEach((change, id) => {
+            // Node Updated
+            if (event.target != window.nodes) {
+              const node_map = event.target;
+              const id = node_map.get("id");
 
-            // If the map has an id, type and title, then its the node itself
-            if (id && node_map.get("type") && node_map.get("title")) {
-              const node = window.litegraph.getNodeById(id);
-              node.title = node_map.get("title");
-              node.pos = [node_map.get("x"), node_map.get("y")];
-              node.mappedto = node_map.get("mappedto");
-              const color = window.resources.get(node.mappedto)?.get("color");
-              node.color = color;
-              node.bgcolor = color;
+              // If the map has an id, type and title, then its the node itself
+              if (id && node_map.get("type") && node_map.get("title")) {
+                const node = window.litegraph.getNodeById(id);
+                node.title = node_map.get("title");
+                node.pos = [node_map.get("x"), node_map.get("y")];
+                node.mappedto = node_map.get("mappedto");
+                const color = window.resources.get(node.mappedto)?.get("color");
+                node.color = color;
+                node.bgcolor = color;
+              }
+
+              // If not, it is the properties or watches
+              else {
+                const node = window.litegraph.getNodeById(event.path[0]);
+                Object.keys(node.properties).forEach((key) => {
+                  const new_value = node_map.get(key);
+                  if (new_value)
+                    node.properties[key] = new_value;
+                });
+                Object.keys(node.watches).forEach((key) => {
+                  const new_value = node_map.get(key);
+                  if (new_value)
+                    node.watches[key] = new_value;
+                });
+              }
+              window.litegraph.setDirtyCanvas(true, true);
             }
 
-            // If not, it is the properties or watches
-            else {
-              const node = window.litegraph.getNodeById(event.path[0]);
-              Object.keys(node.properties).forEach((key) => {
-                const new_value = node_map.get(key);
-                if (new_value)
-                  node.properties[key] = new_value;
-              });
-              Object.keys(node.watches).forEach((key) => {
-                const new_value = node_map.get(key);
-                if (new_value)
-                  node.watches[key] = new_value;
-              });
+            // Node Added
+            else if (change.action === 'add') {
+              var node_map = window.nodes.get(id);
+              if(!window.litegraph.getNodeById(id)) {
+                var node = LiteGraph.createNode(node_map.get("type"));
+                node.id = id;
+                node.title = node_map.get("title");
+                node.pos = [node_map.get("x"), node_map.get("y")];
+                node.mappedto = node_map.get("mappedto");
+                const color = window.resources.get(node.mappedto)?.get("color");
+                node.color = color;
+                node.bgcolor = color;
+                window.litegraph.add(node);
+              }
             }
-            window.litegraph.setDirtyCanvas(true, true);
-          }
 
-          // Node Added
-          else if (change.action === 'add') {
-            var node_map = window.nodes.get(id);
-            if(!window.litegraph.getNodeById(id)) {
-              var node = LiteGraph.createNode(node_map.get("type"));
-              node.id = id;
-              node.title = node_map.get("title");
-              node.pos = [node_map.get("x"), node_map.get("y")];
-              node.mappedto = node_map.get("mappedto");
-              const color = window.resources.get(node.mappedto)?.get("color");
-              node.color = color;
-              node.bgcolor = color;
-              window.litegraph.add(node);
+            // Node Deleted
+            else if (change.action === 'delete') {
+              window.litegraph.remove(window.litegraph.getNodeById(id))
             }
-          }
-
-          // Node Deleted
-          else if (change.action === 'delete') {
-            window.litegraph.remove(window.litegraph.getNodeById(id))
-          }
-        });
+          });
+        }
       });
     });
 
@@ -124,7 +127,7 @@ provider.on('status', event => {
 });
 
 window.litegraph.onNodeAdded = function(node) {
-  if (!node) return;
+  if (!node || window.nodes.get(node.id)) return;
 
   window.ydoc.transact(() => {
     const node_map = new Y.Map();

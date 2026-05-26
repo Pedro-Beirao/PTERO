@@ -1456,6 +1456,22 @@
       return;
     }
 
+    var new_title = node.title
+    for (let i = 1; i < 100; i++) {
+      var found = false
+      for (var j = 0; j < this._nodes.length; j++) {
+        if (this._nodes[j].title == new_title) {
+          found = true
+        }
+      }
+      if (!found) {
+        node.title = new_title;
+        break;
+      }
+      new_title = node.title + `_${i}`
+    }
+    node.title = new_title;
+
     //nodes
     if (node.id != -1 && this._nodes_by_id[node.id] != null) {
       console.warn(
