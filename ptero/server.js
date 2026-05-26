@@ -213,7 +213,7 @@ async function watchDINASORE(id) {
              const value = data.getAttribute('value');
 
              ydoc.transact(() => {
-               nodeMap.get("watches").set(portName, value);
+               nodeMap?.get("watches")?.set(portName, value);
              });
            }
          }

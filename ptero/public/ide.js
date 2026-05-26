@@ -260,8 +260,6 @@ function syncNodes() {
 function registerNode(fbt_doc) {
   const fbtype = fbt_doc.getElementsByTagName("FBType")[0];
 
-  const name = fbtype.getAttribute("Name");
-
   // Define the LiteGraph Node
   function CustomNode() {
     this.properties = {}
@@ -302,6 +300,7 @@ function registerNode(fbt_doc) {
     this.size = [this.size[0] + 50, this.size[1]];
   }
 
+  const name = fbtype.getAttribute("Name");
   CustomNode.title = name;
 
   CustomNode.prototype.onDrawForeground = function(ctx, graphcanvas)
