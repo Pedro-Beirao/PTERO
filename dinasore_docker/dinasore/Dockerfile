@@ -24,13 +24,6 @@ RUN pip install -r requirements.txt
 RUN pip install numpy scipy argparse psycopg2 asyncua
 
 # -------------------------------------
-# Add Custom Function Blocks
-
-WORKDIR /root/dinasore/resources/function_blocks
-
-ADD ../data/fb/* .
-
-# -------------------------------------
 # Docker entrypoint
 WORKDIR /root
 COPY --chmod=0700 dinasore/docker-entrypoint.sh .

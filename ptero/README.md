@@ -33,5 +33,6 @@ apt install caddy # https://caddyserver.com/docs/install
 caddy run
 
 # Create a tunnel to expose Caddy's port with serveo.net
-autossh -M 0 -R ptero.pedro-beirao.eu:80:localhost:3001 serveo.net
+apt install autossh
+autossh -M 0 -R 80:localhost:3001 serveo.net
 ```

@@ -1,3 +1,4 @@
+global.WebSocket = require('ws');
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
@@ -6,6 +7,8 @@ const Y = require('yjs');
 const { WebsocketProvider } = require('y-websocket');
 const { spawn } = require('child_process');
 const { DOMParser } = require('@xmldom/xmldom');
+
+const PYTHON_PATH = "python3"
 
 const ydoc = new Y.Doc()
 const provider = new WebsocketProvider('ws://localhost:1234', 'room', ydoc, { binary: true, connect: true, resyncInterval: 5000 })
@@ -282,10 +285,10 @@ async function syncFBs() {
   function promise_sync() {
     return new Promise((resolve, reject) => {
       ydoc.transact(() => {
-        communication.insert(0, "python3.12 ./sync/synchronize.py\n");
+        communication.insert(0, PYTHON3_PATH + " ./sync/synchronize.py\n");
       });
 
-      const child = spawn('python3.12', ['./sync/synchronize.py']);
+      const child = spawn(PYTHON3_PATH, ['./sync/synchronize.py']);
 
       child.stdout.on('data', (data) => {
         ydoc.transact(() => {
