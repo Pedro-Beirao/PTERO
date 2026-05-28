@@ -41,6 +41,11 @@ async function restartDINASOREs() {
 }
 
 async function deploy() {
+  if (mode == "test") {
+    test_deploy();
+    return;
+  }
+
   try {
     const response = await fetch('/deploy', {
       method: 'POST'
@@ -50,6 +55,11 @@ async function deploy() {
   } catch (error) {
     console.error('Error deploying:', error);
   }
+}
+
+async function test_deploy() {
+  // TODO test deploy
+  window.com_bindingaas
 }
 
 function switchTab(el) {

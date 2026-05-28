@@ -1,6 +1,5 @@
 import * as Y from "https://esm.sh/yjs@13.6.0";
 import { WebsocketProvider } from "https://esm.sh/y-websocket@3.0.0?deps=yjs@13.6.0";
-// import { IndexeddbPersistence } from "https://esm.sh/y-indexeddb@9.0.12?deps=yjs@13.6.0";
 
 LiteGraph.NODE_TITLE_COLOR = "#BBB"
 LiteGraph.NODE_TEXT_COLOR = "#CCC"
@@ -13,13 +12,20 @@ const wsUrl = (window.location.hostname === 'localhost' ||
               window.location.hostname == '127.0.0.1')
   ? 'ws://localhost:1234'
   : `wss://${window.location.host}`;
-window.provider = new WebsocketProvider(wsUrl, "room", ydoc, {binary: true});
+
+let roomid = "room";
+if (mode == "test") {
+  roomid = localStorage.getItem('ptero-roomid');
+  if (!roomid) {
+    roomid = self.crypto.randomUUID();
+    localStorage.setItem('ptero-roomid', roomid);
+  }
+}
+window.provider = new WebsocketProvider(wsUrl, roomid, ydoc, { binary: true });
 window.nodes = window.ydoc.getMap('nodes');
 window.links = window.ydoc.getArray('links');
 window.fbs = window.ydoc.getMap('fbs');
 window.resources = window.ydoc.getMap('resources');
-
-localStorage.clear(); // TODO needed? there was a bug where local storage was screwing it up
 
 const not_connected = document.getElementById('not-connected');
 provider.on('synced', (isSynced) => {

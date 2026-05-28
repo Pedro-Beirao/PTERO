@@ -33,7 +33,8 @@ app.set('views', './views');
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', (req, res) => res.render('index'));
-app.get('/ide', (req, res) => res.render('ide'));
+app.get('/ide', (req, res) => res.render('ide', { mode: 'default' }));
+app.get('/test-ide', (req, res) => res.render('ide', { mode: 'test' }));
 app.get('/sinf', (req, res) => res.render('sinf'));
 
 // Middleware to parse JSON and XML
@@ -94,15 +95,17 @@ function prepareMessages() {
     const source = nodes.get(link_map.origin_id);
     const destination = nodes.get(link_map.target_id);
 
-    const source_name = source.get("title")
-    const destination_name = destination.get("title")
+    if (source && destination) {
+      const source_name = source.get("title")
+      const destination_name = destination.get("title")
 
-    const source_str = `${source_name}.${link_map.origin_slot_name}`;
-    const destination_str = `${destination_name}.${link_map.target_slot_name}`;
+      const source_str = `${source_name}.${link_map.origin_slot_name}`;
+      const destination_str = `${destination_name}.${link_map.target_slot_name}`;
 
-    messages.push({ message: `<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`, config: "EMB_RES" });
-    // console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
-    message_id++;
+      messages.push({ message: `<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`, config: "EMB_RES" });
+      // console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
+      message_id++;
+    }
   });
 
   messages.push({ message: `<Request Action="START" ID="${message_id}"/>`, config: "EMB_RES" });
@@ -286,10 +289,10 @@ async function syncFBs() {
   function promise_sync() {
     return new Promise((resolve, reject) => {
       ydoc.transact(() => {
-        communication.insert(0, PYTHON3_PATH + " ./sync/synchronize.py\n");
+        communication.insert(0, PYTHON_PATH + " ./sync/synchronize.py\n");
       });
 
-      const child = spawn(PYTHON3_PATH, ['./sync/synchronize.py']);
+      const child = spawn(PYTHON_PATH, ['./sync/synchronize.py']);
 
       child.stdout.on('data', (data) => {
         ydoc.transact(() => {
