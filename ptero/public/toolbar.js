@@ -92,7 +92,8 @@ async function test_deploy() {
     `<Request Action="CREATE" ID="11"><Connection Destination="CONCATENATE_REALS.VALUE1" Source="SENSOR_SIMULATOR.VALUE"/></Request>`,
     `<Response ID="11" />`,
     `<Request Action="START" ID="12"/>`,
-    `<Response ID="12" />`
+    `<Response ID="12" />`,
+    `\n\n\nthis console output is being simulated for test purposes for SINF feedback`
   ]
 
 
