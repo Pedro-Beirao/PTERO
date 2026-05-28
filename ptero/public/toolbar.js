@@ -61,6 +61,8 @@ function switchTab(el) {
 
   if (panelId === 'panel-graph' && window.litegraph) {
     requestAnimationFrame(() => window.resizeCanvas());
+    window.syncNodes();
+    window.populateGraph();
   }
   else if (panelId === 'panel-fbs' && window.xml_editorview) {
     window.xml_editorview.refresh();

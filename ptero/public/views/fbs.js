@@ -85,6 +85,14 @@ function populateSidebar() {
     }
 
     fbs_list.appendChild(div);
+
+    // Update the graph if the xml changes
+    fb.get("xml").observe(() => {
+      if (document.getElementById("panel-graph").classList.contains("active")) {
+        window.syncNodes();
+        window.populateGraph();
+      }
+    })
   });
 };
 

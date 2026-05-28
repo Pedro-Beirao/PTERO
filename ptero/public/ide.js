@@ -215,6 +215,7 @@ window.litegraph.onNodeConnectionChange = function(type, node, slot, target_node
 };
 
 function populateGraph() {
+  window.litegraph.clear();
   window.nodes.forEach((node_map, id) => {
     if(!window.litegraph.getNodeById(id)) {
       var node = LiteGraph.createNode(node_map.get("type"));
@@ -259,6 +260,9 @@ function syncNodes() {
     registerNode(fbt_doc)
   });
 }
+
+window.populateGraph = populateGraph
+window.syncNodes = syncNodes
 
 function registerNode(fbt_doc) {
   const fbtype = fbt_doc.getElementsByTagName("FBType")[0];
