@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', (req, res) => res.render('index'));
 app.get('/ide', (req, res) => res.render('ide'));
+app.get('/sinf', (req, res) => res.render('sinf'));
 
 // Middleware to parse JSON and XML
 app.use(express.json());
