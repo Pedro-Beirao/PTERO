@@ -7,7 +7,7 @@ window.com_editorview = CodeMirror(com_editor, {
   tabSize: 2,
   theme: "monokai",
   mode: "xml",
-  readOnly: "nocursor"
+  readOnly: true
 });
 
 window.com_binding = new CodemirrorBinding(

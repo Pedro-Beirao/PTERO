@@ -36,7 +36,6 @@ provider.on('synced', (isSynced) => {
 
     window.nodes.observeDeep((events) => {
       events.forEach(event => {
-        console.log(event.transaction)
         if (event.transaction.origin != "programmatic") {
           event.changes.keys.forEach((change, id) => {
             // Node Updated

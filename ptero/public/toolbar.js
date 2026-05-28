@@ -47,7 +47,7 @@ async function deploy() {
   }
 
   try {
-    const response = await fetch('/deploy', {
+    const response = await fetch(mode != "test" ? "/deploy" : "/test-deploy", {
       method: 'POST'
     });
     const result = await response.text();
@@ -58,8 +58,69 @@ async function deploy() {
 }
 
 async function test_deploy() {
-  // TODO test deploy
-  window.com_bindingaas
+  const communication = window.ydoc.getText("communication")
+  ydoc.transact(() => {
+    communication.delete(0, communication.length);
+  });
+  const test_messages = [
+    `python3 ./sync/synchronize.py`,
+    `Starting copying process`,
+    `Copying process completed`,
+    `Synchronized 1 DINASOREs`,
+    `<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`,
+    `<Response ID="0" />`,
+    `<Request Action="CREATE" ID="1"><FB Name="EMB_RES" Type="EMB_RES"/></Request>`,
+    `<Response ID="1" />`,
+    `<Request Action="CREATE" ID="2"><FB Name="SENSOR_SIMULATOR" Type="SENSOR_SIMULATOR"/></Request>`,
+    `<Response ID="2" />`,
+    `<Request Action="WRITE" ID="3"><Connection Destination="SENSOR_SIMULATOR.OFFSET" Source="12"/></Request>`,
+    `<Response ID="3" />`,
+    `<Request Action="CREATE" ID="4"><FB Name="MOVING_AVERAGE" Type="MOVING_AVERAGE"/></Request>`,
+    `<Response ID="4" />`,
+    `<Request Action="WRITE" ID="5"><Connection Destination="MOVING_AVERAGE.WINDOW" Source="5"/></Request>`,
+    `<Response ID="5" />`,
+    `<Request Action="CREATE" ID="6"><FB Name="CONCATENATE_REALS" Type="CONCATENATE_REALS"/></Request>`,
+    `<Response ID="6" />`,
+    `<Request Action="CREATE" ID="7"><Connection Destination="MOVING_AVERAGE.VALUE" Source="SENSOR_SIMULATOR.VALUE"/></Request>`,
+    `<Response ID="7" />`,
+    `<Request Action="CREATE" ID="8"><Connection Destination="CONCATENATE_REALS.VALUE2" Source="MOVING_AVERAGE.VALUE_MA"/></Request>`,
+    `<Response ID="8" />`,
+    `<Request Action="CREATE" ID="9"><Connection Destination="CONCATENATE_REALS.RUN" Source="MOVING_AVERAGE.RUN_O"/></Request>`,
+    `<Response ID="9" />`,
+    `<Request Action="CREATE" ID="10"><Connection Destination="MOVING_AVERAGE.RUN" Source="SENSOR_SIMULATOR.READ_O"/></Request>`,
+    `<Response ID="10" />`,
+    `<Request Action="CREATE" ID="11"><Connection Destination="CONCATENATE_REALS.VALUE1" Source="SENSOR_SIMULATOR.VALUE"/></Request>`,
+    `<Response ID="11" />`,
+    `<Request Action="START" ID="12"/>`,
+    `<Response ID="12" />`
+  ]
+
+
+  for (var i = 0; i < test_messages.length; i++) {
+    ydoc.transact(async () => {
+      communication.insert(communication.length, test_messages[i].toString() + "\n")
+    })
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
+  test_watch();
+}
+
+async function test_watch() {
+  while (true) {
+    const value = (Math.random() * 6 + 12).toFixed(2)
+    const value_ma = (Math.random() * 6 + 12).toFixed(2)
+    const result = String(value) + ";" + String(value_ma);
+
+    for (const [nk, node_map] of window.nodes.entries()) {
+      for (const [key, kv] of node_map.get("watches").entries()) {
+        node_map.get("watches").set(key, key == "VALUE" ? value :
+                                         key == "VALUE_MA" ? value_ma :
+                                         key == "RESULT" ? result : "0");
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
 }
 
 function switchTab(el) {

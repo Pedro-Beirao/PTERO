@@ -7,13 +7,6 @@
       "username": "root",
       "password": "dinasore",
       "dinasore-path": "/root/dinasore"
-    },
-    {
-      "address": "localhost",
-      "port": "23",
-      "username": "root",
-      "password": "dinasore",
-      "dinasore-path": "/root/dinasore"
     }
   ]
 }
