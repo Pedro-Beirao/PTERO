@@ -9,7 +9,7 @@ window.litegraph = new LGraph();
 window.ydoc = new Y.Doc();
 
 const wsUrl = (window.location.hostname === 'localhost' ||
-              window.location.hostname == '127.0.0.1')
+               window.location.hostname === '127.0.0.1')
   ? 'ws://localhost:1234'
   : `wss://${window.location.host}`;
 
