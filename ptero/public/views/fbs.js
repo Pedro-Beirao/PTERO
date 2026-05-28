@@ -40,6 +40,8 @@ window.py_editorview = CodeMirror(py_editor, {
   mode: "python"
 });
 
+
+var cur_fb = 0;
 window.fbs.observe(() => {
   populateSidebar();
 });
@@ -53,8 +55,14 @@ document.getElementById("add-fb").addEventListener("click", () => {
 function populateSidebar() {
   fbs_list.innerHTML = "";
 
-  if (window.fbs.length == 0)
-    add_fb()
+  if (window.fbs.size == 0) {
+    fbs_toolbar.style.visibility = "hidden";
+    fbs_editor.style.visibility = "hidden";
+  }
+  else {
+    fbs_toolbar.style.visibility = "visible";
+    fbs_editor.style.visibility = "visible";
+  }
 
   window.fbs.forEach((fb, id) => {
     const div = document.createElement("div");
@@ -62,10 +70,19 @@ function populateSidebar() {
     div.textContent = fb.get("name");
     div.dataset.uuid = id;
 
-    div.onclick = () => bindTextEditors(id);
-
-    if (!fbs_list.hasChildNodes())
+    if (id == cur_fb || cur_fb == 0) {
       bindTextEditors(id);
+      const selected = document.querySelectorAll('.selected');
+      selected.forEach(sel => sel.classList.remove("selected"));
+      div.classList.add("selected");
+    }
+
+    div.onclick = () => {
+      bindTextEditors(id);
+      const selected = document.querySelectorAll('.selected');
+      selected.forEach(sel => sel.classList.remove("selected"));
+      div.classList.add("selected");
+    }
 
     fbs_list.appendChild(div);
   });
@@ -88,7 +105,7 @@ function add_fb() {
 
       window.fbs.set(uuid, fb);
 
-      bindTextEditors(uuid)
+      // Sidebar will be populated now because of
       break;
     }
   }
@@ -118,6 +135,7 @@ function InputBind(uuid, key, div) {
     window.ydoc.transact(() => {
       fbs.delete(uuid);
     });
+    cur_fb = 0;
     populateSidebar();
   }
   deleteBtn.addEventListener('click', onClick);
@@ -169,6 +187,8 @@ function bindTextEditors(uuid) {
 
   window.xml_editorview.refresh();
   window.py_editorview.refresh();
+
+  cur_fb = uuid;
 }
 
 // TODO put this somewhere nicer
