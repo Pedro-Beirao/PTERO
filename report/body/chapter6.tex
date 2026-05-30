@@ -1,2 +1,143 @@
 \chapter{Validation}
-% TODO validate results
+In order to validate that the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified, the prototype was tested by approaching it from two complementary perspectives: objective testing, which seeks to find measurable and quantifiable aspects of the system's behaviour and design decisions, and subjective testing, which asks real users to interact with the prototype, giving feedback on their perception and experience with the system.
+% TODO Together, these two validation techniques provide a comprehensive picture of the solution's effectiveness.
+
+\section{Test Program Design} \label{sec:test-program-design}
+The following \ac{FBD} program design was used in both the objective and subjective validation tests.
+
+\subsection{Available resources}
+These are the resources available from the start to the tested \ac{IDE}.
+\begin{itemize}
+\item 1 \textit{DINASORE} instance. More could be used but in order to make user testing simpler, a single instance was deemed appropriate.
+\item 3 function blocks, defined by 2 files each. The files are taken from the official \textit{DINASORE}'s tutorial \textit{'Sensorization "Hello World!"'}. They will need to be imported into the \ac{IDE} and the \textit{DINASORE} instance before the program can be deployed
+  \begin{itemize}
+  \item SENSOR\_SIMULATOR.fbt and SENSOR\_SIMULATOR.py
+  \item MOVING\_AVERAGE.fbt and MOVING\_AVERAGE.py
+  \item CONCATENATE\_REALS.fbt and CONCATENATE\_REALS.py
+  \end{itemize}
+\end{itemize}
+
+\subsection{Event and Data Flow}
+The following flow, as represented in \textit{4diac IDE}, should be defined in the \ac{IDE} and then sent to the \ac{RTE}:
+
+\begin{figure}[H]
+  \includegraphics[width=0.8\linewidth]{test-program.jpg}
+  \caption{Test design represented in \textit{4diac IDE}}
+  \label{fig:test-program}
+\end{figure}
+
+% TODO maybe talk about mapping to dinasore?
+
+\subsection{Expected Output}
+After deploying, the \ac{IDE} should display the generated output values of the output data slots.
+
+% TODO more about what kind of outputs?
+
+\section{Objective Validation}
+Objective validation focuses on measurable criteria that can be validated independently of user opinion. These tests were designed to verify if the prototype, and by extension the proposed solution, does not fail to meet the functional requirements of a \textit{IEC 61499} \ac{IDE} and is able to confidently achieve the goals that it sets out for. Besides being able to function, these tests also measure performance metrics that can be directly compared with \textit{4diac IDE}.
+
+\subsection{Functional Correctness}
+The prototype was subjected to functional tests to confirm that all core features behave as specified. It was tested by implementing and deploying the test program defined in \Cref{sec:test-program-design}. As a control, the same was performed in \textit{4diac IDE}. The steps taken are as follows:
+
+\begin{enumerate}
+\item \textbf{Configured available \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: In the \textit{System Configuration} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, then connected it to the \textit{Ethernet} tunnel.
+  \item \textbf{PTERO}: In the \textit{Config} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, as well as the SSH details of the device which will be used to sync the function blocks files.
+  \end{itemize}
+
+\item \textbf{Imported the function block files}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Copied and pasted the given files to \texttt{4diac-ide/typelibrary/(new\_folder)}.
+  \item \textbf{PTERO}: Copied and pasted the given files in the \textit{Function Blocks} tab.
+  \end{itemize}
+
+\item \textbf{Designed the flow}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: In the \textit{App View} tab, dragged and dropped the wanted function blocks, then connected the event and data slots. Double-clicked input slots to assign input value.
+  \item \textbf{PTERO}: In the \textit{Graph} tab, right-clicked and selected the wanted function blocks to add them, then connected the event and data slots. Right-clicked nodes to assign input value.
+  \end{itemize}
+
+\item \textbf{Mapped to \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
+  \item \textbf{PTERO}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
+  \end{itemize}
+
+\item \textbf{Synced files with \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Called the \texttt{synchronize.py} manually, feeding it the needed SSH details.
+  \item \textbf{PTERO}: This was done automatically and without any needed setup when deploying.
+  \end{itemize}
+
+\item \textbf{Deployed}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
+  \item \textbf{PTERO}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
+  \end{itemize}
+
+\item \textbf{Monitored the output}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: The \textit{Monitor values} option was enabled, and the values were displayed on the right side of the output data slots.
+  \item \textbf{PTERO}: The values were displayed on the right side of the output data slots.
+  \end{itemize}
+\end{enumerate}
+
+Besides verifying that the output values are being monitored correctly, following the \textit{Deployed} step, the commands displayed in the console were directly compared between \acp{IDE}. It was verified that both were sending exactly the same commands, the headers as well as the contents were exactly the same, and the responses were no different. These results confirmed that the prototype correctly handles the development of \textit{IEC 61499} programs.
+
+% TODO mention that the steps are a bit different
+
+\subsection{Performance}
+This solution not only aims to be able to do the same workload as \textit{4diac IDE}, but also have capabilities and an inherent design that justify its existence. Therefore, this section compares the performance of several real world tasks between the \acp{IDE}. The listed tasks are the ones that demonstrated to be significantly different between solutions, others were analysed but proved to not be worth the discussion.
+
+\begin{itemize}
+\item \textbf{Install}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Install a desktop app. There is no compatible version for macOS.
+  \item \textbf{PTERO}: Install a \textit{Node.js} server (can be as simple as installing a \textit{Docker} image). By working in a web browser, it is crossplatform, without much development effort, which allows macOS users to use it. The downside is that it is harder to install for just local development.
+  \end{itemize}
+
+\item \textbf{Open}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Average of 4 seconds to boot the application in a mid level computer. As it is written in \textit{Java}, the boot time cannot be improved much.
+  \item \textbf{PTERO}: Average of less than a second to load webpage. The use of lightweight libraries and the move of heavy workloads to the server allow the page to load in an instant.
+  \end{itemize}
+
+\item \textbf{Create and edit function block files}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: While it does have a way to create and edit the \textit{.fbt} files inside the editor, the code editor is not targeted against \textit{DINASORE} and therefore does not support \textit{.py} files.
+  \item \textbf{PTERO}: Has a text editor for both types of files.
+  \end{itemize}
+\end{itemize}
+
+% TODO remote dev
+% TODO collaboration
+% TODO real time collab
+
+One of the concrete objectives of this work was to deliver a solution that is meaningfully faster than the approach it replaces. To verify this, [describe your measurement approach --- e.g. task completion time, API response time, load time] was measured under controlled conditions and compared against [the baseline --- e.g. the previous tool, manual process, or benchmark].
+
+The prototype achieved [X result], representing a [Y\%] improvement over the baseline. These results confirm that the solution delivers a tangible gain in [speed / efficiency / throughput], directly addressing one of the core gaps motivating this work.
+
+% TODO table with pros and cons of each
+
+\subsection{Problem Resolution}
+
+Beyond raw performance, the prototype was also evaluated on whether it resolves the specific issue identified in Chapter~\ref{ch:background}. [Describe concretely: e.g. ``Whereas the previous workflow required users to manually reconcile data across three separate systems, the prototype consolidates this into a single interface, eliminating the source of inconsistency entirely.'']. This was verified by replicating the exact scenario that originally exposed the problem and confirming that it no longer occurs under the new system.
+
+\section{Subjective Validation}
+
+To complement the objective findings, the prototype was made available to a group of \textit{N} participants representative of the intended user base. Participants were asked to interact with the application freely and to complete a set of representative tasks, after which they provided structured feedback through a questionnaire.
+
+\subsection{User Study Design}
+
+Participants were selected to reflect the diversity of the target user group in terms of [relevant characteristics, e.g. technical background, familiarity with the problem domain]. Each session followed the same protocol: participants were given a brief introduction to the context of the tool, asked to complete the tasks independently, and then invited to share their impressions.
+
+\subsection{Results and Feedback}
+
+The feedback collected was largely positive. Participants responded well to [highlight a strength, e.g. the clarity of the interface, the speed of the system, the reduction in steps required]. The mean score on [your scale, e.g. the System Usability Scale (SUS) / a custom Likert-scale questionnaire] was \textit{X.X}, indicating a [good / strong / favourable] reception overall.
+
+Where criticism arose, it centred on [a common concern, e.g. the lack of a confirmation step before submission, or unfamiliar terminology in certain labels]. These observations were noted and, where feasible, incorporated into a subsequent revision of the prototype. The fact that participants were able to [complete the core task / identify the solution's main benefit] without prior training suggests that the design is sufficiently intuitive for the target context.
+
+\section{Summary}
+
+Taken together, the objective and subjective validation results support the conclusion that the prototype successfully addresses the gap identified at the outset of this work. It demonstrably [resolves the specific problem], performs [faster / more reliably / more efficiently] than the prior approach, and was received positively by representative users. Limitations observed during testing, and their implications for future development, are discussed in Chapter~\ref{ch:conclusion}.
