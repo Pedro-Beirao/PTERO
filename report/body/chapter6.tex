@@ -2,6 +2,8 @@
 In order to validate that the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified, the prototype was tested by approaching it from two complementary perspectives: objective testing, which seeks to find measurable and quantifiable aspects of the system's behaviour and design decisions, and subjective testing, which asks real users to interact with the prototype, giving feedback on their perception and experience with the system.
 % TODO Together, these two validation techniques provide a comprehensive picture of the solution's effectiveness.
 
+% TODO \section{4diac IDE experience}
+
 \section{Test Program Design} \label{sec:test-program-design}
 The following \ac{FBD} program design was used in both the objective and subjective validation tests.
 
@@ -94,7 +96,7 @@ This solution not only aims to be able to do the same workload as \textit{4diac 
 \item \textbf{Install}
   \begin{itemize}
   \item \textbf{4diac IDE}: Install a desktop app. There is no compatible version for macOS.
-  \item \textbf{PTERO}: Install a \textit{Node.js} server (can be as simple as installing a \textit{Docker} image). By working in a web browser, it is crossplatform, without much development effort, which allows macOS users to use it. The downside is that it is harder to install for just local development.
+  \item \textbf{PTERO}: Install a \textit{Node.js} server. By working in a web browser, it is crossplatform without much development effort, which allows macOS users to use it. The downside is that it is harder to install for just local development.
   \end{itemize}
 
 \item \textbf{Open}
@@ -108,36 +110,59 @@ This solution not only aims to be able to do the same workload as \textit{4diac 
   \item \textbf{4diac IDE}: While it does have a way to create and edit the \textit{.fbt} files inside the editor, the code editor is not targeted against \textit{DINASORE} and therefore does not support \textit{.py} files.
   \item \textbf{PTERO}: Has a text editor for both types of files.
   \end{itemize}
+
+\item \textbf{Collaboration}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: An external periodic version control system like \textit{Git} needs to be used. Structured data in formats like \textit{XML} is not handled properly by these types of version control system, which results in frequent merge conflicts \cite{axelsson_version_2015}. The following test was conducted:
+    \begin{enumerate}
+    \item A project has a graph with 1 function block added. 2 users are working on the graph.
+    \item User \#1 deletes the function block.
+    \item User \#2 modifies the position of the function block.
+    \item User \#1 commits and pushes.
+    \item User \#2 tries to pull the changes but gets a merge conflict
+    \end{enumerate}
+  \item \textbf{PTERO}: Has a realtime collaboration system. Any change made is immediately propagated to every client, and resolved by a \ac{CRDT}, ensuring no conflicts need to be handled manually and damage is minimised.
+  \end{itemize}
+
+\item \textbf{Synchronising files with the \textit{DINASOREs}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Required to manually use an external script before deployment.
+  \item \textbf{PTERO}: The server itself will connect and synchronise the files with the \textit{DINASOREs}. This happens automatically when attempting to deploy, ensuring that deployments never fail due to the human error of forgetting to sync the files.
+  \end{itemize}
+
+\item \textbf{Remote deployment}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Every \ac{IDE} must have a valid connection with each available \textit{DINASORE}, as well as \textit{SSH} access. This gets increasingly complicated if the user want to make a deployment while in a different network. A way to expose each individual device needs to be design.
+  \item \textbf{PTERO}: By having the server as the middleware, only it must be exposed for the users to connect. With only the server permanently having direct connection with the \textit{DINASORE} devices, no individual handling is needed.
+  \end{itemize}
 \end{itemize}
 
-% TODO remote dev
-% TODO collaboration
-% TODO real time collab
+% TODO remote dev on mobile?
 
-One of the concrete objectives of this work was to deliver a solution that is meaningfully faster than the approach it replaces. To verify this, [describe your measurement approach --- e.g. task completion time, API response time, load time] was measured under controlled conditions and compared against [the baseline --- e.g. the previous tool, manual process, or benchmark].
+% One of the concrete objectives of this work was to deliver a solution that is meaningfully faster than the approach it replaces. To verify this, [describe your measurement approach --- e.g. task completion time, API response time, load time] was measured under controlled conditions and compared against [the baseline --- e.g. the previous tool, manual process, or benchmark].
 
-The prototype achieved [X result], representing a [Y\%] improvement over the baseline. These results confirm that the solution delivers a tangible gain in [speed / efficiency / throughput], directly addressing one of the core gaps motivating this work.
+% The prototype achieved [X result], representing a [Y\%] improvement over the baseline. These results confirm that the solution delivers a tangible gain in [speed / efficiency / throughput], directly addressing one of the core gaps motivating this work.
 
 % TODO table with pros and cons of each
 
-\subsection{Problem Resolution}
+% \subsection{Problem Resolution}
 
-Beyond raw performance, the prototype was also evaluated on whether it resolves the specific issue identified in Chapter~\ref{ch:background}. [Describe concretely: e.g. ``Whereas the previous workflow required users to manually reconcile data across three separate systems, the prototype consolidates this into a single interface, eliminating the source of inconsistency entirely.'']. This was verified by replicating the exact scenario that originally exposed the problem and confirming that it no longer occurs under the new system.
+% Beyond raw performance, the prototype was also evaluated on whether it resolves the specific issue identified in Chapter~\ref{ch:background}. [Describe concretely: e.g. ``Whereas the previous workflow required users to manually reconcile data across three separate systems, the prototype consolidates this into a single interface, eliminating the source of inconsistency entirely.'']. This was verified by replicating the exact scenario that originally exposed the problem and confirming that it no longer occurs under the new system.
 
 \section{Subjective Validation}
 
-To complement the objective findings, the prototype was made available to a group of \textit{N} participants representative of the intended user base. Participants were asked to interact with the application freely and to complete a set of representative tasks, after which they provided structured feedback through a questionnaire.
+% To complement the objective findings, the prototype was made available to a group of \textit{N} participants representative of the intended user base. Participants were asked to interact with the application freely and to complete a set of representative tasks, after which they provided structured feedback through a questionnaire.
 
-\subsection{User Study Design}
+% \subsection{User Study Design}
 
-Participants were selected to reflect the diversity of the target user group in terms of [relevant characteristics, e.g. technical background, familiarity with the problem domain]. Each session followed the same protocol: participants were given a brief introduction to the context of the tool, asked to complete the tasks independently, and then invited to share their impressions.
+% Participants were selected to reflect the diversity of the target user group in terms of [relevant characteristics, e.g. technical background, familiarity with the problem domain]. Each session followed the same protocol: participants were given a brief introduction to the context of the tool, asked to complete the tasks independently, and then invited to share their impressions.
 
-\subsection{Results and Feedback}
+% \subsection{Results and Feedback}
 
-The feedback collected was largely positive. Participants responded well to [highlight a strength, e.g. the clarity of the interface, the speed of the system, the reduction in steps required]. The mean score on [your scale, e.g. the System Usability Scale (SUS) / a custom Likert-scale questionnaire] was \textit{X.X}, indicating a [good / strong / favourable] reception overall.
+% The feedback collected was largely positive. Participants responded well to [highlight a strength, e.g. the clarity of the interface, the speed of the system, the reduction in steps required]. The mean score on [your scale, e.g. the System Usability Scale (SUS) / a custom Likert-scale questionnaire] was \textit{X.X}, indicating a [good / strong / favourable] reception overall.
 
-Where criticism arose, it centred on [a common concern, e.g. the lack of a confirmation step before submission, or unfamiliar terminology in certain labels]. These observations were noted and, where feasible, incorporated into a subsequent revision of the prototype. The fact that participants were able to [complete the core task / identify the solution's main benefit] without prior training suggests that the design is sufficiently intuitive for the target context.
+% Where criticism arose, it centred on [a common concern, e.g. the lack of a confirmation step before submission, or unfamiliar terminology in certain labels]. These observations were noted and, where feasible, incorporated into a subsequent revision of the prototype. The fact that participants were able to [complete the core task / identify the solution's main benefit] without prior training suggests that the design is sufficiently intuitive for the target context.
 
-\section{Summary}
+% \section{Summary}
 
-Taken together, the objective and subjective validation results support the conclusion that the prototype successfully addresses the gap identified at the outset of this work. It demonstrably [resolves the specific problem], performs [faster / more reliably / more efficiently] than the prior approach, and was received positively by representative users. Limitations observed during testing, and their implications for future development, are discussed in Chapter~\ref{ch:conclusion}.
+% Taken together, the objective and subjective validation results support the conclusion that the prototype successfully addresses the gap identified at the outset of this work. It demonstrably [resolves the specific problem], performs [faster / more reliably / more efficiently] than the prior approach, and was received positively by representative users. Limitations observed during testing, and their implications for future development, are discussed in Chapter~\ref{ch:conclusion}.
