@@ -1,4 +1,8 @@
 words = [
+    "FEUP",
+    "Likert",
+    "MEEC",
+    "SINF",
     "artifact",
     "cho",
     "cpps",
@@ -24,6 +28,7 @@ words = [
     "plc",
     "scalable",
     "sorokin",
+    "textbf",
     "textit",
     "texttt",
     "webpage",

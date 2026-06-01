@@ -2,7 +2,108 @@
 In order to validate that the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified, the prototype was tested by approaching it from two complementary perspectives: objective testing, which seeks to find measurable and quantifiable aspects of the system's behaviour and design decisions, and subjective testing, which asks real users to interact with the prototype, giving feedback on their perception and experience with the system.
 % TODO Together, these two validation techniques provide a comprehensive picture of the solution's effectiveness.
 
-% TODO \section{4diac IDE experience}
+\section{4diac IDE User Experience} \label{sec:4diac-ide--user-experience}
+Before beginning testing of the proposed solution, a study on the user experience of working with \textit{4diac IDE} as the underlying development environment for \textit{IEC 61499} was conducted. The participants of the questionnaire were students from the \ac{MEEC} at \ac{FEUP}, enrolled in the course of \ac{SINF}, in which \textit{4diac IDE} was used as the primary tool for modelling \ac{FBD} programs, using \textit{DINASORE} as the \ac{RTE}.
+
+% TODO mention that the students are capable of responding and that they are possibly a future target of ptero
+% The study involved \textit{N} undergraduate and graduate students with varying
+% levels of prior experience in industrial automation tooling. Over the semester,
+% participants engaged in a series of practical assignments requiring them to design,
+% configure, and deploy IEC 61499 function block networks using 4diac IDE. This
+% longitudinal exposure ensured that responses reflected sustained interaction with
+% the tool rather than a first-impression evaluation.
+
+\subsection{Questionnaire Design}
+Firstly the questionnaire asked the participants if the \ac{SINF} course was the first time they have used \textit{4diac IDE}. This was important to differentiate answers based on prior experience.
+% TODO dont like the wording
+
+Then followed a Likert \cite{likert_technique_1932} table on the difficulty of doing several different tasks using this \ac{IDE}. Ranging from \textit{Very Easy} to \textit{Very Hard}, this section had the intent of understanding how easy and straightforward each step of \textit{IEC 61499} development was. If a specific step was difficult in \textit{4diac IDE}, it will be interesting to see how it compares with \textit{PTERO}.
+
+Next, another Likert table, this time on how intuitive it was to understand each part of the \ac{IDE}. This way the design decisions of \textit{4diac IDE} can be critically analysed.
+
+% TODO want to write more on each
+% TODO maybe add the items of each?
+
+The questionnaire concluded with the following 3 open text questions, asking participants to provide feedback in their own words on the aspects they considered most relevant in their experience with the tool.
+\begin{itemize}
+\item What did you \textbf{like} most about using 4diac IDE?
+\item What were the \textbf{biggest challenges} you faced?
+\item Any additional comments?
+\end{itemize}
+
+\subsection{Results}
+
+% TODO title and description
+% TODO change values
+\noindent
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
+\toprule
+Installing 4diac IDE & \likertpct{12}{14}{8}{9}{57}\\
+\midrule
+Setting up the project & \likertpct{43}{44}{4}{4}{5}\\
+\midrule
+Connecting the function blocks & \likertpct{12}{14}{8}{9}{57}\\
+\midrule
+Creating new function block files & \likertpct{12}{14}{8}{9}{57}\\
+\midrule
+Synchronising the function blocks with DINASORE & \likertpct{12}{14}{8}{9}{57}\\
+\midrule
+Deploying and running & \likertpct{12}{14}{8}{9}{57}\\
+\midrule
+Collaborating with other people & \likertpct{12}{14}{8}{9}{57}\\
+\bottomrule
+\end{tabular}
+
+\vspace{1em}
+\textcolor{likert1}{\rule{7pt}{7pt}} Very Easy \hspace{3em} %
+\textcolor{likert2}{\rule{7pt}{7pt}} Easy \hspace{3em} %
+\textcolor{likert3}{\rule{7pt}{7pt}} Moderate \hspace{3em} %
+\textcolor{likert4}{\rule{7pt}{7pt}} Hard \hspace{3em} %
+\textcolor{likert5}{\rule{7pt}{7pt}} Very Hard
+\vspace{3em}
+
+% TODO title and description
+% TODO change values
+\noindent
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
+\toprule
+Graph editor & \likertpct{12}{14}{8}{9}{57}\\
+\midrule
+Navigate between pages & \likertpct{43}{44}{4}{4}{5}\\
+\midrule
+Where in the filesystem to put your function blocks and python code & \likertpct{12}{14}{8}{9}{57}\\
+\midrule
+Understand error messages & \likertpct{12}{14}{8}{9}{57}\\
+\midrule
+Monitor the output & \likertpct{12}{14}{8}{9}{57}\\
+\bottomrule
+\end{tabular}
+
+\vspace{1em}
+\textcolor{likert1}{\rule{7pt}{7pt}} Very Intuitive \hspace{2em} %
+\textcolor{likert2}{\rule{7pt}{7pt}} Intuitive \hspace{2em} %
+\textcolor{likert3}{\rule{7pt}{7pt}} Moderate \hspace{2em} %
+\textcolor{likert4}{\rule{7pt}{7pt}} Confusing \hspace{2em} %
+\textcolor{likert5}{\rule{7pt}{7pt}} Very Confusing
+\vspace{3em}
+
+% Suggested structure:
+%   - Summary table of mean and standard deviation per dimension
+%   - Bar chart or radar chart of mean scores across dimensions
+%   - Notable observations (e.g., learnability rated lowest, satisfaction acceptable)
+
+\subsection{Discussion}
+
+% TODO: Interpret results in the context of the thesis.
+% Suggested framing:
+%   - Acknowledge known usability limitations of 4diac IDE as an Eclipse-based tool
+%   - Relate low scores (if any) to the motivation for the proposed solution
+%   - Argue that results confirm the need for better tooling/collaboration support
+%   - Note that despite friction, students were able to complete tasks, validating
+%     4diac as a viable platform to build upon
+
 
 \section{Test Program Design} \label{sec:test-program-design}
 The following \ac{FBD} program design was used in both the objective and subjective validation tests.
@@ -139,15 +240,13 @@ This solution not only aims to be able to do the same workload as \textit{4diac 
 
 % TODO remote dev on mobile?
 
+% TODO talk on the improvements
+
 % One of the concrete objectives of this work was to deliver a solution that is meaningfully faster than the approach it replaces. To verify this, [describe your measurement approach --- e.g. task completion time, API response time, load time] was measured under controlled conditions and compared against [the baseline --- e.g. the previous tool, manual process, or benchmark].
 
 % The prototype achieved [X result], representing a [Y\%] improvement over the baseline. These results confirm that the solution delivers a tangible gain in [speed / efficiency / throughput], directly addressing one of the core gaps motivating this work.
 
 % TODO table with pros and cons of each
-
-% \subsection{Problem Resolution}
-
-% Beyond raw performance, the prototype was also evaluated on whether it resolves the specific issue identified in Chapter~\ref{ch:background}. [Describe concretely: e.g. ``Whereas the previous workflow required users to manually reconcile data across three separate systems, the prototype consolidates this into a single interface, eliminating the source of inconsistency entirely.'']. This was verified by replicating the exact scenario that originally exposed the problem and confirming that it no longer occurs under the new system.
 
 \section{Subjective Validation}
 
