@@ -64,13 +64,21 @@ app.post('/deploy', async (req, res) => {
   exportFBs();
   await syncFBs();
 
-  const messages = prepareMessages();
-  await sendToDINASORE(messages, res);
+  for (const tcpClient of tcp_sockets) {
+    tcpClient.destroy();
+  }
+  tcp_sockets = [];
 
-  watchDINASORE(0);
+  for (const [res_id, res_map] of resources.entries()) {
+    const messages = prepareMessages(res_id);
+    await sendToDINASORE(messages, res_map, res);
+    deploying = false;
+
+    watchDINASORE(0);
+  }
 });
 
-function prepareMessages() {
+function prepareMessages(res_id) {
   const messages = []
 
   messages.push({ message: `<Request Action="QUERY" ID="0"><FB Name="*" Type="*"/></Request>`, config: "" });
@@ -79,7 +87,10 @@ function prepareMessages() {
   messages.push({ message: `<Request Action="CREATE" ID="1"><FB Name="EMB_RES" Type="EMB_RES"/></Request>`, config: "" });
   message_id++;
 
-  nodes.forEach((node_map, id) => {
+  for (const [nk, node_map] of nodes.entries()) {
+    if (node_map.get("mappedto") != res_id)
+      continue;
+
     const fbtype = node_map.get("type").split("/").pop();
     const fbname = node_map.get("title") || fbtype;
 
@@ -93,12 +104,17 @@ function prepareMessages() {
         message_id++;
       }
     });
-  });
+  };
 
-  links.forEach((link_map, id) => {
+  for (const link_map of links) {
     // [link_id, source_id, source_slot, destination_id, destination_slot, data_type]
     const source = nodes.get(link_map.origin_id);
     const destination = nodes.get(link_map.target_id);
+
+    if (source.get("mappedto") != res_id)
+      continue;
+    if (destination.get("mappedto") != res_id)
+      continue;
 
     if (source && destination) {
       const source_name = source.get("title")
@@ -111,24 +127,18 @@ function prepareMessages() {
       // console.log(`<Request Action="CREATE" ID="${message_id}"><Connection Destination="${destination_str}" Source="${source_str}"/></Request>`)
       message_id++;
     }
-  });
+  };
 
   messages.push({ message: `<Request Action="START" ID="${message_id}"/>`, config: "EMB_RES" });
 
   return messages;
 }
 
-async function sendToDINASORE(messages, res) {
-  for (const tcpClient of tcp_sockets) {
-    tcpClient.destroy();
-  }
-  tcp_sockets = [];
-
+async function sendToDINASORE(messages, res_map, res) {
   const tcpClient = new net.Socket();
   tcp_sockets.push(tcpClient);
-  const DINASORE_HOST = 'localhost';
-  const DINASORE_PORT = 61499;
-  // TODO multiple dinasores
+  const DINASORE_HOST = res_map.get("Address");
+  const DINASORE_PORT = res_map.get("DINASORE port");
 
   try {
     // Connect to DINASORE once
