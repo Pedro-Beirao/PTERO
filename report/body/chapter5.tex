@@ -8,20 +8,25 @@ To be able to prove the proposed solution is viable and will successfully addres
 % Firstly some decisions need to be made to choose the most appropriate technologies to support this work.
 
 \section{Runtime Environment}
-Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration). It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of commercial \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}. Other open-source \acp{RTE} were considered, but none was as well-suited as \textit{DINASORE}. \textit{4diac FORTE} for example was way too extensive and complicated to be able to easily study its source code.
+Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration) \cite{pereira_dinasore_2020}. It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of commercial \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}. Other open-source \acp{RTE} were considered, but none was as well-suited as \textit{DINASORE}. \textit{4diac FORTE} for example was way too extensive and complicated to be able to easily study its source code.
 % TODO maybe talk about the use of python both in dinasores code and the fbs code
+
+\begin{figure}[H]
+  \includegraphics[width=0.5\linewidth]{dinasore-logo.png}
+  \caption{\textit{DINASORE} logo.}
+  \label{fig:dinasore-logo}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[width=0.9\linewidth]{dinasore-architecture.jpg}
+  \caption{\textit{DINASORE}'s architecture \cite{pereira_dinasore_2020}.}
+  \label{fig:dinasore-architecture}
+\end{figure}
 
 By default, \textit{DINASORE} uses the port \textit{61499} to receive commands from the \ac{IDE} and send responses. This is important to note as it is the port that will be used as example throughout this document. The exact details of the communication implementation will be explained further in \Cref{sec:deployment}.
 
 % TODO mention that dinasore is not supported in newer versions of 4diac ide, which means it doesnt run on mac. maybe mention it in another section
 % TODO mention that the communication with 4diac ide was studied
-
-\begin{figure}[h!]
-  \includegraphics[width=0.5\linewidth]{dinasore-logo.png}
-  \caption{\textit{DINASORE} logo}
-  \label{fig:dinasore-logo}
-\end{figure}
-
 
 \section{Server}
 The design begins by setting up a server that will serve the \ac{IDE} interface as a webpage, store and manage all the data and handle communication with the \acp{RTE}. Taking into account the features we plan on implementing, \textit{JavaScript} running on \textit{Node.js} were chosen due to the extensive library ecosystem. For real-time collaboration we will need a library to run in both the server and the frontend, since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
