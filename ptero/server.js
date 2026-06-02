@@ -51,7 +51,13 @@ app.post('/restart_dinasores', async (req, res) => {
 
 var deploying = false
 app.post('/deploy', async (req, res) => {
+  if (deploying)
+    return;
   deploying = true
+  setTimeout(() => {
+    deploying = false;
+  }, 5000)
+
   ydoc.transact(() => {
     communication.delete(0, communication.length);
   });
@@ -60,7 +66,6 @@ app.post('/deploy', async (req, res) => {
 
   const messages = prepareMessages();
   await sendToDINASORE(messages, res);
-  deploying = false
 
   watchDINASORE(0);
 });
