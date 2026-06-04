@@ -1,38 +1,21 @@
 \chapter{Proposed Solution} \label{chap:proposed-solution}
-To address the limitations identified in existing \textit{IEC 61499} development environments, this dissertation proposes the design of a web-based \ac{IDE} for modelling \textit{IEC 61499}-compliant applications. The goal is to bridge the gap between modern collaborative software engineering practices and industrial automation tooling used in \ac{CPPS}.
-
-Existing tools are predominantly desktop based and poorly suited for distributed development. In contrast, the proposed solution adopts a centralised web-based architecture that enables platform independence, simplified setup, simplified deployment, and real-time collaboration.
+To address the limitations identified in existing \textit{IEC 61499} development environments, this dissertation proposes the design and implementation of a remote web-based \ac{IDE} for modelling \textit{IEC 61499}-compliant applications. This work seeks to bridge the gap between modern software engineering practices and the current state of industrial automation tooling for \ac{CPPS}. A remote web-based \ac{IDE} solves many of the problems mentioned in \Cref{chap:state-of-the-art}, addressing the identified gap.
 
 The main reason to propose using web technologies is to solve the issues that affect any local-first development environment. By having the \ac{IDE} be hosted by a centralised server, the following is achieved:
-% TODO remote deployment
+
 % TODO the state of the art needs to mention each of these
-% TODO mention 4diac will be used for comparision
+% TODO a real time collaboration example is excalidraw or other draw programs that use json underneath
+\begin{itemize}
+  \item \textbf{Ease of setup}. Instead of each team member having to install a resource heavy program and set it up with the team's code and configurations, a single server is set up and the team members simply have to connect to it via their browser.
+  \item \textbf{Ease of deployment}. Only the server needs to be aware of all of the target \acp{RTE} and have connection to them. When a team member wants to deploy, the request will be routed through the server, acting as the middleware, removing the need for each development machine to have connection with the target \acp{RTE}.
+  \item \textbf{Real-time collaboration}. All data is kept and directly modified in the server itself, instead of requiring a periodic synchronisation system like \textit{git}. \ac{FBD} coded programs, since they are meant for visual editing, need to be stored in formats that don't easily handle merge conflicts. Real-time combats this by keeping track of atomic changes, instead of blocks of text. % TODO ref about git merge conflicts in these types of files
+  % TODO remote deployment
+\end{itemize}
 
 \section{Approach}
-The approach is derived from functional and non-functional requirements extracted from the \textit{IEC 61499} standard, an analysis of existing tools and the gaps identified in the state of the art. Functional requirements include:
+The approach begins with the derivation of functional and non-functional requirements from the \textit{IEC 61499} standard and an analysis of existing desktop-based tools. Core requirements include support for function block types, event and data connections, and deployment to compliant runtime environments, namely \textit{DINASORE}. Non-functional requirements emphasise platform independence, reduced complexity, usability, and extensibility, addressing the resource intensity and accessibility issues of current solutions. The use of modern web technologies further allows the inclusion of collaborative features and scalable workflows, which are largely absent from current \textit{IEC 61499} tools.
 
-% FIXME bigger more functional reqs?
-\begin{itemize}
-  \item Creation of function block types
-  \item Design of the event and data flow
-  \item Deployment to compliant \acp{RTE}
-  \item Real-time collaboration
-\end{itemize}
-
-% TODO bigger description
-% FIXME do the number need a reason?
-Non-functional requirements should ensure that the solution does not reflect negatively when compared with \textit{4diac IDE} in some key aspects as well as bridge the gaps identified. These include:
-\begin{itemize}
-    \item Platform independence
-    \item Reduced setup complexity
-    \item Improved usability for distributed teams
-    \item Ease of extensibility for future improvements
-    \item The webpage should load in less than 2 seconds
-    \item Deployment should take just as long
-    \item Should be able to handle 100 users concurrently
-\end{itemize}
-
-The effectiveness of the approach is assessed through the implementation of a functional prototype and its direct comparison with current established \acp{IDE}, focusing on usability, accessibility and workflow efficiency. This evaluation demonstrates the feasibility of applying web based principles to \textit{IEC 61499} development and their potential benefits for distributed \ac{CPPS}.
+The effectiveness of the approach is assessed through the implementation of a functional prototype and its direct comparison with established desktop-based \acp{IDE} like \textit{4diac}, focusing on usability, accessibility, and workflow efficiency. This evaluation demonstrates the feasibility of applying web-based principles to \textit{IEC 61499} development and their potential benefits for distributed \ac{CPPS}.
 
 % TODO need to explain a lot more of what i want. like a whole page
 
