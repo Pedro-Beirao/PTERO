@@ -1,54 +1,53 @@
 \chapter{State of the Art} \label{chap:state-of-the-art}
-
 This chapter provides a comprehensive analysis of the current landscape of development environments for \ac{CPPS} and the \textit{IEC 61499} standard. It categorises and critically examines the existing development tools, while looking for possible gaps in the ecosystem.
 
 \section{Ecosystem Summary}
-
-Currently, the development ecosystem is composed only by desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations.
-% TODO talk more about the ecosystem
-% Each of the members of the development team must install the resource intensive program and set it up on par with the rest of the team.
+Currently, the development ecosystem for \textit{IEC 61499} is composed almost exclusively of desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations, requiring each member of a development team to independently install, configure, and maintain the software on their own machine. The tools themselves tend to be resource intensive, which creates demands for the hardware, making them less accessible to users working on modest, shared or virtual machines. There is also the issue of platform dependency, as a niche and focused field, some \acp{IDE} are not crossplatform, forcing users to use virtual machines to be able to use them, further intensifying performance issues.
 
 \subsection{Open-Source}
-The most prominent open-source implementation is the \textit{Eclipse 4diac} \ac{IDE} (based on the \textit{Eclipse} framework) which supports a variety of \acp{RTE} such as \textit{4diac FORTE} and \textit{DINASORE}. This \ac{IDE} is very feature rich at the cost of significant system resources and increased complexity, resulting in a steep learning curve, which makes it more difficult to use \cite{weber_usability_2019}.
+The most prominent open source implementation is the \textit{4diac IDE} (based on the \textit{Eclipse} framework) which supports a variety of \acp{RTE} such as \textit{4diac FORTE} and \textit{DINASORE}. This \ac{IDE} is very feature rich at the cost of increased complexity, resulting in a steep learning curve, which makes it more difficult to use \cite{weber_usability_2019}. The \textit{Eclipse} foundation on which it is built is itself a heavyweight platform, and while this grants access to a broad plugin ecosystem, it also means that the \ac{IDE} inherits the framework's architectural complexity. Navigating the interface to accomplish basic tasks such as creating a new function block type, designing the flow and deploying to a \ac{RTE} can require substantial initial investment before productive work can begin.
 
-An alternative is \textit{Jetbrains FBME} which is a much simpler modelling environment \cite{sorokin_novel_2022}. While easier to use than 4diac \ac{IDE}, it still is a local-first development environment. The importance of this will be explained in \Cref{sec:localfirst}.
+An alternative is \textit{FBME} which is a much simpler modelling environment \cite{sorokin_novel_2022}. Built as a plugin for the \textit{JetBrains MPS} language workbench, while easier to use than \textit{4diac} \ac{IDE}, it still is a local-first development environment, the importance of this will be explained in \Cref{sec:localfirst}.
 
-\begin{figure}[h!]
-  \includegraphics[width=0.5\linewidth]{4diac-logo.jpg}
-  \caption{\textit{4diac} logo}
-  \label{fig:4diac-logo}
-\end{figure}
-
+% TODO references about commercial ides
 \subsection{Commercial}
-The commercial side is occupied by \textit{EcoStruxure Automation Expert}, \textit{ISaGRAF Workbench} and other development environments that usually have their own built-in proprietary \ac{RTE}. This makes them often very complete production ready tools, but they are not very flexible and may not be the best fit for many needs.
+The commercial side is occupied by \textit{EcoStruxure Automation Expert}, \textit{ISaGRAF Workbench} and other development environments that usually have their own built-in proprietary \ac{RTE}. This tight coupling between the engineering tool and the runtime gives commercial vendors significant control over the end-to-end development experience, which typically results in polished, production-ready tooling with strong vendor support. However, it also introduces considerable lock-in: projects developed in one commercial environment are not easily portable to a different runtime or \ac{IDE} and the proprietary nature of the underlying \ac{RTE} limits the ability to inspect, extend, or adapt behaviour.
+
+Commercial tools are also constrained by their licensing models. Per seat licensing is common, meaning that the cost of the toolchain scales directly with the size of the team and can not be viable for smaller organisations, academic research groups, or early stage projects. This creates a tiered ecosystem in which well resourced industrial organisations have access to mature tooling, while smaller teams are restricted to the open source alternatives, each of which carries its own set of limitations as described above.
 
 \section{Local-first development environments} \label{sec:localfirst}
-% TODO mention local first it a problem
-% TODO talk about not having a middleware to the dinasores
+All of the tools described in the previous section share a fundamental design decision: they play around a local-first model, in which the project state lives on a single workstation and the tool itself is a desktop application that must be installed and executed locally. While this model has historically been the norm in industrial automation tooling, it introduces a set of limitations that become problematic as \ac{CPPS} projects grow in scale and involve more distributed engineering teams.
 
-\section{Evolution of Web-Based Engineering Tools}
-% TODO dont mention web based
-The software engineering domain has seen a massive shift from desktop \acp{IDE} to cloud-native environments. This trend is now influencing the domain of \ac{ICS}, and while recent studies have proposed a \ac{SOA} to integrate \textit{IEC 61499} with cloud layers \cite{torres_literature_2025}, the engineering tools themselves remain largely desktop-bound.
+The most immediate consequence is the absence of real-time collaboration. When two engineers need to work on the same \textit{IEC 61499} application simultaneously, they must coordinate manually, typically by dividing the project into separate files or modules and merging their changes afterwards. Unlike regular text based code, \ac{FBD} programs are stored in structured data files, \textit{XML} usually, which makes version control systems like \textit{Git} not appropriate for collaboration in this standard \cite{seidl_collaborative_2018}.
 
-\subsection{Web-Based IDEs in Software Development}
-% TODO vscode can use git, but fbs shouldnt
-% TODO dont mention web based
-In general software development, tools like \textit{Visual Studio Code} have started offering web-based counterparts (as seen in \Cref{fig:vscode-web}) to their desktop applications \cite{noauthor_vscode_nodate} in search of a more flexible user experience. In fact, newer development environments like \textit{Zed} make it a key goal of their products to have web platform support \cite{noauthor_zed_nodate}.
+Local-first tools also require the \ac{IDE} to maintain awareness of the deployment target's state. Without a shared backend, each engineer must independently configure their local environment to point to the correct runtime endpoints and therefore there is no single source of truth for the current deployment state of the system.
 
-\begin{figure}[h!]
-  \includegraphics[width=0.7\linewidth]{vscode.jpg}
-  \caption{\textit{VSCode Web} interface}
-  \label{fig:vscode-web}
-\end{figure}
+\section{Evolution of Web Based Tools}
+The software engineering domain has seen a massive shift from desktop \acp{IDE} to cloud based environments. This trend is now influencing the domain of \ac{ICS}, and while recent studies have proposed a \ac{SOA} to integrate \textit{IEC 61499} with cloud layers \cite{torres_literature_2025}, the engineering tools themselves remain still desktop bound.
+
+In general software development, tools like \textit{Visual Studio Code} have started offering web based counterparts to their desktop applications \cite{noauthor_vscode_nodate} in search of a more flexible user experience. Running entirely within the browser, these environments allow engineers to open, edit, and navigate codebases from any device without installation. They integrate naturally with cloud hosted codebases and \ac{CI} pipelines. In fact, newer development environments like \textit{Zed} make it a key goal of their products to have web platform support \cite{noauthor_zed_nodate}, treating browser delivery not as an afterthought but as a primary design constraint.
+
+Web based editors are also often easier to extend with real time collaboration because they operate within a network architecture, leverage standardised browser communication technologies such as WebSockets, provide uniform deployment through URLs, and naturally integrate with centralised synchronisation services. These characteristics reduce many of the distribution and interoperability challenges that desktop applications must address separately \cite{schmid_real-time_2014}.
+
+The move towards web based tooling is not limited to software development environments. Across a wide range of professional domains, browser-native applications have gradually replaced traditional desktop software. Collaborative document editors such as \textit{Google Docs} allow multiple users to edit the same document simultaneously, with changes synchronised in real time. Similarly, design and prototyping platforms such as \textit{Figma} have demonstrated that even complex graphical workflows can be delivered entirely through the browser while supporting collaboration and centralised asset management. Drawing tools like \textit{Excalidraw} and \textit{draw.io} further illustrate how browser based applications can provide sophisticated modelling and visualisation capabilities without requiring local installation, while providing live collaboration features that their desktop predecessors did not have.
+
+A common characteristic of these platforms is that they treat collaboration as an architectural design rather than an addon. By maintaining a shared representation of the artifact on a central service, users can concurrently make changes with minimal configuration. This contrasts with many traditional desktop applications, where collaboration often relies on exchanging files with separate version control and synchronisation mechanisms. As a result, web based tools have created a new expectation on collaboration.
 
 \section{Gap Analysis}
-Current \textit{IEC 61499} tools face significant limitations that hinder modern \ac{CPPS} development:
+Current \textit{IEC 61499} tools face significant limitations that hinder modern \ac{CPPS} development. These gaps paint a picture of an ecosystem that has matured in terms of standards compliance, but has lagged considerably in adapting to the workflows and expectations of contemporary engineering teams. The following points describe the most significant gaps:
 
-% TODO need to rewrite these. make it a bigger list
+% FIXME What other gaps?
 \begin{itemize}
-    \item \textbf{Platform Dependency:} Existing solutions are monolithic desktop applications, lacking the accessibility and portability of web-based environments.
+    \item \textbf{Platform Dependency:} Existing solutions are monolithic desktop applications, lacking the accessibility and portability that we have come to expect. Engineers are required to install and maintain native software on every machine from which they intend to work, creating friction at the start of projects and compounding over time as the team grows or its members change.
 
-    \item \textbf{Resource Intensity:} Current options are heavyweight and complex, creating a high barrier to entry compared modern development tools of other purposes.
+    \item \textbf{Absence of Real-Time Collaboration:} None of the existing tools provide support for real-time editing. Teams must rely on external version control systems and manual coordination to manage shared development, introducing overhead and increasing the risk of integration errors that would be avoided by a collaboration aware environment.
 
-    \item \textbf{Web Trends:} Despite industry trends, there is currently no mature, lightweight web interface for \ac{FBD}, leaving \ac{ICS} engineering behind the curve of cloud-native software development.
+    \item \textbf{Lack of a Centralised System State:} Since tools are local-first, there is no single representation of a system's current state. This makes it difficult to maintain a consistent view of the system across a distributed team to integrate the development environment into automated deployment and monitoring pipelines.
+
+    \item \textbf{Limited Accessibility:} Engineers cannot access a project without access to a fully configured workstation. This is a practical limitation in industrial settings, where on-site diagnosis of a running application may be necessary from a device in which no local tooling has been installed and the project is not set up.
+
+    % FIXME is this a gap?
+    \item \textbf{Web Trends:} Despite a clear industry shift toward web based development tooling, there is currently no mature web solution for \textit{IEC 61499}, leaving \ac{ICS} engineering behind. The contrast with general software development, where fully featured browser \acp{IDE} are now common, represents both a gap and an opportunity. The techniques and infrastructure required to build such a tool are well understood, but they have not yet been applied to this domain.
 \end{itemize}
+
+Taken together, these gaps suggest that the ecosystem is well positioned to benefit from a lightweight, browser-accessible development environment that prioritises collaboration, low setup overhead, and integration with modern deployment workflows — without sacrificing the domain-specific features that \textit{IEC 61499} engineers depend on.
