@@ -2,7 +2,6 @@ import { default_xml, default_py} from "./default.js"
 import * as Y from "https://esm.sh/yjs@13.6.0";
 import { CodemirrorBinding } from "https://esm.sh/y-codemirror@3.0.1?deps=yjs@13.6.0";
 
-// TODO This is a lot, maybe separate into a few files?
 const fbs_list = document.getElementById("fbs-list");
 const fbs_toolbar = document.getElementById("fbs-toolbar");
 const fbs_editor = document.getElementById('fbs-editor');
@@ -51,7 +50,6 @@ document.getElementById("add-fb").addEventListener("click", () => {
   add_fb();
 });
 
-// TODO show what is the active tab
 function populateSidebar() {
   fbs_list.innerHTML = "";
 
@@ -119,9 +117,6 @@ function add_fb() {
   }
 }
 
-// TODO This function doesnt have to be abstract
-// TODO Make it work on the whole fbs-toolbar
-// TODO Simplify it a lot
 function InputBind(uuid, key, div) {
   const fb = fbs.get(uuid);
 
@@ -138,7 +133,6 @@ function InputBind(uuid, key, div) {
   }
   input.addEventListener('input', onInput);
 
-  // TODO delete text when it is deleted
   const onClick = () => {
     window.ydoc.transact(() => {
       fbs.delete(uuid);
@@ -168,7 +162,6 @@ function InputBind(uuid, key, div) {
   };
 }
 
-// TODO rename name_binding since it now affects the whole fbs-toolbar
 function bindTextEditors(uuid) {
   const fb = fbs.get(uuid);
 
@@ -199,7 +192,6 @@ function bindTextEditors(uuid) {
   cur_fb = uuid;
 }
 
-// TODO put this somewhere nicer
 // Resize handle
 
 let isDragging = false;

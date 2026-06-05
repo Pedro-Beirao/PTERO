@@ -21,26 +21,19 @@ By default, \textit{DINASORE} uses the port \textit{61499} to receive commands f
 
 % TODO mention that dinasore is not supported in newer versions of 4diac ide, which means it doesnt run on mac. maybe mention it in another section
 % TODO mention that the communication with 4diac ide was studied
+% TODO talk about changes made to DINASORE
 
 \section{Server}
 The design begins by setting up a server that will serve the \ac{IDE} interface as a webpage, store and manage all the data and handle communication with the \acp{RTE}. Taking into account the features we plan on implementing, \textit{JavaScript} running on \textit{Node.js} were chosen due to the extensive library ecosystem. For real-time collaboration we will need a library to run in both the server and the frontend, since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
 
-Being the middleware, there are 4 different types of network communications that the server will need to handle, each with it's own requirements:
+% Being the middleware, there are 4 different types of network communications that the server will need to handle, each with it's own requirements:
 
-\begin{itemize}
-  \item \textbf{Serve webpage}: Communicates via \textit{GET} requests to deliver the \textit{html}, \textit{css} and \textit{js} files that make up the \ac{IDE} interface.
-  \item \textbf{Real-Time Collaboration}: Constant atomic updates via a library.
-  \item \textbf{Requested deployment}: A team member sends a \textit{POST} request, that tells the server to deploy.
-  \item \textbf{Deployment sockets}: Communicates via sockets with each \ac{RTE} to send commands and receive the corresponding responses.
-\end{itemize}
-
-\begin{figure}[H]
-  \includegraphics[width=0.7\linewidth]{ide-server-rte.jpg}
-  \caption{Communication through the server}
-  \label{fig:ide-server-rte}
-\end{figure}
-
-% TODO talk about changes made to DINASORE? ask the supervisor
+% \begin{itemize}
+%   \item \textbf{Serve webpage}: Communicates via \textit{GET} requests to deliver the \textit{html}, \textit{css} and \textit{js} files that make up the \ac{IDE} interface.
+%   \item \textbf{Real-Time Collaboration}: Constant atomic updates via a library.
+%   \item \textbf{Requested deployment}: A team member sends a \textit{POST} request, that tells the server to deploy.
+%   \item \textbf{Deployment sockets}: Communicates via sockets with each \ac{RTE} to send commands and receive the corresponding responses.
+% \end{itemize}
 
 \section{Frontend}
 The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} programs.
@@ -210,7 +203,7 @@ This view will display the console logs that are generated when deploying. The c
 % TODO add image
 
 \section{Real-Time Collaboration} \label{sec:real-time-collaboration}
-One of the main goals of the proposed solution is to support collaborative development of \textit{IEC 61499} applications. Since \ac{CPPS} projects are often developed by multiple team members simultaneously, the code collaboration system must accommodate for this. Traditional version control systems such as \textit{Git} are not well suited for collaborative editing of structured graph based data represented in formats such as \textit{json} or \textit{xml}. Although these formats are text based, small logical modifications in the application model can produce large text changes due to formatting changes, element reordering or nested structure updates. As a result, merge conflicts become frequent and difficult to resolve, especially when multiple team members edit the a graph at the same time. This limitation makes real time collaborative editing impractical, motivating the use of synchronisation approaches based on shared data structures and conflict free replication mechanisms such as \acp{CRDT}.
+% One of the main goals of the proposed solution is to support collaborative development of \textit{IEC 61499} applications. Since \ac{CPPS} projects are often developed by multiple team members simultaneously, the code collaboration system must accommodate for this. Traditional version control systems such as \textit{Git} are not well suited for collaborative editing of structured graph based data represented in formats such as \textit{json} or \textit{xml}. Although these formats are text based, small logical modifications in the application model can produce large text changes due to formatting changes, element reordering or nested structure updates. As a result, merge conflicts become frequent and difficult to resolve, especially when multiple team members edit the a graph at the same time. This limitation makes real time collaborative editing impractical, motivating the use of synchronisation approaches based on shared data structures and conflict free replication mechanisms such as \acp{CRDT}.
 
 In this prototype the collaborative editing system was implemented using \textit{Yjs}, a \ac{CRDT} framework designed for distributed collaborative applications. \ac{CRDT} based systems allow users to concurrently edit shared data structures while automatically resolving conflicts in a deterministic manner.
 

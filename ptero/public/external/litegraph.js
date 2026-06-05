@@ -109,13 +109,13 @@
     node_box_coloured_when_on: false, // [true!] this make the nodes box (top left circle) coloured when triggered (execute/action), visual feedback
     node_box_coloured_by_mode: false, // [true!] nodebox based on node mode, visual feedback
 
-    dialog_close_on_mouse_leave: true, // [false on mobile] better true if not touch device, TODO add an helper/listener to close if false
+    dialog_close_on_mouse_leave: true,
     dialog_close_on_mouse_leave_delay: 500,
 
-    shift_click_do_break_link_from: false, // [false!] prefer false if results too easy to break links - implement with ALT or TODO custom keys
+    shift_click_do_break_link_from: false,
     click_do_break_link_to: false, // [false!]prefer false, way too easy to break links
 
-    search_hide_on_mouse_leave: true, // [false on mobile] better true if not touch device, TODO add an helper/listener to close if false
+    search_hide_on_mouse_leave: true,
     search_filter_enabled: false, // [true!] enable filtering slots type in the search widget, !requires auto_load_slot_types or manual set registered_slot_[in/out]_types and slot_types_[in/out]
     search_show_all_on_open: true, // [true!] opens the results list when opening the search widget
 
@@ -140,7 +140,6 @@
     release_link_on_empty_shows_menu: false, //[true!] dragging a link to empty space will open a menu, add from list, search or defaults
 
     pointerevents_method: "mouse", // "mouse"|"pointer" use mouse for retrocompatibility issues? (none found @ now)
-    // TODO implement pointercancel, gotpointercapture, lostpointercapture, (pointerover, pointerout if necessary)
 
     ctrl_shift_v_paste_connect_unselected_outputs: false, //[true!] allows ctrl + shift + v to paste nodes with the outputs of the unselected nodes connected with the inputs of the newly pasted nodes
 
@@ -248,7 +247,6 @@
         );
       }
 
-      // TODO one would want to know input and ouput :: this would allow through registerNodeAndSlotType to get all the slots types
       if (this.auto_load_slot_types) {
         new base_class(base_class.title || "tmpnode");
       }
@@ -1713,7 +1711,6 @@
     for (var i = nodes_list.length - 1; i >= 0; i--) {
       var n = nodes_list[i];
       if (n.isPointInside(x, y, margin)) {
-        // check for lesser interest nodes (TODO check for overlapping, use the top)
         /*if (typeof n == "LGraphGroup"){
 					nRet = n;
 				}else{*/
@@ -2350,7 +2347,7 @@
   };
 
   LGraph.prototype.onNodeTrace = function (node, msg, color) {
-    //TODO
+
   };
 
   //this is the class in charge of storing link information
@@ -4040,8 +4037,6 @@
     return -1;
   };
 
-  // TODO refactor: USE SINGLE findInput/findOutput functions! :: merge options
-
   /**
    * returns the first free input slot
    * @method findInputSlotFree
@@ -4273,7 +4268,6 @@
         " to targetNODE ",
         target_node,
       );
-      //TODO filter
 
       return null;
     }
@@ -4353,7 +4347,6 @@
         " to sourceNODE ",
         source_node,
       );
-      //TODO filter
 
       //console.log("type OUT! "+source_slotType+" not found or not free?")
       return null;
@@ -5788,7 +5781,6 @@ LGraphNode.prototype.executeAction = function(action)
     this._mousemove_callback = this.processMouseMove.bind(this);
     this._mouseup_callback = this.processMouseUp.bind(this);
 
-    //touch events -- TODO IMPLEMENT
     //this._touch_callback = this.touchHandler.bind(this);
 
     LiteGraph.pointerListenerAdd(
@@ -6529,7 +6521,6 @@ LGraphNode.prototype.executeAction = function(action)
       }
     }
 
-    //TODO
     //if(this.node_selected != prev_selected)
     //	this.onNodeSelectionChange(this.node_selected);
 
@@ -7379,7 +7370,6 @@ LGraphNode.prototype.executeAction = function(action)
       //collapse
       //...
 
-      //TODO
       if (this.selected_nodes) {
         for (var i in this.selected_nodes) {
           if (this.selected_nodes[i].onKeyDown) {
@@ -9326,7 +9316,7 @@ LGraphNode.prototype.executeAction = function(action)
           if (!grad) {
             grad = LGraphCanvas.gradients[title_color] =
               ctx.createLinearGradient(0, 0, 400, 0);
-            grad.addColorStop(0, title_color); // TODO refactor: validate color !! prevent DOMException
+            grad.addColorStop(0, title_color);
             grad.addColorStop(1, "#000");
           }
           ctx.fillStyle = grad;
@@ -11449,7 +11439,6 @@ LGraphNode.prototype.executeAction = function(action)
 
           // if connecting in between
           if (isFrom && isTo) {
-            // TODO
           }
 
           return true;
@@ -11596,13 +11585,11 @@ LGraphNode.prototype.executeAction = function(action)
     return false;
   };
 
-  // TODO refactor :: this is used fot title but not for properties!
   LGraphCanvas.onShowPropertyEditor = function (item, options, e, menu, node) {
     var input_html = "";
     var property = item.property || "title";
     var value = node[property];
 
-    // TODO refactor :: use createDialog ?
 
     var dialog = document.createElement("div");
     dialog.is_modified = false;
@@ -11835,7 +11822,7 @@ LGraphNode.prototype.executeAction = function(action)
       slot_from: null,
       node_from: null,
       node_to: null,
-      do_type_filter: LiteGraph.search_filter_enabled, // TODO check for registered_slot_[in/out]_types not empty // this will be checked for functionality enabled : filter on slot type, in and out
+      do_type_filter: LiteGraph.search_filter_enabled,
       type_filter_in: false, // these are default: pass to set initially set values
       type_filter_out: false,
       show_general_if_none_on_typefilter: true,
@@ -12607,7 +12594,6 @@ LGraphNode.prototype.executeAction = function(action)
     return dialog;
   };
 
-  // TODO refactor, theer are different dialog, some uses createDialog, some dont
   LGraphCanvas.prototype.createDialog = function (html, options) {
     var def_options = {
       checkForInput: false,
@@ -13755,7 +13741,6 @@ LGraphNode.prototype.executeAction = function(action)
     }
 
     if (0)
-      //TODO
       options.push({
         content: "To Subgraph",
         callback: LGraphCanvas.onMenuNodeToSubgraph,
@@ -14216,7 +14201,6 @@ LGraphNode.prototype.executeAction = function(action)
       num++;
     }
 
-    //close on leave? touch enabled devices won't work TODO use a global device detector and condition on that
     /*LiteGraph.pointerListenerAdd(root,"leave", function(e) {
 		  	console.log("pointerevents: ContextMenu leave");
             if (that.lock) {
@@ -14441,7 +14425,6 @@ LGraphNode.prototype.executeAction = function(action)
       clearTimeout(this.root.closing_timer);
     }
 
-    // TODO implement : LiteGraph.contextMenuClosed(); :: keep track of opened / closed / current ContextMenu
     // on key press, allow filtering/selecting the context menu elements
   };
 
@@ -15344,7 +15327,6 @@ if (typeof exports != "undefined") {
 
   Subgraph.prototype.buildFromNodes = function (nodes) {
     //clear all?
-    //TODO
 
     //nodes that connect data between parent graph and subgraph
     var subgraph_inputs = [];
@@ -27665,7 +27647,7 @@ void main(void){\n\
       if (v == null) continue;
       if (v.constructor === Function) uniforms[i] = v.call(this, param);
       else if (v.constructor === GL.Texture) {
-        //todo...
+
       } else uniforms[i] = v;
     }
   };
@@ -27920,7 +27902,6 @@ gl_FragColor = fragcolor;\n\
   LGraphShaderGraph.prototype.onDrawSubgraphBackground = function (
     graphcanvas,
   ) {
-    //TODO
   };
 
   LGraphShaderGraph.prototype.getExtraMenuOptions = function (graphcanvas) {
@@ -27941,7 +27922,6 @@ gl_FragColor = fragcolor;\n\
   LiteGraph.registerNodeType("texture/shaderGraph", LGraphShaderGraph);
 
   function shaderNodeFromFunction(classname, params, return_type, code) {
-    //TODO
   }
 
   //Shader Nodes ***********************************************************

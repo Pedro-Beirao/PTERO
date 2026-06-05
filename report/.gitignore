@@ -248,14 +248,12 @@ pythontex-files-*/
 # titletoc
 *.ptc
 
-# todonotes
 *.tdo
 
 # vhistory
 *.hst
 *.ver
 
-# easy-todo
 *.lod
 
 # xcolor
