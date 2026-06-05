@@ -92,33 +92,122 @@ Usability is assessed through user questionnaires based on:
 \end{itemize}
 
 \section{Functional Validation}
+\textit{PTERO} was subjected to functional tests to confirm that all core features behave as specified. It was tested by implementing and deploying the test program defined in \Cref{sec:test-program-design}. As a control, the same was performed in \textit{4diac IDE}. The steps taken are as follows:
+
+% TODO which hardware
+
+\begin{enumerate}
+\item \textbf{Configured available \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: In the \textit{System Configuration} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, then connected it to the \textit{Ethernet} tunnel.
+  \item \textbf{PTERO}: In the \textit{Config} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, as well as the SSH details of the device which will be used to sync the function blocks files.
+  \end{itemize}
+
+\item \textbf{Imported the function block files}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Copied and pasted the given files to \texttt{4diac-ide/typelibrary/(new\_folder)}.
+  \item \textbf{PTERO}: Copied and pasted the given files in the \textit{Function Blocks} tab.
+  \end{itemize}
+
+\item \textbf{Designed the flow}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: In the \textit{App View} tab, dragged and dropped the wanted function blocks, then connected the event and data slots. Double-clicked input slots to assign input value.
+  \item \textbf{PTERO}: In the \textit{Graph} tab, right-clicked and selected the wanted function blocks to add them, then connected the event and data slots. Right-clicked nodes to assign input value.
+  \end{itemize}
+
+\item \textbf{Mapped to \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
+  \item \textbf{PTERO}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
+  \end{itemize}
+
+\item \textbf{Synced files with \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Called the \texttt{synchronize.py} manually, feeding it the needed SSH details.
+  \item \textbf{PTERO}: This was done automatically and without any needed setup when deploying.
+  \end{itemize}
+
+\item \textbf{Deployed}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
+  \item \textbf{PTERO}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
+  \end{itemize}
+
+\item \textbf{Monitored the output}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: The \textit{Monitor values} option was enabled, and the values were displayed on the right side of the output data slots.
+  \item \textbf{PTERO}: The values were displayed on the right side of the output data slots.
+  \end{itemize}
+\end{enumerate}
+
+Besides verifying that the output values are being monitored correctly, following the \textit{Deployed} step, the commands displayed in the console were directly compared between \acp{IDE}. It was verified that both were sending exactly the same commands, the headers as well as the contents were exactly the same, and the responses were no different. These results confirmed that the prototype correctly handles the development of \textit{IEC 61499} programs.
+
+% TODO mention that the steps are a bit different
+
 
 \section{Performance Evaluation}
+This solution not only aims to be able to do the same workload as \textit{4diac IDE}, but also have capabilities and an inherent design that justify its existence. Therefore, this section compares the performance of several real world tasks between the \acp{IDE}. The listed tasks are the ones that demonstrated to be significantly different between solutions, others were analysed but proved to not be worth the discussion.
+
+\begin{itemize}
+\item \textbf{Install}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Install a desktop app. There is no compatible version for macOS.
+  \item \textbf{PTERO}: Install a \textit{Node.js} server. By working in a web browser, it is crossplatform without much development effort, which allows macOS users to use it. The downside is that it is harder to install for just local development.
+  \end{itemize}
+
+\item \textbf{Open}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Average of 4 seconds to boot the application in a mid level computer. As it is written in \textit{Java}, the boot time cannot be improved much.
+  \item \textbf{PTERO}: Average of less than a second to load webpage. The use of lightweight libraries and the move of heavy workloads to the server allow the page to load in an instant.
+  \end{itemize}
+
+\item \textbf{Create and edit function block files}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: While it does have a way to create and edit the \textit{.fbt} files inside the editor, the code editor is not targeted against \textit{DINASORE} and therefore does not support \textit{.py} files.
+  \item \textbf{PTERO}: Has a text editor for both types of files.
+  \end{itemize}
+
+\item \textbf{Collaboration}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: An external periodic version control system like \textit{Git} needs to be used. Structured data in formats like \textit{XML} is not handled properly by these types of version control system, which results in frequent merge conflicts \cite{axelsson_version_2015}. The following test was conducted:
+    \begin{enumerate}
+    \item A project has a graph with 1 function block added. 2 users are working on the graph.
+    \item User \#1 deletes the function block.
+    \item User \#2 modifies the position of the function block.
+    \item User \#1 commits and pushes.
+    \item User \#2 tries to pull the changes but gets a merge conflict
+    \end{enumerate}
+  \item \textbf{PTERO}: Has a realtime collaboration system. Any change made is immediately propagated to every client, and resolved by a \ac{CRDT}, ensuring no conflicts need to be handled manually and damage is minimised.
+  \end{itemize}
+
+\item \textbf{Synchronising files with the \textit{DINASOREs}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Required to manually use an external script before deployment.
+  \item \textbf{PTERO}: The server itself will connect and synchronise the files with the \textit{DINASOREs}. This happens automatically when attempting to deploy, ensuring that deployments never fail due to the human error of forgetting to sync the files.
+  \end{itemize}
+
+\item \textbf{Remote deployment}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Every \ac{IDE} must have a valid connection with each available \textit{DINASORE}, as well as \textit{SSH} access. This gets increasingly complicated if the user want to make a deployment while in a different network. A way to expose each individual device needs to be design.
+  \item \textbf{PTERO}: By having the server as the middleware, only it must be exposed for the users to connect. With only the server permanently having direct connection with the \textit{DINASORE} devices, no individual handling is needed.
+  \end{itemize}
+\end{itemize}
+
+% TODO remote dev on mobile?
+
+% TODO talk on the improvements
+
+% One of the concrete objectives of this work was to deliver a solution that is meaningfully faster than the approach it replaces. To verify this, [describe your measurement approach --- e.g. task completion time, API response time, load time] was measured under controlled conditions and compared against [the baseline --- e.g. the previous tool, manual process, or benchmark].
+
+% The prototype achieved [X result], representing a [Y\%] improvement over the baseline. These results confirm that the solution delivers a tangible gain in [speed / efficiency / throughput], directly addressing one of the core gaps motivating this work.
+
+% TODO table with pros and cons of each
+
 
 \section{Collaboration Evaluation}
+extract from previous section
 
 \section{Usability Evaluation}
-
-\section{Discussion}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{4diac IDE User Experience}
 Before beginning testing of the proposed solution, a study on the user experience of working with \textit{4diac IDE} as the underlying development environment for \textit{IEC 61499} was conducted. The participants of the questionnaire were students from the \ac{MEEC} at \ac{FEUP}, enrolled in the course of \ac{SINF}, in which \textit{4diac IDE} was used as the primary tool for modelling \ac{FBD} programs, using \textit{DINASORE} as the \ac{RTE}.
 
 % TODO mention that the students are capable of responding and that they are possibly a future target of ptero
@@ -220,9 +309,29 @@ Monitor the output & \likertpct{12}{14}{8}{9}{57}\\
 %   - Note that despite friction, students were able to complete tasks, validating
 %     4diac as a viable platform to build upon
 
+\section{Discussion}
 
-\section{Test Program Design} \label{sec:test-program-design}
-The following \ac{FBD} program design was used in both the objective and subjective validation tests.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \section{Test Program Design} \label{sec:test-program-design}
+% The following \ac{FBD} program design was used in both the objective and subjective validation tests.
 
 % \subsection{Available resources}
 % These are the resources available from the start to the tested \ac{IDE}.
@@ -245,119 +354,12 @@ The following \ac{FBD} program design was used in both the objective and subject
 %   \label{fig:test-program}
 % \end{figure}
 
-\section{Objective Validation}
-Objective validation focuses on measurable criteria that can be validated independently of user opinion. These tests were designed to verify if the prototype, and by extension the proposed solution, does not fail to meet the functional requirements of a \textit{IEC 61499} \ac{IDE} and is able to confidently achieve the goals that it sets out for. Besides being able to function, these tests also measure performance metrics that can be directly compared with \textit{4diac IDE}.
+% \section{Objective Validation}
+% Objective validation focuses on measurable criteria that can be validated independently of user opinion. These tests were designed to verify if the prototype, and by extension the proposed solution, does not fail to meet the functional requirements of a \textit{IEC 61499} \ac{IDE} and is able to confidently achieve the goals that it sets out for. Besides being able to function, these tests also measure performance metrics that can be directly compared with \textit{4diac IDE}.
 
-\subsection{Functional Correctness}
-The prototype was subjected to functional tests to confirm that all core features behave as specified. It was tested by implementing and deploying the test program defined in \Cref{sec:test-program-design}. As a control, the same was performed in \textit{4diac IDE}. The steps taken are as follows:
-
-\begin{enumerate}
-\item \textbf{Configured available \textit{DINASORE}}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: In the \textit{System Configuration} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, then connected it to the \textit{Ethernet} tunnel.
-  \item \textbf{PTERO}: In the \textit{Config} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, as well as the SSH details of the device which will be used to sync the function blocks files.
-  \end{itemize}
-
-\item \textbf{Imported the function block files}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Copied and pasted the given files to \texttt{4diac-ide/typelibrary/(new\_folder)}.
-  \item \textbf{PTERO}: Copied and pasted the given files in the \textit{Function Blocks} tab.
-  \end{itemize}
-
-\item \textbf{Designed the flow}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: In the \textit{App View} tab, dragged and dropped the wanted function blocks, then connected the event and data slots. Double-clicked input slots to assign input value.
-  \item \textbf{PTERO}: In the \textit{Graph} tab, right-clicked and selected the wanted function blocks to add them, then connected the event and data slots. Right-clicked nodes to assign input value.
-  \end{itemize}
-
-\item \textbf{Mapped to \textit{DINASORE}}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
-  \item \textbf{PTERO}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
-  \end{itemize}
-
-\item \textbf{Synced files with \textit{DINASORE}}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Called the \texttt{synchronize.py} manually, feeding it the needed SSH details.
-  \item \textbf{PTERO}: This was done automatically and without any needed setup when deploying.
-  \end{itemize}
-
-\item \textbf{Deployed}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
-  \item \textbf{PTERO}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
-  \end{itemize}
-
-\item \textbf{Monitored the output}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: The \textit{Monitor values} option was enabled, and the values were displayed on the right side of the output data slots.
-  \item \textbf{PTERO}: The values were displayed on the right side of the output data slots.
-  \end{itemize}
-\end{enumerate}
-
-Besides verifying that the output values are being monitored correctly, following the \textit{Deployed} step, the commands displayed in the console were directly compared between \acp{IDE}. It was verified that both were sending exactly the same commands, the headers as well as the contents were exactly the same, and the responses were no different. These results confirmed that the prototype correctly handles the development of \textit{IEC 61499} programs.
-
-% TODO mention that the steps are a bit different
-
-\subsection{Performance}
-This solution not only aims to be able to do the same workload as \textit{4diac IDE}, but also have capabilities and an inherent design that justify its existence. Therefore, this section compares the performance of several real world tasks between the \acp{IDE}. The listed tasks are the ones that demonstrated to be significantly different between solutions, others were analysed but proved to not be worth the discussion.
-
-\begin{itemize}
-\item \textbf{Install}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Install a desktop app. There is no compatible version for macOS.
-  \item \textbf{PTERO}: Install a \textit{Node.js} server. By working in a web browser, it is crossplatform without much development effort, which allows macOS users to use it. The downside is that it is harder to install for just local development.
-  \end{itemize}
-
-\item \textbf{Open}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Average of 4 seconds to boot the application in a mid level computer. As it is written in \textit{Java}, the boot time cannot be improved much.
-  \item \textbf{PTERO}: Average of less than a second to load webpage. The use of lightweight libraries and the move of heavy workloads to the server allow the page to load in an instant.
-  \end{itemize}
-
-\item \textbf{Create and edit function block files}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: While it does have a way to create and edit the \textit{.fbt} files inside the editor, the code editor is not targeted against \textit{DINASORE} and therefore does not support \textit{.py} files.
-  \item \textbf{PTERO}: Has a text editor for both types of files.
-  \end{itemize}
-
-\item \textbf{Collaboration}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: An external periodic version control system like \textit{Git} needs to be used. Structured data in formats like \textit{XML} is not handled properly by these types of version control system, which results in frequent merge conflicts \cite{axelsson_version_2015}. The following test was conducted:
-    \begin{enumerate}
-    \item A project has a graph with 1 function block added. 2 users are working on the graph.
-    \item User \#1 deletes the function block.
-    \item User \#2 modifies the position of the function block.
-    \item User \#1 commits and pushes.
-    \item User \#2 tries to pull the changes but gets a merge conflict
-    \end{enumerate}
-  \item \textbf{PTERO}: Has a realtime collaboration system. Any change made is immediately propagated to every client, and resolved by a \ac{CRDT}, ensuring no conflicts need to be handled manually and damage is minimised.
-  \end{itemize}
-
-\item \textbf{Synchronising files with the \textit{DINASOREs}}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Required to manually use an external script before deployment.
-  \item \textbf{PTERO}: The server itself will connect and synchronise the files with the \textit{DINASOREs}. This happens automatically when attempting to deploy, ensuring that deployments never fail due to the human error of forgetting to sync the files.
-  \end{itemize}
-
-\item \textbf{Remote deployment}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Every \ac{IDE} must have a valid connection with each available \textit{DINASORE}, as well as \textit{SSH} access. This gets increasingly complicated if the user want to make a deployment while in a different network. A way to expose each individual device needs to be design.
-  \item \textbf{PTERO}: By having the server as the middleware, only it must be exposed for the users to connect. With only the server permanently having direct connection with the \textit{DINASORE} devices, no individual handling is needed.
-  \end{itemize}
-\end{itemize}
-
-% TODO remote dev on mobile?
-
-% TODO talk on the improvements
-
-% One of the concrete objectives of this work was to deliver a solution that is meaningfully faster than the approach it replaces. To verify this, [describe your measurement approach --- e.g. task completion time, API response time, load time] was measured under controlled conditions and compared against [the baseline --- e.g. the previous tool, manual process, or benchmark].
-
-% The prototype achieved [X result], representing a [Y\%] improvement over the baseline. These results confirm that the solution delivers a tangible gain in [speed / efficiency / throughput], directly addressing one of the core gaps motivating this work.
-
-% TODO table with pros and cons of each
-
-\section{Subjective Validation}
+% \subsection{Functional Correctness}
+% \subsection{Performance}
+% \section{Subjective Validation}
 
 % To complement the objective findings, the prototype was made available to a group of \textit{N} participants representative of the intended user base. Participants were asked to interact with the application freely and to complete a set of representative tasks, after which they provided structured feedback through a questionnaire.
 
