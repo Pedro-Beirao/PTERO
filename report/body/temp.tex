@@ -95,37 +95,36 @@
 %     \item Support for collaborative workflows
 % \end{itemize}
 
-\chapter{Prototype Development} \label{chap:prototype-development}
+% \chapter{Prototype Development} \label{chap:prototype-development}
 
-\section{Overview}
+% \section{Overview}
 
-This chapter describes the technical implementation of the proposed system. It details the server architecture, frontend implementation, collaboration system, and deployment mechanism used to realise the conceptual design presented in Chapter~\ref{chap:proposed-solution}.
+% This chapter describes the technical implementation of the proposed system. It details the server architecture, frontend implementation, collaboration system, and deployment mechanism used to realise the conceptual design presented in Chapter~\ref{chap:proposed-solution}.
 
-\section{Runtime Environment}
+% \section{Runtime Environment}
+% The prototype targets \textit{DINASORE} (\textit{Dynamic INtelligent Architecture for Software and MOdular REconfiguration}) \cite{pereira_dinasore_2020} as the primary \ac{RTE}.
 
-The prototype targets \textit{DINASORE} (\textit{Dynamic INtelligent Architecture for Software and MOdular REconfiguration}) \cite{pereira_dinasore_2020} as the primary \ac{RTE}.
+% \textit{DINASORE} was selected due to its open-source nature, simplified architecture, and suitability for prototyping. It exposes a command-based interface over port 61499, which is used by the \ac{IDE} for deployment communication.
 
-\textit{DINASORE} was selected due to its open-source nature, simplified architecture, and suitability for prototyping. It exposes a command-based interface over port 61499, which is used by the \ac{IDE} for deployment communication.
+% \section{Server Implementation}
 
-\section{Server Implementation}
+% The server is implemented using \textit{Node.js}, providing a JavaScript-based runtime that supports both backend logic and compatibility with frontend libraries.
 
-The server is implemented using \textit{Node.js}, providing a JavaScript-based runtime that supports both backend logic and compatibility with frontend libraries.
+% The server is responsible for:
+% \begin{itemize}
+%     \item Serving the web-based \ac{IDE}
+%     \item Managing application state and storage
+%     \item Handling real-time collaboration updates
+%     \item Orchestrating deployment to \acp{RTE}
+% \end{itemize}
 
-The server is responsible for:
-\begin{itemize}
-    \item Serving the web-based \ac{IDE}
-    \item Managing application state and storage
-    \item Handling real-time collaboration updates
-    \item Orchestrating deployment to \acp{RTE}
-\end{itemize}
-
-Four main communication types are handled:
-\begin{itemize}
-    \item HTTP requests for static content
-    \item WebSocket communication for collaboration
-    \item HTTP POST requests for deployment triggers
-    \item Socket communication with \acp{RTE}
-\end{itemize}
+% Four main communication types are handled:
+% \begin{itemize}
+%     \item HTTP requests for static content
+%     \item WebSocket communication for collaboration
+%     \item HTTP POST requests for deployment triggers
+%     \item Socket communication with \acp{RTE}
+% \end{itemize}
 
 \section{Frontend Implementation}
 

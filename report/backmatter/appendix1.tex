@@ -1,66 +1,236 @@
-%% an example of appendix
-\chapter{Lorem Ipsum} \label{ap1:Lorem}
+\chapter{Implementation Formats Examples} \label{app:implementation}
 
-After the conclusions and bibliographical references,
-the text used to complete the dissertation is presented in this 
-numbered annex. 
+\section{Function Block Files}
 
-\section{What is \emph{Lorem Ipsum}?}
+\begin{lstlisting}[language=XML, caption={Example \textit{xml} definition of a function block}, label={lst:fb-xml}]
+<FBType Name="NEW_FB_1">
+  <InterfaceList>
+    <EventInputs>
+      <Event Name="INIT" Type="Event"/>
+      <Event Name="READ" Type="Event">
+        <With Var="VARIABLE_1"/>
+        <With var="VARIABLE_2"/>
+        <With var="VARIABLE_3"/>
+      </Event>
+    </EventInputs>
+    <EventOutputs>
+      <Event Name="INIT_O" Type="Event"/>
+      <Event Name="READ_O" Type="Event">
+        <With Var="DATA_1"/>
+      </Event>
+    </EventOutputs>
+    <InputVars>
+      <VarDeclaration Name="VARIABLE_1" Type="STRING"/>
+      <VarDeclaration Name="VARIABLE_2" Type="REAL"/>
+      <VarDeclaration Name="VARIABLE_3" Type="INT"/>
+    </InputVars>
+    <OutputVars>
+      <VarDeclaration Name="DATA_1" Type="STRING"/>
+    </OutputVars>
+  </InterfaceList>
+</FBType>
+\end{lstlisting}
 
-\emph{\textbf{Lorem Ipsum}} is simply dummy text of the printing and
-typesetting industry. Lorem Ipsum has been the industry's standard
-dummy text ever since the 1500s, when an unknown printer took a galley
-of type and scrambled it to make a type specimen book. It has survived
-not only five centuries, but also the leap into electronic
-typesetting, remaining essentially unchanged. It was popularised in
-the 1960s with the release of Letraset sheets containing Lorem Ipsum
-passages, and more recently with desktop publishing software like
-Aldus PageMaker including versions of Lorem Ipsum~\cite{kn:Lip08}. 
 
-\section{Where does \emph{Lorem} come from?}
+\begin{lstlisting}[language=Python, caption={Example \textit{Python} code of a function block}, label={lst:fb-py}]
+class NEW_FB_1:
+  def __init__(self):
+    pass
 
-Contrary to popular belief, Lorem Ipsum is not simply random text. It
-has roots in a piece of classical Latin literature from 45 BC, making
-it over 2000 years old. Richard McClintock, a Latin professor at
-Hampden-Sydney College in Virginia, looked up one of the more obscure
-Latin words, consectetur, from a Lorem Ipsum passage, and going
-through the cites of the word in classical literature, discovered the
-undoubtable source. Lorem Ipsum comes from sections 1.10.32 and
-1.10.33 of ``de Finibus Bonorum et Malorum'' (The Extremes of Good and
-Evil) by Cicero, written in 45 BC. This book is a treatise on the
-theory of ethics, very popular during the Renaissance. The first line
-of Lorem Ipsum, ``Lorem ipsum dolor sit amet\ldots'', comes from a line in
-section 1.10.32.
+  def schedule(self, event_name, event_value, variable_1, variable_2, variable_3):
+    if event_name == "INIT":
+      return [event_value, None, ""]
 
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced
-below for those interested. Sections 1.10.32 and 1.10.33 from ``de
-Finibus Bonorum et Malorum'' by Cicero are also reproduced in their
-exact original form, accompanied by English versions from the 1914
-translation by H. Rackham.
+    elif event_name == "READ":
+      return [None, event_value, ""]
+\end{lstlisting}
 
-\section{Why is \emph{Lorem} used?}
+\section{Structures of Serialised Data}
 
-It is a long established fact that a reader will be distracted by the
-readable content of a page when looking at its layout. The point of
-using Lorem Ipsum is that it has a more-or-less normal distribution of
-letters, as opposed to using ``Content here, content here'', making it
-look like readable English. Many desktop publishing packages and web
-page editors now use Lorem Ipsum as their default model text, and a
-search for ``lorem ipsum'' will uncover many web sites still in their
-infancy. Various versions have evolved over the years, sometimes by
-accident, sometimes on purpose (injected humour and the like). 
+\begin{lstlisting}[language=JSON, caption={Structure of the Nodes serialized map}, label={lst:serialize-nodes}]
+{
+  'node_id_1': {
+    type: 'SENSOR_SIMULATOR',
+    title: 'SENSOR_SIMULATOR_1',
+    x: 139, y: 526,
+    mappedto: 'dinasore_id_1',
+    inputs: { OFFSET: '' }
+  },
+  'node_id_2': {
+    type: 'MOVING_AVERAGE',
+    title: 'MOVING_AVERAGE_1',
+    x: 487, y: 551,
+    mappedto: 'dinasore_id_1',
+    inputs: { WINDOW: '5', VALUE: '' }
+  }
+}
+\end{lstlisting}
 
-\section{Where can you find examples?}
+\begin{lstlisting}[language=JSON, caption={Structure of the Links serialized map}, label={lst:serialize-links}]
+{
+  'link_id_1': {
+    origin_id: 'node_id_1',
+    origin_slot: 'VALUE',
+    target_id: 'node_id_2',
+    target_slot: 'VALUE'
+  },
+  'link_id_2': {
+    origin_id: 'node_id_1',
+    origin_slot: 'READ_0',
+    target_id: 'node_id_2',
+    target_slot: 'RUN'
+  }
+}
+\end{lstlisting}
 
-There are many variations of passages of Lorem Ipsum available, but
-the majority have suffered alteration in some form, by injected
-humour, or randomised words which don't look even slightly
-believable. If you are going to use a passage of Lorem Ipsum, you need
-to be sure there isn't anything embarrassing hidden in the middle of
-text. All the Lorem Ipsum generators on the Internet tend to repeat
-predefined chunks as necessary, making this the first true generator
-on the Internet. It uses a dictionary of over 200 Latin words,
-combined with a handful of model sentence structures, to generate
-Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is
-therefore always free from repetition, injected humour, or
-non-characteristic words etc. 
+\section{Synchronisation}
+
+\begin{lstlisting}[language=JSON, caption={Sync configuration}, label={lst:sync-config}]
+{
+  master-fbs-path: 'sync/fbs',
+  dinasores: [
+    {
+      address: 'x.x.x.x',
+      port: 22,
+      username: 'root',
+      password: 'dinasore',
+      dinasore-path: '/root/dinasore'
+    },
+    {
+      address: 'y.y.y.y',
+      port: 22,
+      username: 'root',
+      password: 'dinasore',
+      dinasore-path: '/root/dinasore'
+    }
+  ]
+}
+\end{lstlisting}
+
+\section{Communication} \label{app:implementation:communication}
+
+\begin{lstlisting}[language=Python, caption={build\_message() in Python}, label={lst:build-message-py}]
+def build_message(message_payload, configuration_name):
+  # build the first part of the header
+  hex_input = '{:04x}'.format(len(configuration_name))
+  second_byte = int(hex_input[0:2], 16)
+  third_byte = int(hex_input[2:4], 16)
+  response_len = struct.pack('BB', second_byte, third_byte)
+  response_header_1 = b''.join([b'\x50', response_len])
+
+  # build the second part of the header
+  hex_input = '{:04x}'.format(len(message_payload))
+  second_byte = int(hex_input[0:2], 16)
+  third_byte = int(hex_input[2:4], 16)
+  response_len = struct.pack('BB', second_byte, third_byte)
+  response_header_2 = b''.join([b'\x50', response_len])
+
+  # join the 3 parts
+  response = b''.join([response_header_1, configuration_name, response_header_2, message_payload])
+  return response
+\end{lstlisting}
+
+\begin{lstlisting}[language=JavaScript, caption={build\_message() in JavaScript}, label={lst:build-message-js}]
+function build_message(message_payload, configuration_name) {
+  const configBuffer = Buffer.from(configuration_name, 'utf-8');
+  const messageBuffer = Buffer.from(message_payload, 'utf-8');
+
+  // Header 1: [0x50][len_hi][len_lo]
+  const header1 = Buffer.alloc(3);
+  header1[0] = 0x50;
+  header1.writeUInt16BE(configBuffer.length, 1);
+
+  // Header 2: [0x50][len_hi][len_lo]
+  const header2 = Buffer.alloc(3);
+  header2[0] = 0x50;
+  header2.writeUInt16BE(messageBuffer.length, 1);
+
+  return Buffer.concat([
+    header1,
+    configBuffer,
+    header2,
+    messageBuffer
+  ]);
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-setup}]
+<Request Action="QUERY" ID="0">
+  <FB Name="*" Type="*"/>
+</Request>
+
+<Request Action="CREATE" ID="1">
+  <FB Name="EMB_RES" Type="EMB_RES"/>
+</Request>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={\texttt{CREATE} nodes deployment commands}, label={lst:deploy-create-nodes}]
+<Request Action="CREATE" ID="2">
+  <FB Name="SENSOR_SIMULATOR" Type="SENSOR_SIMULATOR"/>
+</Request>
+
+<Request Action="WRITE" ID="3">
+  <Connection Destination="SENSOR_SIMULATOR.OFFSET" Source="12"/>
+</Request>
+
+<Request Action="CREATE" ID="4">
+  <FB Name="MOVING_AVERAGE" Type="MOVING_AVERAGE"/>
+</Request>
+
+<Request Action="WRITE" ID="5">
+  <Connection Destination="MOVING_AVERAGE.WINDOW" Source="5"/>
+</Request>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={\texttt{CREATE} links deployment commands}, label={lst:deploy-create-links}]
+<Request Action="CREATE" ID="6">
+  <Connection Destination="SENSOR_SIMULATOR.READ_0" Source="MOVING_AVERAGE.RUN"/>
+</Request>
+
+<Request Action="CREATE" ID="7">
+  <Connection Destination="SENSOR_SIMULATOR.VALUE" Source="MOVING_AVERAGE.VALUE"/>
+</Request>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={\texttt{START} deployment command}, label={lst:deploy-start}]
+<Request Action="START" ID="8"/>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={\texttt{Response} after a deployment command is sent}, label={lst:deploy-response}]
+<Response ID="8"/>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={\texttt{CREATE} watches after deploying}, label={lst:deploy-create-watch}]
+<Request ID="0" Action="CREATE">
+  <Watch Source="SENSOR_SIMULATOR.VALUE" Destination="*" />
+</Request>
+
+<Request ID="1" Action="CREATE">
+  <Watch Source="MOVING_AVERAGE.VALUE_MA" Destination="*" />
+</Request>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={Request to \texttt{READ} watches}, label={lst:deploy-read-watch}]
+<Request ID="2" Action="READ">
+  <Watches/>
+</Request>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption={Response to \texttt{READ} watches}, label={lst:deploy-watch}]
+<Response ID="2">
+	<Watches>
+		<Resource name="EMB_RES">
+			<FB name="SENSOR_SIMULATOR">
+				<Port name="VALUE">
+					<Data value="13.75" />
+				</Port>
+			</FB>
+			<FB name="MOVING_AVERAGE">
+				<Port name="VALUE">
+					<Data value="13.3" />
+				</Port>
+			</FB>
+		</Resource>
+	</Watches>
+</Response>
+\end{lstlisting}
