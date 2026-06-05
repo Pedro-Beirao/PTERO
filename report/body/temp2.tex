@@ -1,0 +1,104 @@
+% \chapter{Validation}
+% \label{chap:validation}
+
+% The purpose of this chapter is to evaluate whether the proposed solution achieves the objectives defined in \Cref{chap:proposed-solution}. The evaluation combines objective measurements of system behaviour with subjective feedback collected from users. Together, these perspectives provide a comprehensive assessment of the prototype's effectiveness as an \textit{IEC 61499} development environment.
+
+% The evaluation is organised into five complementary areas. Functional validation verifies that the prototype correctly supports the modelling, deployment, and monitoring of \textit{IEC 61499} applications. Performance evaluation analyses workflow efficiency and compares key development tasks against existing tools. Collaboration evaluation examines the benefits of the real-time collaborative architecture and contrasts it with traditional version-control-based workflows. Usability evaluation focuses on user perception and experience, including a study of existing \textit{IEC 61499} tooling. Finally, the results are discussed in the context of the research objectives and identified limitations.
+
+\section{Evaluation Goals}
+
+The evaluation aims to answer the following questions:
+
+\begin{enumerate}
+\item Can the proposed solution successfully support the complete development workflow of an \textit{IEC 61499} application?
+\item Does the proposed architecture provide advantages over existing desktop-based development environments?
+\item Does the integration of real-time collaboration improve collaborative development workflows?
+\item Do users perceive the proposed solution as accessible and easy to use?
+\end{enumerate}
+
+To answer these questions, both quantitative and qualitative evaluation methods were employed.
+
+\section{Experimental Setup}
+
+% A common test application was used throughout the validation process. The same application was implemented using both the developed prototype and \textit{4diac IDE}, allowing direct comparison between environments.
+
+% \subsection{Available Resources}
+
+% The following resources were made available to the tested \acp{IDE}:
+
+% \begin{itemize}
+% \item One \textit{DINASORE} runtime environment.
+% \item Three function block definitions obtained from the official \textit{DINASORE} tutorial \textit{Sensorization "Hello World!"}:
+% \begin{itemize}
+% \item \texttt{SENSOR_SIMULATOR.fbt} and \texttt{SENSOR_SIMULATOR.py}
+% \item \texttt{MOVING_AVERAGE.fbt} and \texttt{MOVING_AVERAGE.py}
+% \item \texttt{CONCATENATE_REALS.fbt} and \texttt{CONCATENATE_REALS.py}
+% \end{itemize}
+% \end{itemize}
+
+% The selected function blocks provide a representative example of a small \textit{IEC 61499} application while remaining sufficiently simple for controlled testing.
+
+% \subsection{Test Application}
+
+% The application shown in \Cref{fig:test-program} was implemented and deployed during the validation process.
+
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=0.8\linewidth]{test-program.jpg}
+% \caption{Test application used during validation}
+% \label{fig:test-program}
+% \end{figure}
+
+% The application consists of a sensor simulation function block whose output is processed by a moving average filter before being formatted for display.
+
+% \subsection{Expected Behaviour}
+
+% After deployment, the application should execute correctly on the target \textit{DINASORE} instance and continuously produce output values. These values should be observable through the monitoring facilities provided by the \ac{IDE}.
+
+% \section{Evaluation Metrics}
+
+% The evaluation combines both objective and subjective metrics.
+
+\subsection{Functional Metrics}
+
+Functional validation considers:
+
+\begin{itemize}
+\item Successful import of function block definitions
+\item Correct graph modelling behaviour
+\item Successful deployment to \textit{DINASORE}
+\item Correct creation of deployment commands
+\item Successful monitoring of runtime values
+\end{itemize}
+
+\subsection{Performance Metrics}
+
+Performance evaluation considers:
+
+\begin{itemize}
+\item Installation complexity
+\item Startup time
+\item Number of manual configuration steps
+\item Deployment workflow complexity
+\end{itemize}
+
+\subsection{Collaboration Metrics}
+
+Collaboration capabilities are evaluated through:
+
+\begin{itemize}
+\item Support for concurrent editing
+\item Conflict handling mechanisms
+\item Need for manual synchronisation
+\end{itemize}
+
+\subsection{Usability Metrics}
+
+Usability is assessed through user questionnaires based on:
+
+\begin{itemize}
+\item Perceived task difficulty
+\item Interface intuitiveness
+\item User satisfaction
+\item Open-ended qualitative feedback
+\end{itemize}

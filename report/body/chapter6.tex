@@ -1,8 +1,124 @@
 \chapter{Validation}
-In order to validate that the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified, the prototype was tested by approaching it from two complementary perspectives: objective testing, which seeks to find measurable and quantifiable aspects of the system's behaviour and design decisions, and subjective testing, which asks real users to interact with the prototype, giving feedback on their perception and experience with the system.
-% TODO Together, these two validation techniques provide a comprehensive picture of the solution's effectiveness.
+The purpose of this chapter is to evaluate whether the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified. The evaluation combines objective measurements of system behaviour with subjective feedback collected from users. Together, these perspectives provide a comprehensive assessment of the prototype's effectiveness as an \textit{IEC 61499} development environment.
 
-\section{4diac IDE User Experience} \label{sec:4diac-ide--user-experience}
+The evaluation is organised into five complementary areas. Functional validation verifies that the prototype correctly supports the modelling, deployment and monitoring of \textit{IEC 61499} applications. Performance evaluation analyses workflow efficiency and compares key tasks against existing tools. Collaboration evaluation examines the benefits of the real-time collaborative architecture and contrasts it with traditional version control workflows. Usability evaluation focuses on user perception and experience, including a study of existing \textit{IEC 61499} tooling. Finally, the results are discussed in the context of the research objectives and identified limitations.
+
+\section{Evaluation Goals}
+The evaluation aims to answer the following questions:
+
+\begin{enumerate}
+\item Can the proposed solution successfully support the complete development workflow of an \textit{IEC 61499} application?
+\item Does the proposed architecture provide advantages over existing desktop based development environments?
+\item Does the integration of real-time collaboration improve collaborative development workflows?
+\item Do users perceive the proposed solution as accessible, easy to use and an improvement over previous solutions?
+\end{enumerate}
+
+To answer these questions, both quantitative and qualitative evaluation methods were employed.
+% TODO dont like empty lines like this and the one above
+
+\section{Experimental Setup}
+A common test application was used throughout the validation process. The same application was implemented using both the developed prototype and \textit{4diac IDE}, allowing direct comparison between environments.
+
+\subsection{Hardware}
+The following hardware devices were available and used for their respective tests:
+
+\begin{enumerate}
+\item \textbf{M1 MacBook Pro} (16gb 2020): Development machine
+\item \textbf{pc da mariana}: % TODO
+\item \textbf{Raspberry Pi 3} (1gb RAM): Ran a permanent \textit{PTERO} server as well as two \textit{DINASOREs} instances.
+\end{enumerate}
+
+\subsection{Available Resources}
+
+The following resources were made available to the tested \acp{IDE}:
+
+\begin{itemize}
+\item One \textit{DINASORE} runtime environment.
+\item Three function block definitions obtained from the official \textit{DINASORE} tutorial \textit{'Sensorization "Hello World!"'}:
+  \begin{itemize}
+  \item \texttt{SENSOR\_SIMULATOR.fbt} and \texttt{SENSOR\_SIMULATOR.py}
+  \item \texttt{MOVING\_AVERAGE.fbt} and \texttt{MOVING\_AVERAGE.py}
+  \item \texttt{CONCATENATE\_REALS.fbt} and \texttt{CONCATENATE\_REALS.py}
+  \end{itemize}
+\end{itemize}
+
+The selected function blocks provide a representative example of a small \textit{IEC 61499} application while remaining sufficiently simple for controlled testing.
+
+\subsection{Test Application}
+
+The application shown in \Cref{fig:test-program} was implemented and deployed during the validation process. It consists of a sensor simulation function block whose output is processed by a moving average filter before being formatted for display.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{test-program.jpg}
+\caption{Test application used during validation}
+\label{fig:test-program}
+\end{figure}
+
+\subsection{Expected Behaviour}
+
+After deployment, the application should execute correctly on the target \textit{DINASORE} instance and continuously produce output values. These values should be observable through the monitoring facilities provided by the \ac{IDE}.
+
+\section{Evaluation Metrics}
+The evaluation combines both objective and subjective metrics.
+
+\subsection{Performance Metrics}
+Performance evaluation considers:
+
+\begin{itemize}
+\item Installation complexity
+\item Startup time
+\item Number of manual configuration steps
+\item Deployment workflow complexity
+\end{itemize}
+
+\subsection{Collaboration Metrics}
+Collaboration capabilities are evaluated through:
+
+\begin{itemize}
+\item Support for concurrent editing
+\item Conflict handling mechanisms
+\item Need for manual synchronisation
+\end{itemize}
+
+\subsection{Usability Metrics}
+Usability is assessed through user questionnaires based on:
+
+\begin{itemize}
+\item Perceived task difficulty
+\item Interface intuitiveness
+\item User satisfaction
+\item Open ended qualitative feedback
+\end{itemize}
+
+\section{Functional Validation}
+
+\section{Performance Evaluation}
+
+\section{Collaboration Evaluation}
+
+\section{Usability Evaluation}
+
+\section{Discussion}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{4diac IDE User Experience}
 Before beginning testing of the proposed solution, a study on the user experience of working with \textit{4diac IDE} as the underlying development environment for \textit{IEC 61499} was conducted. The participants of the questionnaire were students from the \ac{MEEC} at \ac{FEUP}, enrolled in the course of \ac{SINF}, in which \textit{4diac IDE} was used as the primary tool for modelling \ac{FBD} programs, using \textit{DINASORE} as the \ac{RTE}.
 
 % TODO mention that the students are capable of responding and that they are possibly a future target of ptero
@@ -108,33 +224,26 @@ Monitor the output & \likertpct{12}{14}{8}{9}{57}\\
 \section{Test Program Design} \label{sec:test-program-design}
 The following \ac{FBD} program design was used in both the objective and subjective validation tests.
 
-\subsection{Available resources}
-These are the resources available from the start to the tested \ac{IDE}.
-\begin{itemize}
-\item 1 \textit{DINASORE} instance. More could be used but in order to make user testing simpler, a single instance was deemed appropriate.
-\item 3 function blocks, defined by 2 files each. The files are taken from the official \textit{DINASORE}'s tutorial \textit{'Sensorization "Hello World!"'}. They will need to be imported into the \ac{IDE} and the \textit{DINASORE} instance before the program can be deployed
-  \begin{itemize}
-  \item SENSOR\_SIMULATOR.fbt and SENSOR\_SIMULATOR.py
-  \item MOVING\_AVERAGE.fbt and MOVING\_AVERAGE.py
-  \item CONCATENATE\_REALS.fbt and CONCATENATE\_REALS.py
-  \end{itemize}
-\end{itemize}
+% \subsection{Available resources}
+% These are the resources available from the start to the tested \ac{IDE}.
+% \begin{itemize}
+% \item 1 \textit{DINASORE} instance. More could be used but in order to make user testing simpler, a single instance was deemed appropriate.
+% \item 3 function blocks, defined by 2 files each. The files are taken from the official \textit{DINASORE}'s tutorial \textit{'Sensorization "Hello World!"'}. They will need to be imported into the \ac{IDE} and the \textit{DINASORE} instance before the program can be deployed
+%   \begin{itemize}
+%   \item SENSOR\_SIMULATOR.fbt and SENSOR\_SIMULATOR.py
+%   \item MOVING\_AVERAGE.fbt and MOVING\_AVERAGE.py
+%   \item CONCATENATE\_REALS.fbt and CONCATENATE\_REALS.py
+%   \end{itemize}
+% \end{itemize}
 
-\subsection{Event and Data Flow}
-The following flow, as represented in \textit{4diac IDE}, should be defined in the \ac{IDE} and then sent to the \ac{RTE}:
+% \subsection{Event and Data Flow}
+% The following flow, as represented in \textit{4diac IDE}, should be defined in the \ac{IDE} and then sent to the \ac{RTE}:
 
-\begin{figure}[H]
-  \includegraphics[width=0.8\linewidth]{test-program.jpg}
-  \caption{Test design represented in \textit{4diac IDE}}
-  \label{fig:test-program}
-\end{figure}
-
-% TODO maybe talk about mapping to dinasore?
-
-\subsection{Expected Output}
-After deploying, the \ac{IDE} should display the generated output values of the output data slots.
-
-% TODO more about what kind of outputs?
+% \begin{figure}[H]
+%   \includegraphics[width=0.8\linewidth]{test-program.jpg}
+%   \caption{Test design represented in \textit{4diac IDE}}
+%   \label{fig:test-program}
+% \end{figure}
 
 \section{Objective Validation}
 Objective validation focuses on measurable criteria that can be validated independently of user opinion. These tests were designed to verify if the prototype, and by extension the proposed solution, does not fail to meet the functional requirements of a \textit{IEC 61499} \ac{IDE} and is able to confidently achieve the goals that it sets out for. Besides being able to function, these tests also measure performance metrics that can be directly compared with \textit{4diac IDE}.
