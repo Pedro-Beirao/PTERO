@@ -295,14 +295,35 @@ Monitor the output & \likertpct{9.1}{9.1}{45.5}{27.3}{9.1}\\
 % TODO want to write more on each
 
 \subsubsection{Open Feedback}
-The questionnaire concluded with the following three open text questions, asking participants to provide feedback in their own words on the aspects they considered most relevant in their experience with the tool.
-\begin{itemize}
-\item What did you \textbf{like} most about using 4diac IDE?
-\item What were the \textbf{biggest challenges} you faced?
-\item Any additional comments?
-\end{itemize}
+The questionnaire concluded with open-ended questions that provided additional insight into the user experience of working with \textit{4diac IDE}.
+% Responses were analysed qualitatively and grouped into recurring themes.
 
-% TODO put here some responses
+\paragraph{What did you like most about using 4diac IDE?}
+The most frequently mentioned positive aspect was the modularity of programming with function blocks, which made the overall structure of programs easier to understand.
+
+\begin{quote}
+``The files were simple to implement in .fbt and python, so the logic could be easily done prior and then sequentially implement our ideas in code and then route them.''
+\end{quote}
+
+\begin{quote}
+``I highly appreciated the modularity of the system, specifically the ability to design independent data manipulation pipelines for each individual machine. This decentralised approach feels highly relevant and closely mimics real-world industrial scenarios.''
+\end{quote}
+
+\paragraph{What were the biggest challenges you faced?}
+The most common difficulties were related to deployment, management of function block files and collaboration. Participants reported confusion regarding where files needed to be placed in the filesystem and how synchronisation with \textit{DINASORE} should be performed. As \ac{SINF} students had been tasked over the semester to work in groups, the collaboration issues were a recurring theme in their answers. It is also noteworthy that the average response length increased substantially, from 108 characters in the previous question to 510 characters in this one. This suggests that participants had considerably more detailed feedback when discussing the challenges, often providing details explanations and examples.
+
+\begin{quote}
+``Collaborating with colleagues was very hard, because of the management of file versions. Only one could be working at a time and we could only change the file after it has uploaded on Github.''
+\end{quote}
+
+\begin{quote}
+``Connecting to DINASORE and understanding that there are changes to make in both file systems.''
+\end{quote}
+
+\begin{quote}
+``(...) Vague Error Messages: Debugging can be quite difficult due to a lack of specificity in error messages. (...) 4diac IDE occasionally rejects the deployment of a project without explaining exactly why, sometimes only providing the name of an input variable without further context.''
+\end{quote}
+
 
 \subsection{PTERO Usability}
 % TODO this text
@@ -311,7 +332,6 @@ The questionnaire concluded with the following three open text questions, asking
 % Next, another Likert table, this time on how intuitive it was to understand each part of the \ac{IDE}. This way the design decisions of \textit{4diac IDE} can be critically analysed. The results are displayed in \Cref{tab:4diac-intuitive}.
 % TODO this text
 
-% TODO change values
 \begin{table}[H]
 \centering
 \caption{Perceived intuitiveness of key parts of \textit{PTERO}}
@@ -352,76 +372,54 @@ Score: 88,75
 
 \subsection{Comparison}
 
-% TODO add likert
+\begin{table}[H]
+\centering
+\caption{Direct comparison of usability of \textit{PTERO} and \textit{4diac IDE}}
+\label{tab:direct-comparison}
+\noindent
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
+\toprule
+Configuring DINASOREs & \likertpct{75}{25}{0}{0}{0}\\
+\midrule
+Syncing Function Block code with DINASORE & \likertpct{75}{25}{0}{0}{0}\\
+\midrule
+Creating the flow using the Graph Editor & \likertpct{50}{37.5}{12.5}{0}{0}\\
+\midrule
+Collaborating with others & \likertpct{62.5}{25}{12.5}{0}{0}\\
+\midrule
+Deploying & \likertpct{50}{37.5}{12.5}{0}{0}\\
+\midrule
+Monitoring output & \likertpct{25}{37.5}{25}{12.5}{0}\\
+\bottomrule
+\end{tabular}
+
+\vspace{1em}
+\textcolor{likert1}{\rule{7pt}{7pt}} PTERO is much better \hspace{1.5em} %
+\textcolor{likert2}{\rule{7pt}{7pt}} PTERO is better \hspace{1.5em} %
+\textcolor{likert3}{\rule{7pt}{7pt}} No Preference \hspace{1.5em} %
+\textcolor{likert4}{\rule{7pt}{7pt}} 4diac IDE is better \hspace{1.5em} %
+\textcolor{likert5}{\rule{7pt}{7pt}} 4diac IDE is much better
+\vspace{3em}
+\end{table}
 
 \subsubsection{Open Feedback}
 
-% TODO put here some responses
+\paragraph{What do you like/dislike about a remote web-based solution like PTERO when compared to a desktop app like 4diac IDE?}
+Responses to this question were predominantly positive. Participants highlighted the reduced setup requirements, improved accessibility, and simpler user interface provided by the web-based approach. Several respondents also noted that integrating the \texttt{.fbt} and \texttt{.py} editors into a single environment simplified the development workflow. While some usability improvements were suggested, participants considered PTERO easier to use than \textit{4diac IDE}.
+
+% TODO maybe say that the responses dont really answer the question
+
+\begin{quote}
+``Easier to setup for group work. Accessible from any PC.''
+\end{quote}
+
+\begin{quote}
+``PTERO seems easier to setup and overall use. Loved the feature of writing the .fbt and .py files on the same tab.''
+\end{quote}
+
+\begin{quote}
+``PTERO is an easy to use and very intuitive platform that surpasses in user friendliness the 4DIAC IDE when compared to its complexity and function block management.''
+\end{quote}
 
 \section{Discussion}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% \section{Test Program Design} \label{sec:test-program-design}
-% The following \ac{FBD} program design was used in both the objective and subjective validation tests.
-
-% \subsection{Available resources}
-% These are the resources available from the start to the tested \ac{IDE}.
-% \begin{itemize}
-% \item 1 \textit{DINASORE} instance. More could be used but in order to make user testing simpler, a single instance was deemed appropriate.
-% \item 3 function blocks, defined by 2 files each. The files are taken from the official \textit{DINASORE}'s tutorial \textit{'Sensorization "Hello World!"'}. They will need to be imported into the \ac{IDE} and the \textit{DINASORE} instance before the program can be deployed
-%   \begin{itemize}
-%   \item SENSOR\_SIMULATOR.fbt and SENSOR\_SIMULATOR.py
-%   \item MOVING\_AVERAGE.fbt and MOVING\_AVERAGE.py
-%   \item CONCATENATE\_REALS.fbt and CONCATENATE\_REALS.py
-%   \end{itemize}
-% \end{itemize}
-
-% \subsection{Event and Data Flow}
-% The following flow, as represented in \textit{4diac IDE}, should be defined in the \ac{IDE} and then sent to the \ac{RTE}:
-
-% \begin{figure}[H]
-%   \includegraphics[width=0.8\linewidth]{test-program.jpg}
-%   \caption{Test design represented in \textit{4diac IDE}}
-%   \label{fig:test-program}
-% \end{figure}
-
-% \section{Objective Validation}
-% Objective validation focuses on measurable criteria that can be validated independently of user opinion. These tests were designed to verify if the prototype, and by extension the proposed solution, does not fail to meet the functional requirements of a \textit{IEC 61499} \ac{IDE} and is able to confidently achieve the goals that it sets out for. Besides being able to function, these tests also measure performance metrics that can be directly compared with \textit{4diac IDE}.
-
-% \subsection{Functional Correctness}
-% \subsection{Performance}
-% \section{Subjective Validation}
-
-% To complement the objective findings, the prototype was made available to a group of \textit{N} participants representative of the intended user base. Participants were asked to interact with the application freely and to complete a set of representative tasks, after which they provided structured feedback through a questionnaire.
-
-% \subsection{User Study Design}
-
-% Participants were selected to reflect the diversity of the target user group in terms of [relevant characteristics, e.g. technical background, familiarity with the problem domain]. Each session followed the same protocol: participants were given a brief introduction to the context of the tool, asked to complete the tasks independently, and then invited to share their impressions.
-
-% \subsection{Results and Feedback}
-
-% The feedback collected was largely positive. Participants responded well to [highlight a strength, e.g. the clarity of the interface, the speed of the system, the reduction in steps required]. The mean score on [your scale, e.g. the System Usability Scale (SUS) / a custom Likert-scale questionnaire] was \textit{X.X}, indicating a [good / strong / favourable] reception overall.
-
-% Where criticism arose, it centred on [a common concern, e.g. the lack of a confirmation step before submission, or unfamiliar terminology in certain labels]. These observations were noted and, where feasible, incorporated into a subsequent revision of the prototype. The fact that participants were able to [complete the core task / identify the solution's main benefit] without prior training suggests that the design is sufficiently intuitive for the target context.
-
-% \section{Summary}
-
-% Taken together, the objective and subjective validation results support the conclusion that the prototype successfully addresses the gap identified at the outset of this work. It demonstrably [resolves the specific problem], performs [faster / more reliably / more efficiently] than the prior approach, and was received positively by representative users. Limitations observed during testing, and their implications for future development, are discussed in Chapter~\ref{ch:conclusion}.
