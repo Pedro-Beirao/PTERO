@@ -193,6 +193,8 @@ This solution not only aims to be able to do the same workload as \textit{4diac 
   \end{itemize}
 \end{itemize}
 
+% TODO actual time measures (deployment time, sync latency, scalability)
+
 % TODO remote dev on mobile?
 
 % TODO talk on the improvements
@@ -205,7 +207,7 @@ This solution not only aims to be able to do the same workload as \textit{4diac 
 
 
 \section{Collaboration Evaluation}
-% TODO extract from previous section
+% TODO extract from previous section and add (multi-user editing; consistency; conflict resolution)
 
 \section{Usability Evaluation}
 Two questionnaires were designed and given to participants. One focused on the user experience of working with \textit{4diac IDE} as the underlying development environment for \textit{IEC 61499}. The other asked both for a usability opinion on \textit{PTERO}, as well as a direct comparison between these two \acp{IDE}. The participants of the questionnaires were:
@@ -423,3 +425,14 @@ Responses to this question were predominantly positive. Participants highlighted
 \end{quote}
 
 \section{Discussion}
+The evaluation results indicate that the proposed solution successfully achieves functional parity with the established \textit{4diac IDE} while introducing architectural and usability improvements that address several of the limitations identified in traditional \textit{IEC 61499} development environments.
+
+The functional validation confirmed that \textit{PTERO} correctly supports the complete development workflow, including configuration, modelling, deployment and monitoring of \textit{IEC 61499} applications. Both systems generated identical deployment commands and produced equivalent runtime behaviour in \textit{DINASORE}. This equivalence is an important result, as it demonstrates that the proposed abstraction layer does not compromise correctness or compatibility with existing tooling. Instead, it preserves interoperability while offering a different interaction model.
+
+The performance evaluation further complements these findings by highlighting how architectural decisions in \textit{PTERO} translate into measurable workflow improvements. While both systems are capable of executing equivalent \textit{IEC 61499} applications, \textit{PTERO} reduces the number of manual steps required across key development tasks such as project setup, synchronisation and deployment. A central factor behind this improvement is the tighter integration between the different components of the development pipeline. In \textit{4diac IDE}, the development workflow is distributed across multiple loosely connected tools and processes, requiring explicit user actions to maintain consistency between the modelling environment, local file system, and remote runtime. In contrast, \textit{PTERO} internalises these responsibilities within the platform itself, allowing project state, file management, and deployment logic to be handled automatically as part of a single unified system.
+
+The usability questionnaires provide strong evidence that a web-based implementation can offer a significantly improved user experience compared to \textit{4diac IDE}. Participants consistently reported higher levels of perceived ease of use, intuitiveness, and overall satisfaction when interacting with \textit{PTERO}. This improvement can be attributed not only to interface design choices, but also to the inherent advantages of web technologies in this context.
+
+Furthermore, it was observed that the integration of all development tasks into a single unified interface contributes to a reduction in cognitive load. Unlike \textit{4diac IDE}, where users must switch between multiple tools and external processes (such as file system management and synchronisation scripts), the web-based environment consolidates modelling, editing, deployment and monitoring into a coherent workflow. The results also suggest that responsiveness and perceived simplicity play an important role in user satisfaction.
+
+Overall, the findings indicate that the adoption of web technologies is not merely a change in deployment platform, but a design decision that directly influences usability by simplifying access, unifying workflows and reducing structural complexity for end users.
