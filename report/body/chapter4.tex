@@ -72,15 +72,22 @@ Being the middleware, there are 4 different types of network communications that
 
 % TODO more about communication
 
-\section{Real-Time Collaboration Concept}
+\section{Real-Time Collaboration Model}
 A key requirement of the proposed system is support for concurrent editing of structured \textit{IEC 61499} programs. To address this, the system adopts a \ac{CRDT} approach, enabling multiple users to edit shared application models simultaneously. Changes are propagated in real time and merged deterministically without conflicts.
 
-The graph based structured data that in other \acp{IDE} would be stored as a conflict prone file in formats such as \textit{XML}, should instead be kept as individual fields. A change in a single element should prompt the \ac{CRDT} to only look into that specific field, and not the document as a whole.
+The graph based structured data that in other \acp{IDE} would be stored as a conflict prone file in formats such as \textit{XML}, should instead be kept as individual fields. A change in a single element should prompt the \ac{CRDT} to only look into that specific field, and not the document as a whole. The class diagram in \Cref{fig:uml} illustrates how the fields can be organised.
+
+
+
+\begin{figure}[H]
+  \includegraphics[width=0.8\linewidth]{uml.png}
+  \caption{Class diagram of the program's data}
+  \label{fig:uml}
+\end{figure}
 
 % TODO more details
 
-\section{Deployment Concept}
-
+\section{Deployment Model}
 Deployment in the proposed system is based on a centralised orchestration model. The server translates the graphical application model into a sequence of deployment commands that are executed on target \acp{RTE}. This approach ensures consistent deployment across distributed environments while abstracting low level communication from the user. The deployment process follows the following conceptual stages:
 
 \begin{enumerate}

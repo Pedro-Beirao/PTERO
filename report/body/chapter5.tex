@@ -61,7 +61,7 @@ With the existence of the middleware, this solution removes the requirement for 
 % TODO mention that the following is the ui of the prototype
 
 \begin{figure}[H]
-  \includegraphics[width=0.9\linewidth]{devices-configuration.jpg}
+  \includegraphics[width=0.7\linewidth]{devices-configuration.jpg}
   \caption{Devices Configuration View}
   \label{fig:devices-configuration}
 \end{figure}
@@ -72,10 +72,10 @@ This is where individual function blocks are defined. It allows the team to spec
 Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function block is defined in a \textit{xml} format file with a \textit{.fbt} extension, which results in a function block that can be displayed graphically like seen in \Cref{fig:example-fb}. The internal behaviour of the function blocks in \textit{DINASORE} is programmed in \textit{Python}.
 % TODO explain how the code is structured
 % TODO talk about the format
-% FIXME moved code to appendix, should i mention it here?
+% FIXME moved code to appendix, should i mention it here? A lot in this chapter needs to be changed
 
 \begin{figure}[H]
-  \includegraphics[width=0.65\linewidth]{example-fb.jpg}
+  \includegraphics[width=0.3\linewidth]{example-fb.jpg}
   \caption{Example function block defined via \textit{xml}}
   \label{fig:example-fb}
 \end{figure}
@@ -83,7 +83,7 @@ Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function 
 For the \acp{IDE} to be able to detect and use the function block, both the \textit{.fbt} file and the \textit{.py} file need to be placed in a specific folder, right next to each other, like shown in \Cref{fig:fbs-filesystem}. In this prototype this is handled automatically in the server database, removing the need to manually move files like it is needed in \textit{4diac IDE}.
 
 \begin{figure}[H]
-  \includegraphics[width=0.4\linewidth]{fbs-filesystem.jpg}
+  \includegraphics[width=0.3\linewidth]{fbs-filesystem.jpg}
   \caption{Filesystem folder with various function block files}
   \label{fig:fbs-filesystem}
 \end{figure}
@@ -227,7 +227,7 @@ Once the application is running, the values of the node outputs are continuously
 After creating the watches we can send a request to receive the values using the command in \Cref{lst:deploy-read-watch}. This will return the response in \Cref{lst:deploy-watch}, which by parsing the values, allows the prototype to display them in the \textit{Graph View}, on the right side of the corresponding output slots, demonstrated in \Cref{fig:display-watch}.
 
 \begin{figure}[H]
-  \includegraphics[width=0.7\linewidth]{display-watch.jpg}
+  \includegraphics[width=0.4\linewidth]{display-watch.jpg}
   \caption{Watching an output slot in the \textit{Graph View}}
   \label{fig:display-watch}
 \end{figure}
