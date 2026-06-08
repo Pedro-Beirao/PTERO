@@ -37,7 +37,8 @@ A common characteristic of these platforms is that they treat collaboration as a
 \section{Gap Analysis}
 Current \textit{IEC 61499} tools face significant limitations that hinder modern \ac{CPPS} development. These gaps paint a picture of an ecosystem that has matured in terms of standards compliance, but has lagged considerably in adapting to the workflows and expectations of contemporary engineering teams. The following points describe the most significant gaps:
 
-% FIXME What other gaps?
+% TODO What other gaps?
+% TODO add references
 \begin{itemize}
     \item \textbf{Platform Dependency:} Existing solutions are monolithic desktop applications, lacking the accessibility and portability that we have come to expect. Engineers are required to install and maintain native software on every machine from which they intend to work, creating friction at the start of projects and compounding over time as the team grows or its members change.
 
@@ -46,9 +47,6 @@ Current \textit{IEC 61499} tools face significant limitations that hinder modern
     \item \textbf{Lack of a Centralised System State:} Since tools are local-first, there is no single representation of a system's current state. This makes it difficult to maintain a consistent view of the system across a distributed team to integrate the development environment into automated deployment and monitoring pipelines.
 
     \item \textbf{Limited Accessibility:} Engineers cannot access a project without access to a fully configured workstation. This is a practical limitation in industrial settings, where on-site diagnosis of a running application may be necessary from a device in which no local tooling has been installed and the project is not set up.
-
-    % FIXME is this a gap?
-    \item \textbf{Web Trends:} Despite a clear industry shift toward web based development tooling, there is currently no mature web solution for \textit{IEC 61499}, leaving \ac{ICS} engineering behind. The contrast with general software development, where fully featured browser \acp{IDE} are now common, represents both a gap and an opportunity. The techniques and infrastructure required to build such a tool are well understood, but they have not yet been applied to this domain.
 \end{itemize}
 
 Taken together, these gaps suggest that the ecosystem is well positioned to benefit from a lightweight, browser-accessible development environment that prioritises collaboration, low setup overhead, and integration with modern deployment workflows — without sacrificing the domain-specific features that \textit{IEC 61499} engineers depend on.

@@ -1,7 +1,6 @@
 \chapter{Implementation}
 To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. This chapter describes the technical implementation of the proposed system, detailing the server architecture, frontend implementation, collaboration system and deployment mechanism used to realise the conceptual design presented in \Cref{chap:proposed-solution}.
 
-% FIXME should i mention the name first here?
 The chosen name for this prototype implementation, which will be mentioned throughout the rest of this document, is \textit{PTERO} (Programming Tool for Editing and Runtime Orchestration). % TODO what more to say?
 
 % TODO talk about how the requirements were explored as code was developed
@@ -72,7 +71,6 @@ This is where individual function blocks are defined. It allows the team to spec
 Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function block is defined in a \textit{xml} format file with a \textit{.fbt} extension, which results in a function block that can be displayed graphically like seen in \Cref{fig:example-fb}. The internal behaviour of the function blocks in \textit{DINASORE} is programmed in \textit{Python}.
 % TODO explain how the code is structured
 % TODO talk about the format
-% FIXME moved code to appendix, should i mention it here? A lot in this chapter needs to be changed
 
 \begin{figure}[H]
   \includegraphics[width=0.3\linewidth]{example-fb.jpg}
@@ -170,7 +168,6 @@ In \textit{PTERO} the collaborative editing system was implemented using \textit
 The graph structure in \textit{LiteGraph.js} representing the \ac{FBD} application is synchronised through shared \textit{Yjs} data structures. Operations such as creating function blocks, deleting connections, modifying inputs or moving nodes are propagated in real time to all connected clients. Each user therefore observes the same graph state with minimal delay. To integrate collaboration into this editor, the internal state changes of the graph were connected to the shared \textit{Yjs} document. Whenever a local modification occurs in the graph, the corresponding operation is serialized and applied to the shared collaborative state. Likewise, remote updates received from other users are reflected back into the local graph editor instance.
 
 The serialized data for the graph structure can be divided into 2 maps (using the \texttt{Y.Map} structure), one for the nodes (shown in \Cref{lst:serialize-nodes}) and one for the links (shown in \Cref{lst:serialize-links}). In the nodes map, since the \texttt{title} of each node can be modified and the \texttt{type} can be the same across multiple nodes, we need to define a unique persistent id for each. Besides these, we need to also store the position of the node defined as \texttt{x} and \texttt{y} coordinates, the id of the \textit{DINASORE} that this node is \texttt{mappedto} and the default \texttt{inputs} in case some data input slot is not being fed data from any link. As for the links map, each link must also have a unique persistent id, and then store the origin (represented by the \texttt{origin\_id} node and the \texttt{origin\_slot}) and the target (represented by the \texttt{target\_id} node and the \texttt{target\_slot}).
-% FIXME too confusing without the listings?
 
 % TODO surely theres something more to talk about the serialized data
 
@@ -197,8 +194,8 @@ Before the messages can be sent, they need to be built into the format that \tex
 The \textit{4diac\_simulator.py} file, part of the \textit{tests/} folder of \textit{DINASORE}, implements this method in \textit{Python} as shown in \Cref{lst:build-message-py}. For this prototype, it was necessary to implement it in \textit{JavaScript}, as shown in \Cref{lst:build-message-js}.
 
 \subsubsection{Send Messages} \label{subsubsec:send-messages}
-% FIXME is this still too detailed?
-% FIXME remove all references to EMB_RES?
+% TODO send to appendix
+% TODO remove all references to EMB_RES
 Now that we have defined how to build the messages, we can explore the sequence of commands that need to be sent to each \textit{DINASORE} instance and what configuration name should be used in each. The server connects to each instance and transmits these messages sequentially. The order of message transmission is critical, as connections can only be established between existing nodes. The configuration name used in each message will be determined by whether the command is bound to any resource, in \textit{DINASORE} the existing resource is \textit{EMB\_RES} as mentioned before. In Appendix~\ref{app:implementation:communication} there are examples for all the commands mentioned in this section.
 
 First we need to send the two commands to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
