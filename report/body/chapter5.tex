@@ -155,9 +155,14 @@ Among these alternatives, \textit{LiteGraph.js} presented the best balance betwe
 % TODO a lot
 
 \subsection{Console View}
+% TODO small description instead of reference
 This view will display the console logs that are generated when deploying. The contents of it will be discussed in detail in \Cref{sec:deployment}.
 
-% TODO add image
+\begin{figure}[H]
+  \includegraphics[width=0.9\linewidth]{console-editor.jpg}
+  \caption{Console View}
+  \label{fig:console-editor}
+\end{figure}
 
 \section{Real-Time Collaboration} \label{sec:real-time-collaboration}
 In \textit{PTERO} the collaborative editing system was implemented using \textit{Yjs}, a \ac{CRDT} framework designed for distributed collaborative applications, allowing users to concurrently edit shared data structures while automatically resolving conflicts in a deterministic manner.
@@ -167,7 +172,7 @@ In \textit{PTERO} the collaborative editing system was implemented using \textit
 
 The graph structure in \textit{LiteGraph.js} representing the \ac{FBD} application is synchronised through shared \textit{Yjs} data structures. Operations such as creating function blocks, deleting connections, modifying inputs or moving nodes are propagated in real time to all connected clients. Each user therefore observes the same graph state with minimal delay. To integrate collaboration into this editor, the internal state changes of the graph were connected to the shared \textit{Yjs} document. Whenever a local modification occurs in the graph, the corresponding operation is serialized and applied to the shared collaborative state. Likewise, remote updates received from other users are reflected back into the local graph editor instance.
 
-The serialized data for the graph structure can be divided into 2 maps (using the \texttt{Y.Map} structure), one for the nodes (shown in \Cref{lst:serialize-nodes}) and one for the links (shown in \Cref{lst:serialize-links}). In the nodes map, since the \texttt{title} of each node can be modified and the \texttt{type} can be the same across multiple nodes, we need to define a unique persistent id for each. Besides these, we need to also store the position of the node defined as \texttt{x} and \texttt{y} coordinates, the id of the \textit{DINASORE} that this node is \texttt{mappedto} and the default \texttt{inputs} in case some data input slot is not being fed data from any link. As for the links map, each link must also have a unique persistent id, and then store the origin (represented by the \texttt{origin\_id} node and the \texttt{origin\_slot}) and the target (represented by the \texttt{target\_id} node and the \texttt{target\_slot}).
+% The serialized data for the graph structure can be divided into 2 maps (using the \texttt{Y.Map} structure), one for the nodes and one for the links, as . In the nodes map, since the \texttt{title} of each node can be modified and the \texttt{type} can be the same across multiple nodes, we need to define a unique persistent id for each. Besides these, we need to also store the position of the node defined as \texttt{x} and \texttt{y} coordinates, the id of the \textit{DINASORE} that this node is \texttt{mappedto} and the default \texttt{inputs} in case some data input slot is not being fed data from any link. As for the links map, each link must also have a unique persistent id, and then store the origin (represented by the \texttt{origin\_id} node and the \texttt{origin\_slot}) and the target (represented by the \texttt{target\_id} node and the \texttt{target\_slot}).
 
 % TODO surely theres something more to talk about the serialized data
 
@@ -175,7 +180,9 @@ The serialized data for the graph structure can be divided into 2 maps (using th
 The deployment process is responsible for taking the application defined in the \textit{Graph View} and bringing it to life across the configured \textit{DINASORE} instances. It is broken down into a sequence of steps, each of which is described in the following subsections.
 
 \subsection{Synchronise with DINASOREs}
-The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this we can use the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration file needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. First, \texttt{master-fbs-path} dictates where in the server filesystem the function block files that will be sent are located, then an array of \texttt{dinasores} with the configurations defined in the \textit{Devices Configuration View}. The \texttt{port} used here will be the \textit{SSH} port, the \textit{DINASORE} must have an open \textit{SSH} channel that the server is able to connect to via this port. This file is generated from the configured fields in the \textit{Devices Configuration View}. When the script is ran, it will read the contents of this file in order to connect and send the files to each \textit{DINASORE}.
+The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this we can use the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration file needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. The server must have a valid \textit{SSH} connection with each device in order to connect and send the files.
+
+% First, \texttt{master-fbs-path} dictates where in the server filesystem the function block files that will be sent are located, then an array of \texttt{dinasores} with the configurations defined in the \textit{Devices Configuration View}. The \texttt{port} used here will be the \textit{SSH} port, the \textit{DINASORE} must have an open \textit{SSH} channel that the server is able to connect to via this port. This file is generated from the configured fields in the \textit{Devices Configuration View}. When the script is ran, it will read the contents of this file in order to connect and send the files to each \textit{DINASORE}.
 
 % TODO idk what else there is about sync
 
@@ -183,7 +190,7 @@ The first step is to ensure that each \textit{DINASORE} instance has access to t
 Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these messages are issued is important, as connections can only be established between existing nodes. The following two subsections describe how the messages are constructed and what they contain.
 
 \subsubsection{Build messages}
-Before the messages can be sent, they need to be built into the format that \textit{DINASORE} is expecting. It consists of a two part message: the first part refers to the configuration name, explained later in \Cref{subsubsec:send-messages}, while the second is the actual message payload containing the wanted command. Each of these parts are preceded by a 3-byte header composed of a \texttt{0x50} byte followed by 2 bytes indicating the size of the corresponding content. A representation of this format is presented in \Cref{fig:build-message}.
+Before the messages can be sent, they need to be built into the format that \textit{DINASORE} is expecting. It consists of a two part message: the first part refers to the configuration name, which by default we will use \textit{EMB\_RES}, while the second is the actual message payload containing the wanted command. Each of these parts are preceded by a 3-byte header composed of a \texttt{0x50} byte followed by 2 bytes indicating the size of the corresponding content. A representation of this format is presented in \Cref{fig:build-message}.
 
 \begin{figure}[H]
   \includegraphics[width=0.9\linewidth]{build-message.png}
@@ -194,19 +201,13 @@ Before the messages can be sent, they need to be built into the format that \tex
 The \textit{4diac\_simulator.py} file, part of the \textit{tests/} folder of \textit{DINASORE}, implements this method in \textit{Python} as shown in \Cref{lst:build-message-py}. For this prototype, it was necessary to implement it in \textit{JavaScript}, as shown in \Cref{lst:build-message-js}.
 
 \subsubsection{Send Messages} \label{subsubsec:send-messages}
-% TODO send to appendix
-% TODO remove all references to EMB_RES
-Now that we have defined how to build the messages, we can explore the sequence of commands that need to be sent to each \textit{DINASORE} instance and what configuration name should be used in each. The server connects to each instance and transmits these messages sequentially. The order of message transmission is critical, as connections can only be established between existing nodes. The configuration name used in each message will be determined by whether the command is bound to any resource, in \textit{DINASORE} the existing resource is \textit{EMB\_RES} as mentioned before. In Appendix~\ref{app:implementation:communication} there are examples for all the commands mentioned in this section.
+Now that we have defined how to build the messages, we can explore the sequence of commands that need to be sent to each \textit{DINASORE} instance. The server connects to each instance and transmits these messages sequentially. The order of message transmission is critical, as connections can only be established between existing nodes. The sequence is represented in \Cref{fig:sequence-create}. A more technical and in depth analysis of the messages sent can be found in \Cref{app:send-messages}.
 
-First we need to send the two commands to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
-
-Next, depending on which commands are mapped to each machine, we \texttt{CREATE} all the mapped nodes and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}. The configuration name in these and all following commands will be "\textit{EMB\_RES}" as they need to be bound to it in order to be initialised and ran.
-
-Then the connections are created between the mapped nodes. A \texttt{Source} a \texttt{Destination} must be provided, with the format \texttt{"NODE\_NAME.SLOT\_NAME"}, using the commands in \Cref{lst:deploy-create-links}.
-
-Finally the \texttt{START} command in \Cref{lst:deploy-start} can be issued, which will request for the start of the program execution. For this command the configuration name used will also be "\textit{EMB\_RES}" as it is this resource that will begin the execution of the program.
-
-After each request is sent, a response will be returned by the \textit{DINASORE}. It is important for the \ac{IDE} to listen for these responses and only send the next request once the response corresponding to the previous request is received. The responses have the format shown in \Cref{lst:deploy-response}. The \texttt{ID} of the response will be the same of the associated request. The format of the responses is the same as the requests and the configuration name that is used is empty.
+\begin{figure}[H]
+  \includegraphics[width=0.8\linewidth]{sequence-create.png}
+  \caption{Overview of the communication sequence when deploying}
+  \label{fig:sequence-create}
+\end{figure}
 
 \subsection{Console}
 To give the team visibility into the deployment process right from the \ac{IDE}, without having to log into the server, a console is provided in the \textit{Console View} that displays a live log of each action taken during deployment. There are two main things being logged:
@@ -219,9 +220,15 @@ To give the team visibility into the deployment process right from the \ac{IDE},
 % TODO add listing with logs?
 
 \subsection{Watch}
-Once the application is running, the values of the node outputs are continuously retrieved from the \textit{DINASORE} instances and displayed in the \textit{Graph View}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development. In order to get these values, the \ac{IDE} must tell \textit{DINASORE} instances which output slots it wants to watch and then request the values. In this prototype, for simplicity, all data outputs are watched and we need to send a watch creation request for each. Note in \Cref{lst:deploy-create-watch} that the \texttt{ID} is reset after deploying.
+Once the application is running, the values of the node outputs are continuously retrieved from the \textit{DINASORE} instances and displayed in the \textit{Graph View}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development. In order to get these values, the \ac{IDE} must tell the \textit{DINASORE} instances which output slots it wants to watch and then request the values. In this prototype, for simplicity, all data outputs are watched and we need to send a watch creation request for each.
 
-After creating the watches we can send a request to receive the values using the command in \Cref{lst:deploy-read-watch}. This will return the response in \Cref{lst:deploy-watch}, which by parsing the values, allows the prototype to display them in the \textit{Graph View}, on the right side of the corresponding output slots, demonstrated in \Cref{fig:display-watch}.
+\Cref{fig:sequence-watch} represents the sequence that the messages need to be sent. Details about these requests and the associated responses can be found in \Cref{app:watch}. When the watch values are retrieved, they are displayed in the right side of the corresponding output slots, demonstrated in \Cref{fig:display-watch}.
+
+\begin{figure}[H]
+  \includegraphics[width=0.8\linewidth]{sequence-watch.png}
+  \caption{Overview of the communication sequence when watching}
+  \label{fig:sequence-watch}
+\end{figure}
 
 \begin{figure}[H]
   \includegraphics[width=0.4\linewidth]{display-watch.jpg}

@@ -1,4 +1,4 @@
-\chapter{Implementation Formats Examples} \label{app:implementation}
+\chapter{Implementation} \label{app:implementation}
 
 \section{Function Block Files}
 
@@ -43,44 +43,6 @@ class NEW_FB_1:
 
     elif event_name == "READ":
       return [None, event_value, ""]
-\end{lstlisting}
-
-\section{Structures of Serialised Data}
-
-\begin{lstlisting}[language=JSON, caption={Structure of the Nodes serialized map}, label={lst:serialize-nodes}]
-{
-  'node_id_1': {
-    type: 'SENSOR_SIMULATOR',
-    title: 'SENSOR_SIMULATOR_1',
-    x: 139, y: 526,
-    mappedto: 'dinasore_id_1',
-    inputs: { OFFSET: '' }
-  },
-  'node_id_2': {
-    type: 'MOVING_AVERAGE',
-    title: 'MOVING_AVERAGE_1',
-    x: 487, y: 551,
-    mappedto: 'dinasore_id_1',
-    inputs: { WINDOW: '5', VALUE: '' }
-  }
-}
-\end{lstlisting}
-
-\begin{lstlisting}[language=JSON, caption={Structure of the Links serialized map}, label={lst:serialize-links}]
-{
-  'link_id_1': {
-    origin_id: 'node_id_1',
-    origin_slot: 'VALUE',
-    target_id: 'node_id_2',
-    target_slot: 'VALUE'
-  },
-  'link_id_2': {
-    origin_id: 'node_id_1',
-    origin_slot: 'READ_0',
-    target_id: 'node_id_2',
-    target_slot: 'RUN'
-  }
-}
 \end{lstlisting}
 
 \section{Synchronisation}
@@ -154,6 +116,9 @@ function build_message(message_payload, configuration_name) {
 }
 \end{lstlisting}
 
+\section{Send Messages} \label{app:send-messages}
+First we need to send the two commands in \Cref{lst:deploy-setup} to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
+
 \begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-setup}]
 <Request Action="QUERY" ID="0">
   <FB Name="*" Type="*"/>
@@ -163,6 +128,8 @@ function build_message(message_payload, configuration_name) {
   <FB Name="EMB_RES" Type="EMB_RES"/>
 </Request>
 \end{lstlisting}
+
+Next, depending on which commands are mapped to each machine, we \texttt{CREATE} all the mapped nodes and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}. The configuration name in these and all following commands will be "\textit{EMB\_RES}" as they need to be bound to it in order to be initialised and ran.
 
 \begin{lstlisting}[language=XML, caption={\texttt{CREATE} nodes deployment commands}, label={lst:deploy-create-nodes}]
 <Request Action="CREATE" ID="2">
@@ -182,6 +149,8 @@ function build_message(message_payload, configuration_name) {
 </Request>
 \end{lstlisting}
 
+Then the connections are created between the mapped nodes. A \texttt{Source} a \texttt{Destination} must be provided, with the format \texttt{"NODE\_NAME.SLOT\_NAME"}, using the commands in \Cref{lst:deploy-create-links}.
+
 \begin{lstlisting}[language=XML, caption={\texttt{CREATE} links deployment commands}, label={lst:deploy-create-links}]
 <Request Action="CREATE" ID="6">
   <Connection Destination="SENSOR_SIMULATOR.READ_0" Source="MOVING_AVERAGE.RUN"/>
@@ -192,13 +161,20 @@ function build_message(message_payload, configuration_name) {
 </Request>
 \end{lstlisting}
 
+Finally the \texttt{START} command in \Cref{lst:deploy-start} can be issued, which will request for the start of the program execution. For this command the configuration name used will also be "\textit{EMB\_RES}" as it is this resource that will begin the execution of the program.
+
 \begin{lstlisting}[language=XML, caption={\texttt{START} deployment command}, label={lst:deploy-start}]
 <Request Action="START" ID="8"/>
 \end{lstlisting}
 
+After each request is sent, a response will be returned by the \textit{DINASORE}. It is important for the \ac{IDE} to listen for these responses and only send the next request once the response corresponding to the previous request is received. The responses have the format shown in \Cref{lst:deploy-response}. The \texttt{ID} of the response will be the same of the associated request. The format of the responses is the same as the requests and the configuration name that is used is empty.
+
 \begin{lstlisting}[language=XML, caption={\texttt{Response} after a deployment command is sent}, label={lst:deploy-response}]
 <Response ID="8"/>
 \end{lstlisting}
+
+\section{Watch} \label{app:watch}
+Note in \Cref{lst:deploy-create-watch} that the \texttt{ID} is reset after deploying.
 
 \begin{lstlisting}[language=XML, caption={\texttt{CREATE} watches after deploying}, label={lst:deploy-create-watch}]
 <Request ID="0" Action="CREATE">
@@ -209,6 +185,8 @@ function build_message(message_payload, configuration_name) {
   <Watch Source="MOVING_AVERAGE.VALUE_MA" Destination="*" />
 </Request>
 \end{lstlisting}
+
+After creating the watches we can send a request to receive the values using the command in \Cref{lst:deploy-read-watch}. This will return the response in \Cref{lst:deploy-watch}, which by parsing the values, allows the prototype to display them in the \textit{Graph View}.
 
 \begin{lstlisting}[language=XML, caption={Request to \texttt{READ} watches}, label={lst:deploy-read-watch}]
 <Request ID="2" Action="READ">
