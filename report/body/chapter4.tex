@@ -72,7 +72,7 @@ Being the middleware, there are 4 different types of network communications that
 % TODO more about communication
 
 \section{Real-Time Collaboration Model}
-A key requirement of the proposed system is support for concurrent editing of structured \textit{IEC 61499} programs. To address this, the system adopts a \ac{CRDT} approach, enabling multiple users to edit shared application models simultaneously. Changes are propagated in real time and merged deterministically without conflicts.
+A key requirement of the proposed system is support for concurrent editing of structured \textit{IEC 61499} programs. Real-time collaborative systems shift conflict management from the merge phase to the editing phase itself, all participants may operate on the shared artefact simultaneously, with the system responsible for converging divergent states automatically. To address this, the system adopts a \ac{CRDT} approach, enabling multiple users to edit shared application models simultaneously. Changes are propagated in real time and merged deterministically without conflicts.  Compared to \ac{OT} approaches, \acp{CRDT} provide a more suitable foundation for non linear structured data. Where in \ac{OT} a semantic state change needs to be expressed as a textual change at a specific offset, in \ac{CRDT} it keeps the semantic meaning \cite{kleppmann_conflict-free_2017}.
 
 The graph based structured data that in other \acp{IDE} would be stored as a conflict prone file in formats such as \textit{XML}, should instead be kept as individual fields. A change in a single element should prompt the \ac{CRDT} to only look into that specific field, and not the document as a whole. The class diagram in \Cref{fig:uml} illustrates how the fields can be organised.
 
@@ -103,7 +103,7 @@ This section describes the research methodology adopted to address the research 
 % TODO the next subsections must be more detailed
 
 \subsection{Research Design}
-This research follows a design-oriented research approach. The core of the research consists of the design and implementation of a functional prototype of the solution. Rather than aiming for statistical generalisation, the study focuses on demonstrating feasibility and identifying qualitative improvements over existing environments. The prototype serves as a research artifact used to explore architectural decisions, usability considerations and workflow implications.
+This research follows a design-oriented research approach. The core of the research consists of the design and implementation of a functional prototype of the solution. Rather than aiming for statistical generalisation, the study focuses on demonstrating feasibility and identifying qualitative improvements over existing environments. The prototype serves as a research artefact used to explore architectural decisions, usability considerations and workflow implications.
 
 \subsection{Evaluation}
 Evaluation is conducted through qualitative analysis and comparative assessment against established \textit{IEC 61499} \acp{IDE}. Criteria such as accessibility, usability, feature coverage and support for collaborative workflows are used to assess how effectively the proposed solution addresses the limitations identified in the literature and state of the art.

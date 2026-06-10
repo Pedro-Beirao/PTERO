@@ -20,12 +20,14 @@ To answer these questions, both quantitative and qualitative evaluation methods 
 A common test application was used throughout the validation process. The same application was implemented using both the developed prototype and \textit{4diac IDE}, allowing direct comparison between environments.
 
 \subsection{Hardware}
-The following hardware devices were available and used for testing:
+The following hardware devices were available and used throughout the evaluation phase of this work:
 
 \begin{enumerate}
-\item \textbf{M1 MacBook Pro} (16gb 2020): Development machine
-\item \textbf{pc da mariana}: % TODO
-\item \textbf{Raspberry Pi 3} (1gb RAM): Ran a permanent \textit{PTERO} server as well as two \textit{DINASOREs} instances.
+\item \textbf{M1 MacBook Pro} (16GB RAM, 2020): This machine served as the primary development and testing platform for \textit{PTERO}. Being the development machine, it hosted the local development server during iterative testing cycles and was used to evaluate the responsiveness of the collaborative editing interface, the correctness of graph synchronisation and the performance of the \textit{Yjs} based real-time collaboration layer under local conditions.
+
+\item \textbf{ASUS TUF Gaming F16} (32GB RAM, 2024): This machine was employed primarily for evaluating the performance of the \textit{4diac} runtime environment.
+
+\item \textbf{Raspberry Pi 3} (1GB RAM): This device computer acted as a permanently running, remotely accessible server throughout the evaluation period. It hosted a persistent instance of the \textit{PTERO} server as well as an instance of \textit{DINASORE}. Its limited memory and processing capacity made it the most representative of real-world target environments and its inclusion in the testing structure was instrumental in establishing the practical boundaries of the collaboration server.
 \end{enumerate}
 
 \subsection{Available Resources}
@@ -210,7 +212,15 @@ This solution not only aims to be able to do the same workload as \textit{4diac 
 % TODO extract from previous section and add (multi-user editing; consistency; conflict resolution)
 % TODO need to test
 
-\Citeauthor{cimiano_yjs_2015} affirm that \textit{Yjs} is able to handle an average of 100 actions per millisecond \cite{cimiano_yjs_2015} which is obviously good enough for this use case, as it does not require millisecond precision.
+\Citeauthor{cimiano_yjs_2015} claims that \textit{Yjs} is able to handle an average of 100 actions per millisecond \cite{cimiano_yjs_2015} which is obviously good enough for this use case, as it does not require millisecond precision. Taking connection with the remote server into account, a test was devised to understand how well the \textit{RaspberryPi} could handle multiple users at the same time. A script was created that initialised a set number of clients, connected them to the remote server and sent a change that would get propagated across the clients. By measuring the time that would take for the client to receive the change, the chart in \Cref{fig:yjs-performance} was obtained. The results demonstrated that even a resource constrained machine accessed over a network can serve as an adequate collaboration server for a small team, however, the \textit{Raspberry Pi} deployment was found to be unsuitable beyond approximately 240 simultaneous clients, at which point the hardware prevented additional connections from being established reliably.
+
+\begin{figure}[H]
+  \includegraphics[width=0.8\linewidth]{yjs-performance.png}
+  \caption{Performance results of \textit{Yjs} running in the \textit{RaspberryPi}}
+  \label{fig:yjs-performance}
+\end{figure}
+
+The same test was performed with a server running on the \textit{M1 MacBook Pro} and the clients also in the same machine, removing any delay resulting from network delay and in a much more powerful machine. It was possible to connect 3000 clients with an average propagation time of 65 ms and a P95 of 221 ms, proving that if there is a need for hundreds of clients to be connected at once, the solution is able to scale with the hardware to accommodate.
 
 \section{Usability Evaluation}
 Two questionnaires were designed and given to participants. One focused on the user experience of working with \textit{4diac IDE} as the underlying development environment for \textit{IEC 61499}. The other asked both for a usability opinion on \textit{PTERO}, as well as a direct comparison between these two \acp{IDE}. The participants of the questionnaires were:
