@@ -1,5 +1,6 @@
 \chapter{Proposed Solution} \label{chap:proposed-solution}
-To address the limitations identified in existing \textit{IEC 61499} development environments, this dissertation proposes the design of a web-based \ac{IDE} for modelling \textit{IEC 61499}-compliant applications. The goal is to bridge the gap between modern collaborative software engineering practices and industrial automation tooling used in \acp{CPPS}.
+% TODO use PTERO in this chapter
+To address the limitations identified in existing \textit{IEC 61499} development environments, this dissertation proposes the design of a \textit{PTERO} (Programming Tool for Editing and Runtime Orchestration), a web-based \ac{IDE} for modelling \textit{IEC 61499}-compliant applications. The goal is to bridge the gap between modern collaborative software engineering practices and industrial automation tooling used in \acp{CPPS}.
 
 Existing tools are predominantly desktop based and poorly suited for distributed development. In contrast, the proposed solution adopts a centralised web-based architecture that enables platform independence, simplified setup, simplified deployment and real-time collaboration.
 
@@ -51,7 +52,7 @@ The proposed system follows a centralised server architecture designed to suppor
 \end{itemize}
 
 \begin{figure}[H]
-  \includegraphics[width=0.7\linewidth]{ide-server-rte.jpg}
+  \includegraphics[width=0.7\linewidth]{ide-server-rte.png}
   \caption{Communication through the server}
   \label{fig:ide-server-rte}
 \end{figure}
@@ -59,14 +60,13 @@ The proposed system follows a centralised server architecture designed to suppor
 % TODO talk more about server
 % TODO mention auth
 
-\subsection{Communication Model}
 Being the middleware, there are 4 different types of network communications that the server will need to handle, each with it's own requirements:
 
 \begin{itemize}
   \item \textbf{Serve webpage}: Communicates via \textit{GET} requests to deliver the \textit{html}, \textit{css} and \textit{js} files that make up the \ac{IDE} interface.
   \item \textbf{Real-Time Collaboration}: Frequent atomic updates whenever changes are made.
   \item \textbf{Requested deployment}: A team member sends a \textit{POST} request, that tells the server to deploy.
-  \item \textbf{Deployment sockets}: Communicates via sockets with each \ac{RTE} to send commands and receive the corresponding responses.
+  \item \textbf{Deployment sockets}: Communicates via \textit{TCP} with each \ac{RTE} to send commands and monitor.
 \end{itemize}
 
 % TODO more about communication

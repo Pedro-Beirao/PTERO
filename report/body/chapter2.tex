@@ -44,7 +44,7 @@ The most prominent open source implementation is the \textit{4diac IDE} (based o
 
 \citeauthor{zoitl_developing_2013} \cite{zoitl_developing_2013} demonstrated the use of \textit{4diac IDE} to develop modular and reusable \textit{IEC 61499} applications, highlighting the benefits of flexibility and adaptability in industrial settings. The paper provides a practical perspective on the strengths and limitations of this \ac{IDE}.
 
-An alternative is \textit{FBME} which is a much simpler modelling environment based on the \textit{JetBrains MPS} language workbench. The main contribution of this work is the research on applying model driven development principles on the architecture of the \ac{IDE} itself \cite{sorokin_novel_2022}.
+An alternative is \textit{FBME} which is a much simpler modelling environment based on the \textit{JetBrains MPS} language workbench. The main contribution of this work is the research on applying model driven development principles on the architecture of the \ac{IDE} itself \cite{sorokin_novel_2022}, resulting in a very modular and extensible product.
 
 \subsection{Commercial}
 The commercial side is occupied by \textit{EcoStruxure Automation Expert}, \textit{ISaGRAF Workbench} \cite{vyatkin_comparisons_2008} and other development environments that usually have their own built-in proprietary \ac{RTE}. This tight coupling between the engineering tool and the runtime gives commercial vendors significant control over the end development experience, which typically results in polished, production-ready tooling with strong vendor support. However, it also introduces considerable lock-in: projects developed in one commercial environment are not easily portable to a different runtime or \ac{IDE} and the proprietary nature of the underlying \ac{RTE} limits the ability to inspect, extend, or adapt behaviour.
@@ -85,38 +85,38 @@ Some studies explore remote web based execution and editing of \ac{FBD}. \citeau
 \caption{Comparison of IEC 61499 development environments and proposals.}
 \label{tab:ide-comparison}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}lllcp{5cm}@{}}
+\begin{tabular}{@{}llp{2.5cm}ccp{5cm}@{}}
 \toprule
-\textbf{Tool} & \textbf{Type} & \textbf{Deployment} & \textbf{\shortstack{Real-time\\collaboration}} & \textbf{Comments} \\
+\textbf{Tool} & \textbf{Type} & \textbf{Platform} & \textbf{\shortstack{Remote\\deployment}} & \textbf{\shortstack{Real-time\\collaboration}} & \textbf{Comments} \\
 \midrule
 4diac IDE \cite{zoitl_developing_2013}
   & Open source & Desktop
-  & \cno
-  & Steep learning curve; heavyweight Eclipse base \\[6pt]
+  & \cno & \cno
+  & Steep learning curve \\[6pt]
 FBME \cite{sorokin_novel_2022}
   & Open source & Desktop
-  & \cno
-  & Simpler UX; relies on JetBrains MPS \\[6pt]
+  & \cno & \cno
+  & Very modular \\[6pt]
 EcoStruxure AE
   & Commercial & Desktop
-  & \cno
-  & Vendor lock-in; per-seat licensing \\[6pt]
+  & \cno & \cno
+  & Proprietary ecosystem \\[6pt]
 ISaGRAF Workbench \cite{vyatkin_comparisons_2008}
   & Commercial & Desktop
-  & \cno
-  & Vendor lock-in; licensing costs \\[6pt]
+  & \cno & \cno
+  & Licensing model \\[6pt]
 Rohat et al.\ \cite{rohat_remote_2014}
-  & Proposal & \shortstack[l]{Web\\(monitoring only)}
-  & \cno
-  & Read-only; no authoring; dated web tech \\[6pt]
+  & Proposal & Web (monitoring only)
+  & \cyes & \cno
+  & No remote modelling capabilities \\[6pt]
 Lyu et al.\ \cite{lyu_towards_2024}
-  & Proposal & \shortstack[l]{Web\\(embedded desktop IDE)}
-  & \cno
-  & Does not take advantage of web technologies for the modelling system \\
+  & Proposal & Web (embedded desktop IDE)
+  & \cyes & \cno
+  & Does not take advantage of web technologies for the modelling tool \\
 PTERO\
   & New Proposal & Web
-  & \cyes
-  & Does not take advantage of web technologies for the modelling system \\
+  & \cyes & \cyes
+  & - \\
 \bottomrule
 \end{tabular}%
 }
