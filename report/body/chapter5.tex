@@ -1,236 +1,447 @@
-\chapter{Implementation}
-To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. This chapter describes the technical implementation of the proposed system, detailing the server architecture, frontend implementation, collaboration system and deployment mechanism used to realise the conceptual design presented in \Cref{chap:proposed-solution}.
+\chapter{Validation}
+The purpose of this chapter is to evaluate whether the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified. The evaluation combines objective measurements of system behaviour with subjective feedback collected from users. Together, these perspectives provide a comprehensive assessment of the prototype's effectiveness as an \textit{IEC 61499} development environment.
 
-The chosen name for this prototype implementation, which will be mentioned throughout the rest of this document, is \textit{PTERO} (Programming Tool for Editing and Runtime Orchestration). % TODO what more to say?
+The evaluation is organised into five complementary areas. Functional validation verifies that the prototype correctly supports the modelling, deployment and monitoring of \textit{IEC 61499} applications. Performance evaluation analyses workflow efficiency and compares key tasks against existing tools. Collaboration evaluation examines the benefits of the real-time collaborative architecture and contrasts it with traditional version control workflows. Usability evaluation focuses on user perception and experience, including a study of existing \textit{IEC 61499} tooling. Finally, the results are discussed in the context of the research objectives and identified limitations.
 
-% TODO talk about how the requirements were explored as code was developed
+\section{Evaluation Goals}
+The evaluation aims to answer the following questions:
 
-% \section{Technology Selection}
-% Firstly some decisions need to be made to choose the most appropriate technologies to support this work.
+\begin{enumerate}
+\item Can the proposed solution successfully support the complete development workflow of an \textit{IEC 61499} application?
+\item Does the proposed architecture provide advantages over existing desktop based development environments?
+\item Does the integration of real-time collaboration improve collaborative development workflows?
+\item Do users perceive the proposed solution as accessible, easy to use and an improvement over previous solutions?
+\end{enumerate}
 
-\section{Runtime Environment}
-Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration) \cite{pereira_dinasore_2020}. It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of commercial \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}. Other open-source \acp{RTE} were considered, but none were as well-suited as \textit{DINASORE}. \textit{4diac FORTE} for example was way too extensive and complicated to be able to easily study its source code. \Cref{fig:dinasore-architecture} represents the architecture of this \ac{RTE} where \textit{PTERO} aims to replace the \textit{4DIAC Interface}.
-% TODO maybe talk about the use of python both in dinasores code and the fbs code
+To address these questions, the evaluation combined both quantitative and qualitative methods, assessing objective performance characteristics alongside subjective user experience.
 
+\section{Experimental Setup} \label{sec:experimental-setup}
+A common test application was used throughout the validation process. The same application was implemented using both the developed prototype and \textit{4diac IDE}, allowing direct comparison between environments.
 
-\begin{figure}[H]
-  \includegraphics[width=0.9\linewidth]{dinasore-architecture.jpg}
-  \caption{\textit{DINASORE}'s architecture \cite{pereira_dinasore_2020}.}
-  \label{fig:dinasore-architecture}
-\end{figure}
+\subsection{Hardware}
+The following hardware devices were available and used throughout the evaluation phase of this work:
 
-By default, \textit{DINASORE} uses the port \textit{61499} to receive commands from the \ac{IDE} and send responses. This is important to note as it is the port that will be used as example in this chapter. The exact details of the communication implementation will be explained further in \Cref{sec:deployment}.
+\begin{enumerate}
+\item \textbf{M1 MacBook Pro} (16GB RAM, 2020): This machine served as the primary development and testing platform for \textit{PTERO}. Being the development machine, it hosted the local development server during iterative testing cycles and was used to evaluate the responsiveness of the collaborative editing interface, the correctness of graph synchronisation and the performance of the \textit{Yjs} based real-time collaboration layer under local conditions.
 
-% TODO mention that dinasore is not supported in newer versions of 4diac ide, which means it doesnt run on mac. maybe mention it in another section
-% TODO mention that the communication with 4diac ide was studied
-% TODO talk about changes made to DINASORE
+\item \textbf{ASUS TUF Gaming F16} (32GB RAM, 2024): This machine was employed primarily for evaluating the performance of the \textit{4diac} runtime environment.
 
-\section{Server}
-The design begins by setting up a server that will serve the \ac{IDE} interface as a webpage, store and manage all the data and handle communication with the \acp{RTE}. Taking into account the features we plan on implementing, \textit{JavaScript} running on \textit{Node.js} were chosen due to the extensive library ecosystem. For real-time collaboration we will need a library to run in both the server and the frontend, since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
+\item \textbf{Raspberry Pi 3} (1GB RAM): This device computer acted as a permanently running, remotely accessible server throughout the evaluation period. It hosted a persistent instance of the \textit{PTERO} server as well as an instance of \textit{DINASORE}. Its limited memory and processing capacity made it the most representative of real-world target environments and its inclusion in the testing structure was instrumental in establishing the practical boundaries of the collaboration server.
+\end{enumerate}
 
-% TODO mention implementation of database and more about server
+\subsection{Available Resources}
 
-\section{Frontend}
-The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} programs.
-% TODO want to talk a bit more about what a frontend is
-
-Each subsection will first explain and describe what an \ac{IDE} should implement and follow by showing how the prototype solved the proposed requirements.
-
-\subsection{Devices Configuration View}
-In the interest of distributed \ac{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so we need a clean way to define the resources that are available. Both the \textit{DINASORE} port and the \textit{SSH} port need to be defined for each defined since deployment communication will be made through both.
-% TODO need to mention sync
-% TODO something more
-
-Each device should have several fields that the team can configure:
+The following resources were made available to the tested \acp{IDE}:
 
 \begin{itemize}
-  \item \textbf{Name}: Human friendly name to quickly identify what device this is
-  \item \textbf{Address}: The address of the device
-  \item \textbf{DINASORE port}: The port where \textit{DINASORE} is running
-  \item \textbf{Color}: The color associated with this \textit{DINASORE} instance, providing a visual distinction in the \textit{Graph View} between function blocks mapped to different instances.
-  \item \textbf{SSH port}: The open \textit{SSH} port of the device.
-  \item \textbf{SSH user} and \textbf{SSH password}: The \textit{SSH} login credentials.
-  \item \textbf{SSH path to DINASORE}: Path in the \textit{SSH} filesystem pointing to where \textit{DINASORE} is located.
+\item One \textit{DINASORE} runtime environment.
+\item Three function block definitions obtained from the official \textit{DINASORE} tutorial \textit{'Sensorization "Hello World!"'}:
+  \begin{itemize}
+  \item \texttt{SENSOR\_SIMULATOR.fbt} and \texttt{SENSOR\_SIMULATOR.py}
+  \item \texttt{MOVING\_AVERAGE.fbt} and \texttt{MOVING\_AVERAGE.py}
+  \item \texttt{CONCATENATE\_REALS.fbt} and \texttt{CONCATENATE\_REALS.py}
+  \end{itemize}
 \end{itemize}
 
-% TODO mention that its best to edit in the ide than in the server
+The selected function blocks provide a representative example of a small \textit{IEC 61499} application while remaining sufficiently simple for controlled testing.
 
-With the existence of the middleware, this solution removes the requirement for each team member to configure the available \textit{DINASORE} instances in their own \ac{IDE}, and instead keeps a shared configuration in the server database.
+\subsection{Test Application}
 
-% TODO mention that the following is the ui of the prototype
-
-\begin{figure}[H]
-  \includegraphics[width=0.7\linewidth]{devices-configuration.jpg}
-  \caption{Devices Configuration View}
-  \label{fig:devices-configuration}
-\end{figure}
-
-\subsection{Function Blocks Editor View}
-This is where individual function blocks are defined. It allows the team to specify the interface of each function block, its input and output data ports and events, as well as program the internal behaviour. This separation of interface and implementation follows the \textit{IEC 61499} model of encapsulation, where a function block exposes a well defined interface while keeping its internal logic self-contained.
-
-Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function block is defined in a \textit{xml} format file with a \textit{.fbt} extension, which results in a function block that can be displayed graphically like seen in \Cref{fig:example-fb}. The internal behaviour of the function blocks in \textit{DINASORE} is programmed in \textit{Python}.
-% TODO explain how the code is structured
-% TODO talk about the format
+The application shown in \Cref{fig:test-program} was implemented and deployed during the validation process. It consists of a sensor simulation function block whose output is processed by a moving average filter before being formatted for display.
 
 \begin{figure}[H]
-  \includegraphics[width=0.3\linewidth]{example-fb.jpg}
-  \caption{Example function block defined via \textit{xml}}
-  \label{fig:example-fb}
+\centering
+\includegraphics[width=0.8\linewidth]{test-program.jpg}
+\caption{Test application used during validation}
+\label{fig:test-program}
 \end{figure}
 
-For the \acp{IDE} to be able to detect and use the function block, both the \textit{.fbt} file and the \textit{.py} file need to be placed in a specific folder, right next to each other, like shown in \Cref{fig:fbs-filesystem}. In this prototype this is handled automatically in the server database, removing the need to manually move files like it is needed in \textit{4diac IDE}.
+\subsection{Expected Behaviour}
+
+After deployment, the application should execute correctly on the target \textit{DINASORE} instance and continuously produce output values. These values should be observable through the monitoring facilities provided by the \ac{IDE}.
+
+\section{Evaluation Metrics}
+The evaluation combines both objective and subjective metrics.
+
+\subsection{Performance Metrics}
+Performance evaluation considers:
+
+\begin{itemize}
+\item Installation complexity
+\item Startup time
+\item Number of manual configuration steps
+\item Deployment workflow complexity
+\end{itemize}
+
+\subsection{Collaboration Metrics}
+Collaboration capabilities are evaluated through:
+
+\begin{itemize}
+\item Support for concurrent editing
+\item Conflict handling mechanisms
+\item Need for manual synchronisation
+\end{itemize}
+
+\subsection{Usability Metrics}
+Usability is assessed through user questionnaires based on:
+
+\begin{itemize}
+\item Perceived task difficulty
+\item Interface intuitiveness
+\item User satisfaction
+\item Open ended qualitative feedback
+\end{itemize}
+
+\section{Functional Validation}
+\textit{PTERO} was subjected to functional tests to confirm that all core features behave as specified. It was tested by implementing and deploying the test program defined in \Cref{sec:experimental-setup}. As a control, the same was performed in \textit{4diac IDE}. The steps taken were as follows:
+
+% TODO which hardware (probably dont need to mention)
+
+\begin{enumerate}
+\item \textbf{Configured available \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: In the \textit{System Configuration} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, then connected it to the \textit{Ethernet} tunnel.
+  \item \textbf{PTERO}: In the \textit{Config} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, as well as the SSH details of the device which will be used to sync the function blocks files.
+  \end{itemize}
+
+\item \textbf{Imported the function block files}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Copied and pasted the given files to \texttt{4diac-ide/typelibrary/(new\_folder)}.
+  \item \textbf{PTERO}: Copied and pasted the given files in the \textit{Function Blocks} tab.
+  \end{itemize}
+
+\item \textbf{Designed the flow}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: In the \textit{App View} tab, dragged and dropped the wanted function blocks, then connected the event and data slots. Double-clicked input slots to assign input value.
+  \item \textbf{PTERO}: In the \textit{Graph} tab, right-clicked and selected the wanted function blocks to add them, then connected the event and data slots. Right-clicked nodes to assign input value.
+  \end{itemize}
+
+\item \textbf{Mapped to \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
+  \item \textbf{PTERO}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
+  \end{itemize}
+
+\item \textbf{Synced files with \textit{DINASORE}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Called the \texttt{synchronize.py} manually, feeding it the needed SSH details.
+  \item \textbf{PTERO}: This was done automatically and without any needed setup when deploying.
+  \end{itemize}
+
+\item \textbf{Deployed}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
+  \item \textbf{PTERO}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
+  \end{itemize}
+
+\item \textbf{Monitored the output}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: The \textit{Monitor values} option was enabled and the values were displayed on the right side of the output data slots.
+  \item \textbf{PTERO}: The values were displayed on the right side of the output data slots.
+  \end{itemize}
+\end{enumerate}
+
+Besides verifying that the output values are being monitored correctly, following the \textit{Deployed} step, the commands displayed in the console were directly compared between \acp{IDE}. It was verified that both were sending exactly the same commands, the headers as well as the contents were exactly the same and the responses were no different. These results confirmed that the prototype correctly handles the development of \textit{IEC 61499} programs.
+
+While the two workflows are broadly equivalent in the number of steps required, they differ in several procedural details. Configuring a device in \textit{PTERO} requires additional SSH credentials upfront, a step absent in \textit{4diac IDE}, however, this overhead is offset later in the workflow, as file synchronisation with \textit{DINASORE} is a manual command line operation in \textit{4diac IDE}, while it is handled automatically by \textit{PTERO} at deploy time. Similarly, importing function block files is more straightforward in \textit{PTERO}, which accepts files directly through the interface, whereas \textit{4diac IDE} requires manual placement into a specific directory in the filesystem. These differences reflect a deliberate design philosophy in \textit{PTERO} of consolidating configuration complexity into the tool itself.
+
+\section{Performance Evaluation}
+This solution not only aims to be able to do the same workload as \textit{4diac IDE}, but also have capabilities and an inherent design that justify its existence. Therefore, this section compares the performance of several real world tasks between the \acp{IDE}. The listed tasks are the ones that demonstrated to be significantly different between solutions, others were analysed but proved to not be worth the discussion.
+
+\begin{itemize}
+\item \textbf{Install}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Install a desktop app. There is no compatible version for macOS that supports \textit{DINASORE}.
+  \item \textbf{PTERO}: Install a \textit{Node.js} server. By working in a web browser, it is crossplatform without much development effort, which allows macOS users to use it. The downside is that it is harder to install for just local development.
+  \end{itemize}
+
+\item \textbf{Open}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Average of 4 seconds to boot the application in the \textit{ASUS TUF Gaming F16}. The startup overhead is inherent to the \textit{Eclipse} based desktop architecture underlying this tool.
+  \item \textbf{PTERO}: Average of less than a second to load webpage. The use of lightweight libraries and the move of heavy workloads to the server allow the page to load in an instant.
+  \end{itemize}
+
+\item \textbf{Create and edit function block files}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: While it does have a way to create and edit the \textit{.fbt} files inside the application, there is no built in \textit{Python} text editor.
+  \item \textbf{PTERO}: Has a text editor for both types of files.
+  \end{itemize}
+
+\item \textbf{Collaboration}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: An external periodic version control system like \textit{Git} needs to be used. Structured data in formats like \textit{XML} is not handled properly by these types of version control system, which results in frequent merge conflicts \cite{axelsson_version_2015}. The following test was conducted:
+    \begin{enumerate}
+    \item A project has a graph with 1 function block added. 2 users are working on the graph.
+    \item User \#1 deletes the function block.
+    \item User \#2 modifies the position of the function block.
+    \item User \#1 commits and pushes.
+    \item User \#2 tries to pull the changes but gets a merge conflict
+    \end{enumerate}
+  \item \textbf{PTERO}: Has a realtime collaboration system. Any change made is immediately propagated to every client and resolved by a \ac{CRDT}, ensuring no conflicts need to be handled manually and damage is minimised.
+  \end{itemize}
+
+\item \textbf{Synchronising files with the \textit{DINASOREs}}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Required to manually use an external script before deployment.
+  \item \textbf{PTERO}: The server itself will connect and synchronise the files with the \textit{DINASOREs}. This happens automatically when attempting to deploy, ensuring that deployments never fail due to the human error of forgetting to sync the files.
+  \end{itemize}
+
+\item \textbf{Remote deployment}
+  \begin{itemize}
+  \item \textbf{4diac IDE}: Every \ac{IDE} must have a valid connection with each available \textit{DINASORE}, as well as \textit{SSH} access. This gets increasingly complicated if the user wants to make a deployment while in a different network.
+  \item \textbf{PTERO}: By having the server as the middleware, only it must be exposed for the users to connect. With only the server permanently having direct connection with the \textit{DINASORE} devices, no individual handling is needed.
+  \end{itemize}
+\end{itemize}
+
+% TODO actual time measures (deployment time, sync latency, scalability)
+
+% TODO remote dev on mobile?
+
+% TODO talk on the improvements
+
+% One of the concrete objectives of this work was to deliver a solution that is meaningfully faster than the approach it replaces. To verify this, [describe your measurement approach --- e.g. task completion time, API response time, load time] was measured under controlled conditions and compared against [the baseline --- e.g. the previous tool, manual process, or benchmark].
+
+% The prototype achieved [X result], representing a [Y\%] improvement over the baseline. These results confirm that the solution delivers a tangible gain in [speed / efficiency / throughput], directly addressing one of the core gaps motivating this work.
+
+% TODO table with pros and cons of each
+
+
+\section{Collaboration Evaluation}
+% TODO extract from previous section and add (multi-user editing; consistency; conflict resolution)
+% TODO need to test
+
+\Citeauthor{cimiano_yjs_2015} claims that \textit{Yjs} is able to handle an average of 100 actions per millisecond \cite{cimiano_yjs_2015} which is obviously good enough for this use case, as it does not require millisecond precision. Taking connection with the remote server into account, a test was devised to understand how well the \textit{Raspberry Pi} could handle multiple users at the same time. A script was created that initialised a set number of clients, connected them to the remote server and sent a change that would get propagated across the clients. By measuring the time that would take for the client to receive the change, the chart in \Cref{fig:yjs-performance} was obtained. The results demonstrated that even a resource constrained machine accessed over a network can serve as an adequate collaboration server for a small team, however, the \textit{Raspberry Pi} deployment was found to be unsuitable beyond approximately 240 simultaneous clients, at which point the hardware prevented additional connections from being established reliably.
 
 \begin{figure}[H]
-  \includegraphics[width=0.3\linewidth]{fbs-filesystem.jpg}
-  \caption{Filesystem folder with various function block files}
-  \label{fig:fbs-filesystem}
+  \includegraphics[width=0.8\linewidth]{yjs-performance.png}
+  \caption{Performance results of \textit{Yjs} running in the \textit{Raspberry Pi}}
+  \label{fig:yjs-performance}
 \end{figure}
 
-This view contains a split view text editor: a side for the \textit{.fbt} file and the other for the \textit{.py} file. It would be possible to create a visual editor for designing the interface, instead of having to write \textit{xml} by hand, but the added complexity would not be justified at this prototyping stage. The \textit{xml} format is sufficiently structured that a text editor provides an adequate experience, and a dedicated visual interface remains a natural direction for future development.
+The same test was performed with a server running on the \textit{M1 MacBook Pro} and the clients also in the same machine, removing any delay resulting from network delay and in a much more powerful machine. It was possible to connect 3000 clients with an average propagation time of 65 ms and a P95 of 221 ms, proving that if there is a need for hundreds of clients to be connected at once, the solution is able to scale with the hardware to accommodate it.
 
-% TODO maybe talk about the file manager
+\section{Usability Evaluation}
+Two questionnaires were designed and given to participants. One focused on the user experience of working with \textit{4diac IDE} as the underlying development environment for \textit{IEC 61499}. The other asked both for a usability opinion on \textit{PTERO}, as well as a direct comparison between these two \acp{IDE}. The participants of the questionnaires were:
 
-\begin{figure}[H]
-  \includegraphics[width=1\linewidth]{fbs-editor.jpg}
-  \caption{Function Blocks Editor View}
-  \label{fig:fbs-editor}
-\end{figure}
+\begin{itemize}
+\item 11 Students from \ac{MEEC} at \ac{FEUP}, enrolled in the course of \ac{SINF}, in which, over the course of a semester, they were tasked with using \textit{4diac IDE} for modelling \ac{FBD} programs with \textit{DINASORE} as the \ac{RTE}. Having completed a full semester of work on this environment, these students possessed sufficient practical familiarity with the tool to provide informed usability assessments and represent a realistic profile of future \textit{PTERO} adopters in academic and educational contexts.
+\item 5 Students at \ac{FEUP}, working on Master's dissertations at \ac{SYSTEC} on topics directly related to \textit{4diac IDE} and \textit{DINASORE}. Their deeper technical engagement with the ecosystem made them particularly well positioned to evaluate the correctness and completeness of \textit{PTERO}'s workflow.
+\end{itemize}
 
-\subsection{Graph View}
-This view is the primary workspace for composing the application. Function blocks are placed on the canvas and connected together by drawing connections between their data and event ports, forming the application network. Event ports are commonly color coded red, while data ports are color coded blue. % TODO talk about coloring
+\subsection{4diac IDE Usability}
+% Firstly the questionnaire asked the participants if the \ac{SINF} course was the first time they have used \textit{4diac IDE}. This was important to differentiate answers based on prior experience.
+% TODO dont like the wording
+% TODO mention the test program is the one added above
 
-In \textit{DINASORE}, all \textit{INIT} event ports are by default assigned to \textit{EMB\_RES}, the default resource that sends an event when the application is started. This removes the need to connect the \textit{INIT} event ports, but the \textit{READ} event port is not assigned by default and therefore needs to be connected in every function block. The \texttt{schedule()} function will only be called and generate output when an event is sent to the \textit{READ} event port. The described event driven execution model is what allows an explicit specification of the execution order of function blocks. Periodic out of event execution of function blocks is also possible with the implementation of a looping function block that triggers events \cite{noauthor_iec_nodate}.
-
-A function block will have some input and output data ports, each with its own associated data type. For example, an \textit{INT} input port will not accept data from a \textit{WORD} output port, and therefore should not be able to connect to it. It is also possible to set a default value for an input if no output is connected to it, there is an editable string field for this which gets converted to the expected data type by the \ac{RTE}. The data types supported by \textit{IEC 61499} are derived from and defined by \textit{IEC 61131-3} as listed in \Cref{tab:iec-data-types}.
+\subsubsection{Difficulty}
+With the use of a Likert \cite{likert_technique_1932} table, the difficulty of doing several different tasks using this \ac{IDE} was analysed. Ranging from \textit{Very Easy} to \textit{Very Hard}, this section had the intent of understanding how easy and straightforward each step of \textit{IEC 61499} development was. If a specific step was difficult in \textit{4diac IDE}, it will be interesting to see how it compares with \textit{PTERO}. The results are displayed in \Cref{tab:4diac-difficulty}.
 
 \begin{table}[H]
-    \centering
-    \begin{tabular}{lll}
-        \hline
-        \textbf{Type} & \textbf{Description} & \textbf{Size} \\
-        \hline
-        \texttt{BOOL}    & Boolean              & 1-bit  \\
-        \texttt{SINT}    & Short integer        & 8-bit  \\
-        \texttt{INT}     & Integer              & 16-bit \\
-        \texttt{DINT}    & Double integer       & 32-bit \\
-        \texttt{LINT}    & Long integer         & 64-bit \\
-        \texttt{REAL}    & Floating point       & 32-bit \\
-        \texttt{LREAL}   & Long floating point  & 64-bit \\
-        \texttt{STRING}  & ASCII string         & Variable \\
-        \texttt{WSTRING} & Unicode string       & Variable \\
-        \texttt{TIME}    & Time interval        &        \\
-        \texttt{DATE}    & Date                 &        \\
-        \hline
-    \end{tabular}
-    \caption{IEC 61131-3 Data Types \cite{noauthor_iec_2026}}
-    \label{tab:iec-data-types}
+\centering
+\caption{Perceived difficulty of tasks in \textit{4diac IDE}}
+\label{tab:4diac-difficulty}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
+\toprule
+Installing 4diac IDE & \likertpct{9.1}{36.4}{36.4}{9.1}{9.1}\\
+\midrule
+Setting up the project & \likertpct{0}{18.2}{36.4}{27.3}{19.2}\\
+\midrule
+Connecting the function blocks & \likertpct{18.2}{18.2}{27.3}{27.3}{9.1}\\
+\midrule
+Creating new function block files & \likertpct{0}{18.2}{9.1}{54.5}{18.2}\\
+\midrule
+Synchronising the function blocks with DINASORE & \likertpct{0}{18.2}{18.2}{27.3}{36.4}\\
+\midrule
+Deploying and running & \likertpct{9.1}{27.3}{18.2}{27.3}{18.2}\\
+\midrule
+Collaborating with other people & \likertpct{0}{0}{9.1}{36.4}{54.5}\\
+\bottomrule
+\end{tabular}
+
+\vspace{1em}
+\textcolor{likert1}{\rule{7pt}{7pt}} Very Easy \hspace{3em} %
+\textcolor{likert2}{\rule{7pt}{7pt}} Easy \hspace{3em} %
+\textcolor{likert3}{\rule{7pt}{7pt}} Moderate \hspace{3em} %
+\textcolor{likert4}{\rule{7pt}{7pt}} Hard \hspace{3em} %
+\textcolor{likert5}{\rule{7pt}{7pt}} Very Hard
 \end{table}
 
-% TODO a lot is missing here
+% TODO analyse results
 
-Each function block can also be mapped to a \textit{DINASORE} instance, with the color coding defined in the Devices Configuration View providing an immediate visual indication of how the application is distributed across the available devices. % TODO explain how distributing works
+\subsubsection{Intuitiveness}
+Next, another Likert table, this time on how intuitive it was to understand each part of the \ac{IDE}. This way the design decisions of \textit{4diac IDE} can be critically analysed. The results are displayed in \Cref{tab:4diac-intuitive}.
 
-% TODO explain a lot more
+\begin{table}[H]
+\centering
+\caption{Perceived intuitiveness of key parts of \textit{4diac IDE}}
+\label{tab:4diac-intuitive}
+\noindent
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
+\toprule
+Graph editor & \likertpct{18.2}{18.2}{36.4}{18.2}{9.1}\\
+\midrule
+Navigate between pages & \likertpct{0}{0}{63.6}{18.2}{18.2}\\
+\midrule
+Where in the filesystem to put your function blocks and python code & \likertpct{9.1}{18.2}{9.1}{36.4}{27.3}\\
+\midrule
+Understand error messages & \likertpct{0}{0}{27.3}{18.2}{54.5}\\
+\midrule
+Monitor the output & \likertpct{9.1}{9.1}{45.5}{27.3}{9.1}\\
+\bottomrule
+\end{tabular}
 
-This system was achieved in the prototype with the use of the \textit{LiteGraph.js} library, a graph node editor for the browser. A lot of other libraries were considered, but this one was chosen due to the requirements of the proposed solution. Let us discuss the alternatives that were considered to understand why this choice is important:
+\vspace{1em}
+\textcolor{likert1}{\rule{7pt}{7pt}} Very Intuitive \hspace{2em} %
+\textcolor{likert2}{\rule{7pt}{7pt}} Intuitive \hspace{2em} %
+\textcolor{likert3}{\rule{7pt}{7pt}} Moderate \hspace{2em} %
+\textcolor{likert4}{\rule{7pt}{7pt}} Confusing \hspace{2em} %
+\textcolor{likert5}{\rule{7pt}{7pt}} Very Confusing
+\vspace{3em}
+\end{table}
 
-% TODO add references for each
-\begin{itemize}
-  \item \textbf{Rete.js}: A very flexible and complete editor framework, but the added complexity makes it harder to integrate the desired features. It is also a more general purpose editor, meaning the multi-input and multi-output function blocks with specific data types are not as well supported.
-  \item \textbf{xyflow}: A highly customizable framework composed of React Flow and Svelte Flow. While it provides excellent visual customisation and integration with frontend frameworks, it suffers from the same problems as \textit{Rete.js}. % TODO any word better than problems?
-  \item \textbf{Drawflow}: A lightweight and simplistic library with a focus on data flow execution. Although simple to integrate, it lacks many features required for designing \textit{IEC 61499} function blocks, such as robust type handling and multi-input and multi-output.
-  \item \textbf{Baklava.js}: With a clean architecture and flexibility, this would be a good alternative, but since it specifically targets \textit{Vue} and requires a more intricate setup, it was not the most appropriate choice for a prototype.
-  \item \textbf{GoJS}: Very powerful commercial alternative. It offers advanced functionality and flexibility, but its licensing model make it less suitable for lightweight research prototypes and open development environments.
-  \item \textbf{Node-RED}: A flow based programming environment. While conceptually similar, its architecture is more focused on runtime execution than on being a visual editor of structured data.
-\end{itemize}
+% TODO analyse results
 
-Among these alternatives, \textit{LiteGraph.js} presented the best balance between simplicity, flexibility and ease of integration. Its builtin support for typed inputs and outputs, lightweight architecture and direct focus on visual data flow programming made it especially suitable for the requirements of the proposed solution. Even so, it was necessary to implement custom behaviour on top of some functions of \textit{LiteGraph.js} to achieve the desired behaviour. The choice of the graph library is very important, since the requirements of \textit{IEC 61499} differ significantly from those of most conventional graph editors, as such, special care must be taken to ensure that these requirements are properly supported.
+% TODO want to write more on each
 
-\begin{figure}[H]
-  \includegraphics[width=0.9\linewidth]{graph-editor.jpg}
-  \caption{Graph Editor View}
-  \label{fig:graph-editor}
-\end{figure}
+\subsubsection{Open Feedback}
+The questionnaire concluded with open-ended questions that provided additional insight into the user experience of working with \textit{4diac IDE}.
+% Responses were analysed qualitatively and grouped into recurring themes.
 
-% TODO a lot
+\paragraph{What did you like most about using 4diac IDE?}
+The most frequently mentioned positive aspect was the modularity of programming with function blocks, which made the overall structure of programs easier to understand.
 
-\subsection{Console View}
-% TODO small description instead of reference
-This view will display the console logs that are generated when deploying. The contents of it will be discussed in detail in \Cref{sec:deployment}.
+\begin{quote}
+``The files were simple to implement in .fbt and python, so the logic could be easily done prior and then sequentially implement our ideas in code and then route them.''
+\end{quote}
 
-\begin{figure}[H]
-  \includegraphics[width=0.9\linewidth]{console-editor.jpg}
-  \caption{Console View}
-  \label{fig:console-editor}
-\end{figure}
+\begin{quote}
+``I highly appreciated the modularity of the system, specifically the ability to design independent data manipulation pipelines for each individual machine. This decentralised approach feels highly relevant and closely mimics real-world industrial scenarios.''
+\end{quote}
 
-\section{Real-Time Collaboration} \label{sec:real-time-collaboration}
-In \textit{PTERO} the collaborative editing system was implemented using \textit{Yjs} \cite{cimiano_yjs_2015}, a \ac{CRDT} framework designed for distributed collaborative applications, allowing users to concurrently edit shared data structures while automatically resolving conflicts in a deterministic manner. \textit{Yjs} was chosen in detriment of alternative \ac{CRDT} implementations like \textit{Automerge} due to its large ecosystem. With built-in support for many text editor libraries \cite{noauthor_editor_2023}, such as \textit{CodeMirror}, adding real-time collaboration to the \textit{Function Blocks Editor View} is very straightforward.
+\paragraph{What were the biggest challenges you faced?}
+The most common difficulties were related to deployment, management of function block files and collaboration. Participants reported confusion regarding where files needed to be placed in the filesystem and how synchronisation with \textit{DINASORE} should be performed. As \ac{SINF} students had been tasked over the semester to work in groups, the collaboration issues were a recurring theme in their answers. It is also noteworthy that the average response length increased substantially, from 108 characters in the previous question to 510 characters in this one. This suggests that participants had considerably more detailed feedback when discussing the challenges, often providing details explanations and examples.
 
-The graph structure representing the \ac{FBD} application is synchronised through shared \textit{Yjs} data structures. Operations such as creating function blocks, deleting connections, modifying inputs or moving nodes are propagated in real time to all connected clients. Each user therefore observes the same graph state with minimal delay. To integrate collaboration into this editor, the internal state changes of the graph were connected to the shared \textit{Yjs} document. Whenever a local modification occurs in the graph, the corresponding operation is serialized and applied to the shared collaborative state. Likewise, remote updates received from other users are reflected back into the local graph editor instance.
+\begin{quote}
+``Collaborating with colleagues was very hard, because of the management of file versions. Only one could be working at a time and we could only change the file after it has uploaded on Github.''
+\end{quote}
 
-% TODO surely theres something more to talk about the serialized data
+\begin{quote}
+``Connecting to DINASORE and understanding that there are changes to make in both file systems.''
+\end{quote}
 
-\section{Deployment} \label{sec:deployment}
-The deployment process is responsible for taking the application defined in the \textit{Graph View} and bringing it to life across the configured \textit{DINASORE} instances. It is broken down into a sequence of steps, each of which is described in the following subsections.
+\begin{quote}
+``(...) Vague Error Messages: Debugging can be quite difficult due to a lack of specificity in error messages. (...) 4diac IDE occasionally rejects the deployment of a project without explaining exactly why, sometimes only providing the name of an input variable without further context.''
+\end{quote}
 
-\subsection{Synchronise with DINASOREs}
-The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this we can use the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration file needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. The server must have a valid \textit{SSH} connection with each device in order to connect and send the files.
 
-% First, \texttt{master-fbs-path} dictates where in the server filesystem the function block files that will be sent are located, then an array of \texttt{dinasores} with the configurations defined in the \textit{Devices Configuration View}. The \texttt{port} used here will be the \textit{SSH} port, the \textit{DINASORE} must have an open \textit{SSH} channel that the server is able to connect to via this port. This file is generated from the configured fields in the \textit{Devices Configuration View}. When the script is ran, it will read the contents of this file in order to connect and send the files to each \textit{DINASORE}.
+\subsection{PTERO Usability}
+% TODO this text
 
-% TODO idk what else there is about sync
+\subsubsection{Intuitiveness}
+% Next, another Likert table, this time on how intuitive it was to understand each part of the \ac{IDE}. This way the design decisions of \textit{4diac IDE} can be critically analysed. The results are displayed in \Cref{tab:4diac-intuitive}.
+% TODO this text
 
-\subsection{Send Commands}
-Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these messages are issued is important, as connections can only be established between existing nodes. The following two subsections describe how the messages are constructed and what they contain.
+\begin{table}[H]
+\centering
+\caption{Perceived intuitiveness of key parts of \textit{PTERO}}
+\label{tab:ptero-intuitive}
+\noindent
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
+\toprule
+DINASORE configuration & \likertpct{75}{25}{0}{0}{0}\\
+\midrule
+Function Blocks Code Editor & \likertpct{75}{25}{0}{0}{0}\\
+\midrule
+Graph Editor & \likertpct{50}{50}{0}{0}{0}\\
+\midrule
+Monitor the output & \likertpct{75}{25}{0}{0}{0}\\
+\bottomrule
+\end{tabular}
 
-\subsubsection{Build messages}
-Before the messages can be sent, they need to be built into the format that \textit{DINASORE} is expecting. It consists of a two part message: the first part refers to the configuration name, which by default we will use \textit{EMB\_RES}, while the second is the actual message payload containing the wanted command. Each of these parts are preceded by a 3-byte header composed of a \texttt{0x50} byte followed by 2 bytes indicating the size of the corresponding content. A representation of this format is presented in \Cref{fig:build-message}.
+\vspace{1em}
+\textcolor{likert1}{\rule{7pt}{7pt}} Very Intuitive \hspace{2em} %
+\textcolor{likert2}{\rule{7pt}{7pt}} Intuitive \hspace{2em} %
+\textcolor{likert3}{\rule{7pt}{7pt}} Moderate \hspace{2em} %
+\textcolor{likert4}{\rule{7pt}{7pt}} Confusing \hspace{2em} %
+\textcolor{likert5}{\rule{7pt}{7pt}} Very Confusing
+\vspace{3em}
+\end{table}
 
-\begin{figure}[H]
-  \includegraphics[width=0.9\linewidth]{build-message.png}
-  \caption{\textit{DINASORE} communication format}
-  \label{fig:build-message}
-\end{figure}
+% TODO analyse results
 
-The \textit{4diac\_simulator.py} file, part of the \textit{tests/} folder of \textit{DINASORE}, implements this method in \textit{Python} as shown in \Cref{lst:build-message-py}. For this prototype, it was necessary to implement it in \textit{JavaScript}, as shown in \Cref{lst:build-message-js}.
+% TODO want to write more on each
 
-\subsubsection{Send Messages} \label{subsubsec:send-messages}
-Now that we have defined how to build the messages, we can explore the sequence of commands that need to be sent to each \textit{DINASORE} instance. The server connects to each instance and transmits these messages sequentially. The order of message transmission is critical, as connections can only be established between existing nodes. The sequence is represented in \Cref{fig:sequence-create}. A more technical and in depth analysis of the messages sent can be found in \Cref{app:send-messages}.
+\subsubsection{System Usability Scale}
+% TODO describe what it is
 
-\begin{figure}[H]
-  \includegraphics[width=0.8\linewidth]{sequence-create.png}
-  \caption{Overview of the communication sequence when deploying}
-  \label{fig:sequence-create}
-\end{figure}
+Score: 88,75
 
-\subsection{Console}
-To give the team visibility into the deployment process right from the \ac{IDE}, without having to log into the server, a console is provided in the \textit{Console View} that displays a live log of each action taken during deployment. There are two main things being logged:
+% TODO add results to appendix
 
-\begin{itemize}
-  \item \textbf{Synchronise}: The output of running the \textit{Python} script is displayed so that the team see that the \textit{SSH} communication is being done properly.
-  \item \textbf{Send Commands}: As commands are sent and responses are received, they are displayed, allowing the team to make sure each command is formulated correctly, being processed and a response is issued.
-\end{itemize}
+\subsection{Comparison}
 
-% TODO add listing with logs?
+\begin{table}[H]
+\centering
+\caption{Direct comparison of usability of \textit{PTERO} and \textit{4diac IDE}}
+\label{tab:direct-comparison}
+\noindent
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
+\toprule
+Configuring DINASOREs & \likertpct{75}{25}{0}{0}{0}\\
+\midrule
+Syncing Function Block code with DINASORE & \likertpct{75}{25}{0}{0}{0}\\
+\midrule
+Creating the flow using the Graph Editor & \likertpct{50}{37.5}{12.5}{0}{0}\\
+\midrule
+Collaborating with others & \likertpct{62.5}{25}{12.5}{0}{0}\\
+\midrule
+Deploying & \likertpct{50}{37.5}{12.5}{0}{0}\\
+\midrule
+Monitoring output & \likertpct{25}{37.5}{25}{12.5}{0}\\
+\bottomrule
+\end{tabular}
 
-\subsection{Watch}
-Once the application is running, the values of the node outputs are continuously retrieved from the \textit{DINASORE} instances and displayed in the \textit{Graph View}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development. In order to get these values, the \ac{IDE} must tell the \textit{DINASORE} instances which output slots it wants to watch and then request the values. In this prototype, for simplicity, all data outputs are watched and we need to send a watch creation request for each.
+\vspace{1em}
+\textcolor{likert1}{\rule{7pt}{7pt}} PTERO is much better \hspace{1.5em} %
+\textcolor{likert2}{\rule{7pt}{7pt}} PTERO is better \hspace{1.5em} %
+\textcolor{likert3}{\rule{7pt}{7pt}} No Preference \hspace{1.5em} %
+\textcolor{likert4}{\rule{7pt}{7pt}} 4diac IDE is better \hspace{1.5em} %
+\textcolor{likert5}{\rule{7pt}{7pt}} 4diac IDE is much better
+\vspace{3em}
+\end{table}
 
-\Cref{fig:sequence-watch} represents the sequence that the messages need to be sent. Details about these requests and the associated responses can be found in \Cref{app:watch}. When the watch values are retrieved, they are displayed in the right side of the corresponding output slots, demonstrated in \Cref{fig:display-watch}.
+\subsubsection{Open Feedback}
 
-\begin{figure}[H]
-  \includegraphics[width=0.8\linewidth]{sequence-watch.png}
-  \caption{Overview of the communication sequence when watching}
-  \label{fig:sequence-watch}
-\end{figure}
+\paragraph{What do you like/dislike about a remote web-based solution like PTERO when compared to a desktop app like 4diac IDE?}
+Responses to this question were predominantly positive. Participants highlighted the reduced setup requirements, improved accessibility and simpler user interface provided by the web-based approach. Several respondents also noted that integrating the \texttt{.fbt} and \texttt{.py} editors into a single environment simplified the development workflow. While some usability improvements were suggested, participants considered PTERO easier to use than \textit{4diac IDE}.
 
-\begin{figure}[H]
-  \includegraphics[width=0.4\linewidth]{display-watch.jpg}
-  \caption{Watching an output slot in the \textit{Graph View}}
-  \label{fig:display-watch}
-\end{figure}
+% TODO maybe say that the responses dont really answer the question
 
-\section{Distribution}
-% TODO talk about packaging it
-% TODO talk about conclusion
+\begin{quote}
+``Easier to setup for group work. Accessible from any PC.''
+\end{quote}
+
+\begin{quote}
+``PTERO seems easier to setup and overall use. Loved the feature of writing the .fbt and .py files on the same tab.''
+\end{quote}
+
+\begin{quote}
+``PTERO is an easy to use and very intuitive platform that surpasses in user friendliness the 4DIAC IDE when compared to its complexity and function block management.''
+\end{quote}
+
+\section{Discussion}
+The evaluation results indicate that the proposed solution successfully achieves functional parity with the established \textit{4diac IDE} while introducing architectural and usability improvements that address several of the limitations identified in traditional \textit{IEC 61499} development environments.
+
+The functional validation confirmed that \textit{PTERO} correctly supports the complete development workflow, including configuration, modelling, deployment and monitoring of \textit{IEC 61499} applications. Both systems generated identical deployment commands and produced equivalent runtime behaviour in \textit{DINASORE}. This equivalence is an important result, as it demonstrates that the proposed abstraction layer does not compromise correctness or compatibility with existing tooling. Instead, it preserves interoperability while offering a different interaction model.
+
+The performance evaluation further complements these findings by highlighting how architectural decisions in \textit{PTERO} translate into measurable workflow improvements. While both systems are capable of executing equivalent \textit{IEC 61499} applications, \textit{PTERO} reduces the number of manual steps required across key development tasks such as project setup, synchronisation and deployment. A central factor behind this improvement is the tighter integration between the different components of the development pipeline. In \textit{4diac IDE}, the development workflow is distributed across multiple loosely connected tools and processes, requiring explicit user actions to maintain consistency between the modelling environment, local file system and remote runtime. In contrast, \textit{PTERO} internalises these responsibilities within the platform itself, allowing project state, file management and deployment logic to be handled automatically as part of a single unified system.
+
+The usability questionnaires provide strong evidence that a web-based implementation can offer a significantly improved user experience compared to \textit{4diac IDE}. Participants consistently reported higher levels of perceived ease of use, intuitiveness and overall satisfaction when interacting with \textit{PTERO}. This improvement can be attributed not only to interface design choices, but also to the inherent advantages of web technologies in this context.
+
+Furthermore, it was observed that the integration of all development tasks into a single unified interface contributes to a reduction in cognitive load. Unlike \textit{4diac IDE}, where users must switch between multiple tools and external processes (such as file system management and synchronisation scripts), the web-based environment consolidates modelling, editing, deployment and monitoring into a coherent workflow. The results also suggest that responsiveness and perceived simplicity play an important role in user satisfaction.
+
+Overall, the findings indicate that the adoption of web technologies is not merely a change in deployment platform, but a design decision that directly influences usability by simplifying access, unifying workflows and reducing structural complexity for end users.

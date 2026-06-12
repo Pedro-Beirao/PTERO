@@ -1,5 +1,6 @@
 db
 sync/fbs
+tests
 
 # JS gitignore
 

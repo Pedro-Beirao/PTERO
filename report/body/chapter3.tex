@@ -1,52 +1,109 @@
-\chapter{State of the Art} \label{chap:state-of-the-art}
-This chapter provides a comprehensive analysis of the current landscape of development environments for \ac{CPPS} and the \textit{IEC 61499} standard. It categorises and critically examines the existing development tools, while looking for possible gaps in the ecosystem.
+\chapter{Proposed Solution} \label{chap:proposed-solution}
+To address the limitations identified in existing \textit{IEC 61499} development environments, this dissertation proposes the design of a web-based \ac{IDE} for modelling \textit{IEC 61499}-compliant applications. The goal is to bridge the gap between modern collaborative software engineering practices and industrial automation tooling used in \acp{CPPS}.
 
-\section{Ecosystem Summary}
-Currently, the development ecosystem for \textit{IEC 61499} is composed almost exclusively of desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations, requiring each member of a development team to independently install, configure, and maintain the software on their own machine. The tools themselves tend to be resource intensive, which creates demands for the hardware, making them less accessible to users working on modest, shared or virtual machines. There is also the issue of platform dependency, as a niche and focused field, some \acp{IDE} are not crossplatform, forcing users to use virtual machines to be able to use them, further intensifying performance issues.
+Existing tools are predominantly desktop based and poorly suited for distributed development. In contrast, the proposed solution adopts a centralised web-based architecture that enables platform independence, simplified setup, simplified deployment and real-time collaboration.
 
-\subsection{Open-Source}
-The most prominent open source implementation is the \textit{4diac IDE} (based on the \textit{Eclipse} framework) which supports a variety of \acp{RTE} such as \textit{4diac FORTE} and \textit{DINASORE}. This \ac{IDE} is very feature rich at the cost of increased complexity, resulting in a steep learning curve, which makes it more difficult to use \cite{weber_usability_2019}. The \textit{Eclipse} foundation on which it is built is itself a heavyweight platform, and while this grants access to a broad plugin ecosystem, it also means that the \ac{IDE} inherits the framework's architectural complexity. Navigating the interface to accomplish basic tasks such as creating a new function block type, designing the flow and deploying to a \ac{RTE} can require substantial initial investment before productive work can begin.
+The main reason to propose using web technologies is to solve the issues that affects any local-first development environment. By having the \ac{IDE} be hosted by a centralised server, the following key aspects are achieved:
 
-An alternative is \textit{FBME} which is a much simpler modelling environment \cite{sorokin_novel_2022}. Built as a plugin for the \textit{JetBrains MPS} language workbench, while easier to use than \textit{4diac} \ac{IDE}, it still is a local-first development environment, the importance of this will be explained in \Cref{sec:localfirst}.
-
-% TODO references about commercial ides
-\subsection{Commercial}
-The commercial side is occupied by \textit{EcoStruxure Automation Expert}, \textit{ISaGRAF Workbench} and other development environments that usually have their own built-in proprietary \ac{RTE}. This tight coupling between the engineering tool and the runtime gives commercial vendors significant control over the end-to-end development experience, which typically results in polished, production-ready tooling with strong vendor support. However, it also introduces considerable lock-in: projects developed in one commercial environment are not easily portable to a different runtime or \ac{IDE} and the proprietary nature of the underlying \ac{RTE} limits the ability to inspect, extend, or adapt behaviour.
-
-Commercial tools are also constrained by their licensing models. Per seat licensing is common, meaning that the cost of the toolchain scales directly with the size of the team and can not be viable for smaller organisations, academic research groups, or early stage projects. This creates a tiered ecosystem in which well resourced industrial organisations have access to mature tooling, while smaller teams are restricted to the open source alternatives, each of which carries its own set of limitations as described above.
-
-\section{Local-first development environments} \label{sec:localfirst}
-All of the tools described in the previous section share a fundamental design decision: they play around a local-first model, in which the project state lives on a single workstation and the tool itself is a desktop application that must be installed and executed locally. While this model has historically been the norm in industrial automation tooling, it introduces a set of limitations that become problematic as \ac{CPPS} projects grow in scale and involve more distributed engineering teams.
-
-The most immediate consequence is the absence of real-time collaboration. When two engineers need to work on the same \textit{IEC 61499} application simultaneously, they must coordinate manually, typically by dividing the project into separate files or modules and merging their changes afterwards. Unlike regular text based code, \ac{FBD} programs are stored in structured data files, \textit{XML} usually, which makes version control systems like \textit{Git} not appropriate for collaboration in this standard \cite{seidl_collaborative_2018}.
-
-Local-first tools also require the \ac{IDE} to maintain awareness of the deployment target's state. Without a shared backend, each engineer must independently configure their local environment to point to the correct runtime endpoints and therefore there is no single source of truth for the current deployment state of the system.
-
-\section{Evolution of Web Based Tools}
-The software engineering domain has seen a massive shift from desktop \acp{IDE} to cloud based environments. This trend is now influencing the domain of \ac{ICS}, and while recent studies have proposed a \ac{SOA} to integrate \textit{IEC 61499} with cloud layers \cite{torres_literature_2025}, the engineering tools themselves remain still desktop bound.
-
-In general software development, tools like \textit{Visual Studio Code} have started offering web based counterparts to their desktop applications \cite{noauthor_vscode_nodate} in search of a more flexible user experience. Running entirely within the browser, these environments allow engineers to open, edit, and navigate codebases from any device without installation. They integrate naturally with cloud hosted codebases and \ac{CI} pipelines. In fact, newer development environments like \textit{Zed} make it a key goal of their products to have web platform support \cite{noauthor_zed_nodate}, treating browser delivery not as an afterthought but as a primary design constraint.
-
-Web based editors are also often easier to extend with real time collaboration because they operate within a network architecture, leverage standardised browser communication technologies such as WebSockets, provide uniform deployment through URLs, and naturally integrate with centralised synchronisation services. These characteristics reduce many of the distribution and interoperability challenges that desktop applications must address separately \cite{schmid_real-time_2014}.
-
-The move towards web based tooling is not limited to software development environments. Across a wide range of professional domains, browser-native applications have gradually replaced traditional desktop software. Collaborative document editors such as \textit{Google Docs} allow multiple users to edit the same document simultaneously, with changes synchronised in real time. Similarly, design and prototyping platforms such as \textit{Figma} have demonstrated that even complex graphical workflows can be delivered entirely through the browser while supporting collaboration and centralised asset management. Drawing tools like \textit{Excalidraw} and \textit{draw.io} further illustrate how browser based applications can provide sophisticated modelling and visualisation capabilities without requiring local installation, while providing live collaboration features that their desktop predecessors did not have.
-% TODO mention they use json underneath
-
-A common characteristic of these platforms is that they treat collaboration as an architectural design rather than an addon. By maintaining a shared representation of the artefact on a central service, users can concurrently make changes with minimal configuration. This contrasts with many traditional desktop applications, where collaboration often relies on exchanging files with separate version control and synchronisation mechanisms. As a result, web based tools have created a new expectation on collaboration.
-
-\section{Gap Analysis}
-Current \textit{IEC 61499} tools face significant limitations that hinder modern \ac{CPPS} development. These gaps paint a picture of an ecosystem that has matured in terms of standards compliance, but has lagged considerably in adapting to the workflows and expectations of contemporary engineering teams. The following points describe the most significant gaps:
-
-% TODO What other gaps?
-% TODO add references
 \begin{itemize}
-    \item \textbf{Platform Dependency:} Existing solutions are monolithic desktop applications, lacking the accessibility and portability that we have come to expect. Engineers are required to install and maintain native software on every machine from which they intend to work, creating friction at the start of projects and compounding over time as the team grows or its members change.
+  \item \textbf{Ease of setup}. Instead of each team member having to install a resource heavy program and set it up with the team's code and configurations, a single server is set up and the team members simply have to connect to it via their browser.
+  \item \textbf{Ease of deployment}. Only the server needs to be aware of all of the target \acp{RTE} and have connection to them. When a team member wants to deploy, the request will be routed through the server, acting as the middleware, removing the need for each development machine to have connection with the target \acp{RTE}.
+  \item \textbf{Real-time collaboration}. All data is kept and directly modified in the server itself, instead of requiring a periodic synchronisation system like \textit{git}. \ac{FBD} coded programs, since they are meant for visual editing, need to be stored in formats that don't easily handle merge conflicts. Real-time combats this by keeping track of atomic changes, instead of blocks of text. % TODO ref about git merge conflicts in these types of files
+  % TODO remote deployment
+\end{itemize}
+% TODO the state of the art needs to mention each of these
+% TODO mention 4diac will be used for comparision
 
-    \item \textbf{Absence of Real-Time Collaboration:} None of the existing tools provide support for real-time editing. Teams must rely on external version control systems and manual coordination to manage shared development, introducing overhead and increasing the risk of integration errors that would be avoided by a collaboration aware environment.
+\section{Approach}
+The approach is derived from functional and non-functional requirements extracted from the \textit{IEC 61499} standard, an analysis of existing tools and the gaps identified in the state of the art. Functional requirements include:
 
-    \item \textbf{Lack of a Centralised System State:} Since tools are local-first, there is no single representation of a system's current state. This makes it difficult to maintain a consistent view of the system across a distributed team to integrate the development environment into automated deployment and monitoring pipelines.
+% TODO remove all reqs
 
-    \item \textbf{Limited Accessibility:} Engineers cannot access a project without access to a fully configured workstation. This is a practical limitation in industrial settings, where on-site diagnosis of a running application may be necessary from a device in which no local tooling has been installed and the project is not set up.
+\begin{itemize}
+  \item Creation of function block types
+  \item Design of the event and data flow
+  \item Deployment to compliant \acp{RTE}
+  \item Real-time collaboration
 \end{itemize}
 
-Taken together, these gaps suggest that the ecosystem is well positioned to benefit from a lightweight, browser-accessible development environment that prioritises collaboration, low setup overhead, and integration with modern deployment workflows — without sacrificing the domain-specific features that \textit{IEC 61499} engineers depend on.
+Non-functional requirements should ensure that the solution does not reflect negatively when compared with \textit{4diac IDE} in some key aspects as well as bridge the gaps identified. These include:
+\begin{itemize}
+    \item Platform independence
+    \item Reduced setup complexity
+    \item Improved usability for distributed teams
+    \item Ease of extensibility for future improvements
+    \item The webpage should load in less than 2 seconds
+    \item Deployment should take just as long
+    \item Should be able to handle 100 users concurrently
+\end{itemize}
+
+The effectiveness of the approach is assessed through the implementation of a functional prototype and its direct comparison with current established \acp{IDE}, focusing on usability, accessibility and workflow efficiency. This evaluation demonstrates the feasibility of applying web based principles to \textit{IEC 61499} development and their potential benefits for distributed \acp{CPPS}.
+
+% TODO need to explain a lot more of what i want. like a whole page
+
+
+\section{System Architecture}
+The proposed system follows a centralised server architecture designed to support distributed \ac{CPPS} development. Instead of the \acp{IDE} having direct communication with the \acp{RTE}, the server acts as an intermediary, meaning all requests go through it and removing the need for direct device-level configuration on individual machines. Besides serving the frontend to the users, it also stores all data in a centralised database. The development pipeline therefore consists of the following three core components, organised as displayed in \Cref{fig:ide-server-rte}:
+\begin{itemize}
+    \item \textbf{Frontend \ac{IDE}}: A web interface for setting up and modelling the \textit{IEC 61499} applications.
+    \item \textbf{Server Middleware}: A centralised backend responsible for state management, collaboration and communication.
+    \item \textbf{\acp{RTE}}: External execution environments where the applications are deployed.
+\end{itemize}
+
+\begin{figure}[H]
+  \includegraphics[width=0.7\linewidth]{ide-server-rte.jpg}
+  \caption{Communication through the server}
+  \label{fig:ide-server-rte}
+\end{figure}
+
+% TODO talk more about server
+% TODO mention auth
+
+\subsection{Communication Model}
+Being the middleware, there are 4 different types of network communications that the server will need to handle, each with it's own requirements:
+
+\begin{itemize}
+  \item \textbf{Serve webpage}: Communicates via \textit{GET} requests to deliver the \textit{html}, \textit{css} and \textit{js} files that make up the \ac{IDE} interface.
+  \item \textbf{Real-Time Collaboration}: Frequent atomic updates whenever changes are made.
+  \item \textbf{Requested deployment}: A team member sends a \textit{POST} request, that tells the server to deploy.
+  \item \textbf{Deployment sockets}: Communicates via sockets with each \ac{RTE} to send commands and receive the corresponding responses.
+\end{itemize}
+
+% TODO more about communication
+
+\section{Real-Time Collaboration Model}
+A key requirement of the proposed system is support for concurrent editing of structured \textit{IEC 61499} programs. Real-time collaborative systems shift conflict management from the merge phase to the editing phase itself, all participants may operate on the shared artefact simultaneously, with the system responsible for converging divergent states automatically. To address this, the system adopts a \ac{CRDT} approach, enabling multiple users to edit shared application models simultaneously. Changes are propagated in real time and merged deterministically without conflicts.  Compared to \ac{OT} approaches, \acp{CRDT} provide a more suitable foundation for non linear structured data. Where in \ac{OT} a semantic state change needs to be expressed as a textual change at a specific offset, in \ac{CRDT} it keeps the semantic meaning \cite{kleppmann_conflict-free_2017}.
+
+The graph based structured data that in other \acp{IDE} would be stored as a conflict prone file in formats such as \textit{XML}, should instead be kept as individual fields. A change in a single element should prompt the \ac{CRDT} to only look into that specific field and not the document as a whole. The class diagram in \Cref{fig:uml} illustrates how the fields can be organised.
+
+
+
+\begin{figure}[H]
+  \includegraphics[width=0.8\linewidth]{uml.png}
+  \caption{Class diagram of the program's data}
+  \label{fig:uml}
+\end{figure}
+
+% TODO more details
+
+\section{Deployment Model}
+Deployment in the proposed system is based on a centralised orchestration model. The server translates the graphical application model into a sequence of deployment commands that are executed on target \acp{RTE}. This approach ensures consistent deployment across distributed environments while abstracting low level communication from the user. The deployment process follows the following conceptual stages:
+
+\begin{enumerate}
+    \item Synchronising the function block types across devices
+    \item Sending execution commands to the assigned \acp{RTE}
+    \item Start monitoring processes
+\end{enumerate}
+
+% TODO more details
+
+\section{Methods}
+This section describes the research methodology adopted to address the research questions defined in this dissertation. Given the practical and design-oriented nature of the problem, the methodology focuses on the design, implementation and evaluation of a piece of software. The chosen methods are appropriate for investigating how web-based technologies can enhance \textit{IEC 61499} development environments, as they allow both the realisation of a concrete solution and the systematic assessment of its capabilities relative to existing tools.
+
+% TODO the next subsections must be more detailed
+
+\subsection{Research Design}
+This research follows a design-oriented research approach. The core of the research consists of the design and implementation of a functional prototype of the solution. Rather than aiming for statistical generalisation, the study focuses on demonstrating feasibility and identifying qualitative improvements over existing environments. The prototype serves as a research artefact used to explore architectural decisions, usability considerations and workflow implications.
+
+\subsection{Evaluation}
+Evaluation is conducted through qualitative analysis and comparative assessment against established \textit{IEC 61499} \acp{IDE}. Criteria such as accessibility, usability, feature coverage and support for collaborative workflows are used to assess how effectively the proposed solution addresses the limitations identified in the literature and state of the art.
