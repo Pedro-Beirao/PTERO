@@ -32,43 +32,43 @@ classDiagram
 
 ```mermaid
 sequenceDiagram
-    IDE->>RTE: QUERY
-    RTE-->>IDE: OK
+    Server->>RTE: QUERY
+    RTE-->>Server: OK
 
     rect rgb(240,255,220)
         loop For each FB
-            IDE->>RTE: CREATE FB
+            Server->>RTE: CREATE FB
             Note right of RTE: Create Function Blocks and initialise inputs
-            RTE-->>IDE: OK
+            RTE-->>Server: OK
         end
 
 
         loop For each Connection
-            IDE->>RTE: CREATE Connection
+            Server->>RTE: CREATE Connection
             Note right of RTE: Create Connections between Function Blocks
-            RTE-->>IDE: OK
+            RTE-->>Server: OK
         end
     end
 
-    IDE->>RTE: START
-    RTE-->>IDE: OK
+    Server->>RTE: START
+    RTE-->>Server: OK
 ```
 
 ```mermaid
 sequenceDiagram
     rect rgb(240,255,220)
         loop For each Watch
-            IDE->>RTE: CREATE Watch
+            Server->>RTE: CREATE Watch
             Note right of RTE: Create Watches
-            RTE-->>IDE: OK
+            RTE-->>Server: OK
         end
     end
 
     rect rgb(220, 240, 255)
         loop
-            IDE->>RTE: Request Watches
+            Server->>RTE: Request Watches
             Note right of RTE: Retrieve Watch values
-            RTE-->>IDE: Watch values
+            RTE-->>Server: Watch values
         end
     end
 ```

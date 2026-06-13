@@ -8,12 +8,16 @@ The main reason to propose using web technologies is to solve the issues that af
 
 \begin{itemize}
   \item \textbf{Ease of setup}. Instead of each team member having to install a resource heavy program and set it up with the team's code and configurations, a single server is set up and the team members simply have to connect to it via their browser.
+
   \item \textbf{Ease of deployment}. Only the server needs to be aware of all of the target \acp{RTE} and have connection to them. When a team member wants to deploy, the request will be routed through the server, acting as the middleware, removing the need for each development machine to have connection with the target \acp{RTE}.
-  \item \textbf{Real-time collaboration}. All data is kept and directly modified in the server itself, instead of requiring a periodic synchronisation system like \textit{git}. \ac{FBD} coded programs, since they are meant for visual editing, need to be stored in formats that don't easily handle merge conflicts. Real-time combats this by keeping track of atomic changes, instead of blocks of text. % TODO ref about git merge conflicts in these types of files
+
+  \item \textbf{Improved collaboration}. A real-time collaboration aware system that keeps track of atomic changes, instead of blocks of text, reducing the integration integration error associated with version control systems on structured data.
+
   % TODO remote deployment
 \end{itemize}
 % TODO the state of the art needs to mention each of these
 % TODO mention 4diac will be used for comparision
+% TODO better coupling with the gaps
 
 \section{Approach}
 The approach is derived from functional and non-functional requirements extracted from the \textit{IEC 61499} standard, an analysis of existing tools and the gaps identified in the state of the art. Functional requirements include:
