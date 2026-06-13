@@ -44,7 +44,7 @@ The most prominent open source implementation is the \textit{4diac IDE} (based o
 
 \citeauthor{zoitl_developing_2013} \cite{zoitl_developing_2013} demonstrated the use of \textit{4diac IDE} to develop modular and reusable \textit{IEC 61499} applications, highlighting the benefits of flexibility and adaptability in industrial settings. The paper provides a practical perspective on the strengths and limitations of this \ac{IDE}.
 
-An alternative is \textit{FBME} which is a much simpler modelling environment based on the \textit{JetBrains MPS} language workbench. The main contribution of this work is the research on applying model driven development principles on the architecture of the \ac{IDE} itself \cite{sorokin_novel_2022}, resulting in a very modular and extensible product.
+An alternative is \textit{FBME}, which is a much simpler modelling environment based on the \textit{JetBrains MPS} language workbench. This \ac{IDE} implements \textit{IEC 61499} concepts through a set of integrated \acp{DSL}. The main contribution of this work is the research on applying model-driven development principles to the architecture of the \ac{IDE} itself \cite{sorokin_novel_2022}, resulting in a very modular and extensible product.
 
 \subsection{Commercial}
 The commercial side is occupied by \textit{EcoStruxure Automation Expert}, \textit{ISaGRAF Workbench} \cite{vyatkin_comparisons_2008} and other development environments that usually have their own built-in proprietary \ac{RTE}. This tight coupling between the engineering tool and the runtime gives commercial vendors significant control over the end development experience, which typically results in polished, production-ready tooling with strong vendor support. However, it also introduces considerable lock-in: projects developed in one commercial environment are not easily portable to a different runtime or \ac{IDE} and the proprietary nature of the underlying \ac{RTE} limits the ability to inspect, extend, or adapt behaviour.
@@ -74,6 +74,8 @@ The move towards web based tooling is not limited to software development enviro
 A common characteristic of these platforms is that they treat collaboration as an architectural design rather than an addon. By maintaining a shared representation of the artefact on a central service, users can concurrently make changes with minimal configuration. This contrasts with many traditional desktop applications, where collaboration often relies on exchanging files with separate version control and synchronisation mechanisms. As a result, web based tools have created a new expectation on collaboration.
 
 Some studies explore remote web based execution and editing of \ac{FBD}. \citeauthor{rohat_remote_2014} \cite{rohat_remote_2014} proposed an early approach to remote monitoring and interaction with \textit{IEC 61499} applications through a web interface, identifying the practical benefits of browser access in distributed industrial settings. While the work predates many modern web technologies, it established the motivation for moving development and monitoring capabilities to the browser. More recently, \citeauthor{lyu_towards_2024} \cite{lyu_towards_2024} revisited this direction by proposing fully remote cloud based platform for \textit{IEC 61499} development, embedding \textit{EcoStruxure AE} in a frontend web interface. This way they were able to move all the processing into a centralised cloud platform.
+
+More generally, \citeauthor{sorokin_towards_2023} \cite{sorokin_towards_2023} proposes a new architecture for the development of web-based \ac{DSL} tools, grazing on the field of of \textit{IEC 61499} engineering by using \textit{FBME} as an example of how it can be migrated into a distributed collaborative web environment. While this paper does not provide the groundwork and validation necessary for the development of specifically a \textit{IEC 61499} tool, it does provide good general insights of how its architecture could be designed.
 
 \section{Comparative Analysis and Research Gap}
 % TODO intro
@@ -105,14 +107,18 @@ ISaGRAF Workbench \cite{vyatkin_comparisons_2008}
   & Commercial & Desktop
   & \cno & \cno
   & Licensing model \\[6pt]
-Rohat et al.\ \cite{rohat_remote_2014}
+\citeauthor{rohat_remote_2014}\ \cite{rohat_remote_2014}
   & Proposal & Web (monitoring only)
   & \cyes & \cno
   & No remote modelling capabilities \\[6pt]
-Lyu et al.\ \cite{lyu_towards_2024}
+\citeauthor{lyu_towards_2024}\ \cite{lyu_towards_2024}
   & Proposal & Web (embedded desktop IDE)
   & \cyes & \cno
   & Does not take advantage of web technologies for the modelling tool \\
+\citeauthor{sorokin_towards_2023}\ \cite{sorokin_towards_2023}
+  & Proposal & Web
+  & \cyes & \cyes
+  & Designs a general architecture for creating web \ac{DSL} tooling  \\
 PTERO\
   & New Proposal & Web
   & \cyes & \cyes
@@ -121,11 +127,6 @@ PTERO\
 \end{tabular}%
 }
 \end{table}
-
-
-
-
-
 
 Current \textit{IEC 61499} tools face significant limitations that hinder modern \ac{CPPS} development. These gaps paint a picture of an ecosystem that has matured in terms of standards compliance, but has lagged considerably in adapting to the workflows and expectations of contemporary engineering teams. The following points describe the most significant gaps:
 
