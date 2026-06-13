@@ -24,7 +24,7 @@ By default, \textit{DINASORE} uses the port \textit{61499} to receive commands f
 % TODO talk about changes made to DINASORE
 
 \section{Server}
-The design begins by setting up a server that will serve the \ac{IDE} interface as a webpage, store and manage all the data and handle communication with the \acp{RTE}. Taking into account the features we plan on implementing, \textit{JavaScript} running on \textit{Node.js} were chosen due to the extensive library ecosystem. For real-time collaboration we will need a library to run in both the server and the frontend, since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
+The design begins by setting up a server that will serve the \ac{IDE} interface as a webpage, store and manage all the data and handle communication with the \acp{RTE}. Taking into account the features that are planned, \textit{JavaScript} running on \textit{Node.js} were chosen due to the extensive library ecosystem. For real-time collaboration a library will be required to run in both the server and the frontend, since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
 
 % TODO mention implementation of database and more about server
 
@@ -35,7 +35,7 @@ The frontend is the \ac{UI} that will be used to create and modify the \ac{FBD} 
 Each subsection will first explain and describe what an \ac{IDE} should implement and follow by showing how the prototype solved the proposed requirements.
 
 \subsection{Devices Configuration View}
-In the interest of distributed \acp{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so we need a clean way to define the resources that are available. Both the \textit{DINASORE} port and the \textit{SSH} port need to be defined for each defined since deployment communication will be made through both.
+In the interest of distributed \acp{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so a clean way to define the resources that are available is needed. Both the \textit{DINASORE} port and the \textit{SSH} port need to be defined for each defined since deployment communication will be made through both.
 % TODO need to mention sync
 % TODO something more
 
@@ -173,7 +173,7 @@ The graph structure representing the \ac{FBD} application is synchronised throug
 The deployment process is responsible for taking the application defined in the \textit{Graph View} and bringing it to life across the configured \textit{DINASORE} instances. It is broken down into a sequence of steps, each of which is described in the following subsections.
 
 \subsection{Synchronise with DINASOREs}
-The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this we can use the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration file needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. The server must have a valid \textit{SSH} connection with each device in order to connect and send the files.
+The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this the system can make use of the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration file needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. The server must have a valid \textit{SSH} connection with each device in order to connect and send the files.
 
 % First, \texttt{master-fbs-path} dictates where in the server filesystem the function block files that will be sent are located, then an array of \texttt{dinasores} with the configurations defined in the \textit{Devices Configuration View}. The \texttt{port} used here will be the \textit{SSH} port, the \textit{DINASORE} must have an open \textit{SSH} channel that the server is able to connect to via this port. This file is generated from the configured fields in the \textit{Devices Configuration View}. When the script is ran, it will read the contents of this file in order to connect and send the files to each \textit{DINASORE}.
 
@@ -183,7 +183,7 @@ The first step is to ensure that each \textit{DINASORE} instance has access to t
 Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these messages are issued is important, as connections can only be established between existing nodes. The following two subsections describe how the messages are constructed and what they contain.
 
 \subsubsection{Build messages}
-Before the messages can be sent, they need to be built into the format that \textit{DINASORE} is expecting. It consists of a two part message: the first part refers to the configuration name, which by default we will use \textit{EMB\_RES}, while the second is the actual message payload containing the wanted command. Each of these parts are preceded by a 3-byte header composed of a \texttt{0x50} byte followed by 2 bytes indicating the size of the corresponding content. A representation of this format is presented in \Cref{fig:build-message}.
+Before the messages can be sent, they need to be built into the format that \textit{DINASORE} is expecting. It consists of a two part message: the first part refers to the configuration name, which by default will be \textit{EMB\_RES}, while the second is the actual message payload containing the wanted command. Each of these parts are preceded by a 3-byte header composed of a \texttt{0x50} byte followed by 2 bytes indicating the size of the corresponding content. A representation of this format is presented in \Cref{fig:build-message}.
 
 \begin{figure}[H]
   \includegraphics[width=0.9\linewidth]{build-message.png}
@@ -213,7 +213,7 @@ To give the team visibility into the deployment process right from the \ac{IDE},
 % TODO add listing with logs?
 
 \subsection{Watch}
-Once the application is running, the values of the node outputs are continuously retrieved from the \textit{DINASORE} instances and displayed in the \textit{Graph View}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development. In order to get these values, the \ac{IDE} must tell the \textit{DINASORE} instances which output slots it wants to watch and then request the values. In this prototype, for simplicity, all data outputs are watched and we need to send a watch creation request for each.
+Once the application is running, the values of the node outputs are continuously retrieved from the \textit{DINASORE} instances and displayed in the \textit{Graph View}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development. In order to get these values, the \ac{IDE} must tell the \textit{DINASORE} instances which output slots it wants to watch and then request the values. In this prototype, for simplicity, all data outputs are watched and a watch creation request must be sent for each.
 
 \Cref{fig:sequence-watch} represents the sequence that the messages need to be sent. Details about these requests and the associated responses can be found in \Cref{app:watch}. When the watch values are retrieved, they are displayed in the right side of the corresponding output slots, demonstrated in \Cref{fig:display-watch}.
 

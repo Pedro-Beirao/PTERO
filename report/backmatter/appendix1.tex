@@ -117,7 +117,7 @@ function build_message(message_payload, configuration_name) {
 \end{lstlisting}
 
 \section{Send Messages} \label{app:send-messages}
-First we need to send the two commands in \Cref{lst:deploy-setup} to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
+First, the two commands in \Cref{lst:deploy-setup} need to be sent to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
 
 \begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-setup}]
 <Request Action="QUERY" ID="0">
@@ -129,7 +129,7 @@ First we need to send the two commands in \Cref{lst:deploy-setup} to every devic
 </Request>
 \end{lstlisting}
 
-Next, depending on which commands are mapped to each machine, we \texttt{CREATE} all the mapped nodes and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}. The configuration name in these and all following commands will be "\textit{EMB\_RES}" as they need to be bound to it in order to be initialised and ran.
+Next, depending on which nodes are mapped to each machine, it needs to \texttt{CREATE} all the mapped nodes and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}. The configuration name in these and all following commands will be "\textit{EMB\_RES}" as they need to be bound to it in order to be initialised and ran.
 
 \begin{lstlisting}[language=XML, caption={\texttt{CREATE} nodes deployment commands}, label={lst:deploy-create-nodes}]
 <Request Action="CREATE" ID="2">
@@ -186,7 +186,7 @@ Note in \Cref{lst:deploy-create-watch} that the \texttt{ID} is reset after deplo
 </Request>
 \end{lstlisting}
 
-After creating the watches we can send a request to receive the values using the command in \Cref{lst:deploy-read-watch}. This will return the response in \Cref{lst:deploy-watch}, which by parsing the values, allows the prototype to display them in the \textit{Graph View}.
+After creating the watches, request can be sent in order to receive the watch values using the command in \Cref{lst:deploy-read-watch}. This will return the response in \Cref{lst:deploy-watch}, which by parsing the values, allows the prototype to display them in the \textit{Graph View}.
 
 \begin{lstlisting}[language=XML, caption={Request to \texttt{READ} watches}, label={lst:deploy-read-watch}]
 <Request ID="2" Action="READ">
