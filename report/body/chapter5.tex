@@ -1,10 +1,5 @@
 \chapter{Validation}
-The purpose of this chapter is to evaluate whether the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified. The evaluation combines objective measurements of system behaviour with subjective feedback collected from users. Together, these perspectives provide a comprehensive assessment of the prototype's effectiveness as an \textit{IEC 61499} development environment.
-
-The evaluation is organised into five complementary areas. Functional validation verifies that the prototype correctly supports the modelling, deployment and monitoring of \textit{IEC 61499} applications. Performance evaluation analyses workflow efficiency and compares key tasks against existing tools. Collaboration evaluation examines the benefits of the real-time collaborative architecture and contrasts it with traditional version control workflows. Usability evaluation focuses on user perception and experience, including a study of existing \textit{IEC 61499} tooling. Finally, the results are discussed in the context of the research objectives and identified limitations.
-
-\section{Evaluation Goals}
-The evaluation aims to answer the following questions:
+The purpose of this chapter is to evaluate whether the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified. The evaluation combines objective measurements of system behaviour with subjective feedback collected from users. Together, these perspectives provide a comprehensive assessment of the prototype's effectiveness as an \textit{IEC 61499} development environment. The following questions are to be answered by this evaluation:
 
 \begin{enumerate}
 \item Can the proposed solution successfully support the complete development workflow of an \textit{IEC 61499} application?
@@ -13,7 +8,7 @@ The evaluation aims to answer the following questions:
 \item Do users perceive the proposed solution as accessible, easy to use and an improvement over previous solutions?
 \end{enumerate}
 
-To address these questions, the evaluation combined both quantitative and qualitative methods, assessing objective performance characteristics alongside subjective user experience.
+To address these questions, the evaluation combined both quantitative and qualitative methods, assessing objective performance characteristics alongside subjective user experience. Five complementary areas make up this validation. Functional validation verifies that the prototype correctly supports the modelling, deployment and monitoring of \textit{IEC 61499} applications. Performance evaluation analyses workflow efficiency and compares key tasks against existing tools. Collaboration evaluation examines the benefits of the real-time collaborative architecture and contrasts it with traditional version control workflows. Usability evaluation focuses on user perception and experience, including a study of existing \textit{IEC 61499} tooling. Finally, the results are discussed in the context of the research objectives and identified limitations.
 
 \section{Experimental Setup} \label{sec:experimental-setup}
 A common test application was used throughout the validation process. The same application was implemented using both \textit{PTERO} and \textit{4diac IDE}, allowing direct comparison between environments.
@@ -22,15 +17,14 @@ A common test application was used throughout the validation process. The same a
 The following hardware devices were available and used throughout the evaluation phase of this work:
 
 \begin{enumerate}
-\item \textbf{M1 MacBook Pro} (16GB RAM, 2020): This machine served as the primary development and testing platform for \textit{PTERO}. Being the development machine, it hosted the local development server during iterative testing cycles and was used to evaluate the responsiveness of the collaborative editing interface, the correctness of graph synchronisation and the performance of the \textit{Yjs} based real-time collaboration layer under local conditions.
+\item \textbf{M1 MacBook Pro} (16GB RAM, 2020, macOS 26): This machine served as the primary development and testing platform for \textit{PTERO}. Being the development machine, it hosted the local development server during iterative testing cycles and was used to evaluate the responsiveness of the collaborative editing interface, the correctness of graph synchronisation and the performance of the \textit{Yjs} based real-time collaboration layer under local conditions.
 
-\item \textbf{ASUS TUF Gaming F16} (32GB RAM, 2024): This machine was employed primarily for evaluating the performance of \textit{4diac IDE}.
+\item \textbf{ASUS TUF Gaming F16} (32GB RAM, 2024, Windows 11): This machine was employed primarily for evaluating the performance of \textit{4diac IDE}.
 
-\item \textbf{Raspberry Pi 3} (1GB RAM): This device acted as a permanently running, remotely accessible server throughout the evaluation period. It hosted a persistent instance of the \textit{PTERO} server as well as an instance of \textit{DINASORE}. Its limited memory and processing capacity made it the most representative of real-world target environments and its inclusion in the testing structure was instrumental in establishing the practical boundaries of the collaboration server.
+\item \textbf{Raspberry Pi 3} (1GB RAM, Raspberry Pi OS): This device acted as a permanently running, remotely accessible server throughout the evaluation period. It hosted a persistent instance of the \textit{PTERO} server as well as an instance of \textit{DINASORE}. Its limited memory and processing capacity made it the most representative of real-world target environments and its inclusion in the testing structure was instrumental in establishing the practical boundaries of the collaboration server.
 \end{enumerate}
 
 \subsection{Available Resources}
-
 The following resources were made available in the testing environments:
 
 \begin{itemize}
@@ -52,143 +46,126 @@ The application shown in \Cref{fig:test-program} was implemented and deployed du
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\linewidth]{test-program.jpg}
-\caption{Test application used during validation}
+\caption{Test application implemented in \textit{4diac IDE}}
 \label{fig:test-program}
 \end{figure}
 
 \subsection{Expected Behaviour}
-
-After deployment, the application should execute correctly on the target \textit{DINASORE} instance and continuously produce output values. These values should be observable through the monitoring facilities provided by the \ac{IDE}.
-
-\section{Evaluation Metrics}
-The evaluation combines both objective and subjective metrics.
-
-\subsection{Performance Metrics}
-Performance evaluation considers:
-
-\begin{itemize}
-\item Installation complexity
-\item Startup time
-\item Number of manual configuration steps
-\item Deployment workflow complexity
-\end{itemize}
-
-\subsection{Collaboration Metrics}
-Collaboration capabilities are evaluated through:
-
-\begin{itemize}
-\item Support for concurrent editing
-\item Conflict handling mechanisms
-\item Need for manual synchronisation
-\end{itemize}
-
-\subsection{Usability Metrics}
-Usability is assessed through user questionnaires based on:
-
-\begin{itemize}
-\item Perceived task difficulty
-\item Interface intuitiveness
-\item User satisfaction
-\item Open ended qualitative feedback
-\end{itemize}
+After deployment, the application should execute correctly on the target \textit{DINASORE} instance and continuously produce output values. These values should be observable through the monitoring capabilities provided by the \ac{IDE}.
 
 \section{Functional Validation}
-\textit{PTERO} was subjected to functional tests to confirm that all core features behave as specified. It was tested by implementing and deploying the test program defined in \Cref{sec:experimental-setup}. As a control, the same was performed in \textit{4diac IDE}. The steps taken were as follows:
+\textit{PTERO} was subjected to functional tests to confirm that all core features behave as specified. It was tested by implementing and deploying the test program defined in \Cref{sec:experimental-setup}. As a control, the same was performed in \textit{4diac IDE}. The steps taken are described in \Cref{tab:workflow-comparison}.
 
 % TODO which hardware (probably dont need to mention)
 
-\begin{enumerate}
-\item \textbf{Configured available \textit{DINASORE}}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: In the \textit{System Configuration} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, then connected it to the \textit{Ethernet} tunnel.
-  \item \textbf{PTERO}: In the \textit{Config} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, as well as the SSH details of the device which will be used to sync the function blocks files.
-  \end{itemize}
+\begin{longtable}{p{2.5cm}p{6cm}p{5.5cm}}
+\caption{Workflow Comparison Between \textit{4diac IDE} and \textit{PTERO}} \label{tab:workflow-comparison} \\
+\hline
+\textbf{Step} & \textbf{4diac IDE} & \textbf{PTERO} \\ \hline
+\endhead
 
-\item \textbf{Imported the function block files}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Copied and pasted the given files to \texttt{4diac-ide/typelibrary/}.
-  \item \textbf{PTERO}: Copied and pasted the given files in the \textit{Function Blocks} tab.
-  \end{itemize}
+\hline
+\multicolumn{3}{r}{\textit{Continued on next page}} \\
+\endfoot
+\hline
+\endfoot
+\endlastfoot
 
-\item \textbf{Designed the flow}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: In the \textit{App View}, dragged and dropped the wanted function blocks, then connected the event and data slots. Double-clicked input slots to assign input value.
-  \item \textbf{PTERO}: In the \textit{Graph} tab, right-clicked and selected the wanted function blocks to add them, then connected the event and data slots. Right-clicked nodes to assign input value.
-  \end{itemize}
+\textbf{Configured available \textit{DINASORE}} &
+In the \textit{System Configuration} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, then connected it to the \textit{Ethernet} tunnel. &
+In the \textit{Config} tab, added a device and set its IP address and the port where \textit{DINASORE} is running, as well as the SSH details of the device which will be used to sync the function blocks files. \\ \hline
 
-\item \textbf{Mapped to \textit{DINASORE}}
-  \begin{itemize}
-  \item \textbf{Both}: Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to.
-  \end{itemize}
+\textbf{Imported the function block files} &
+Copied and pasted the given files to \texttt{4diac-ide/typelibrary/}. &
+Copied and pasted the given files in the \textit{Function Blocks} tab. \\ \hline
 
-\item \textbf{Synced files with \textit{DINASORE}}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Called the \texttt{synchronize.py} manually, feeding it the needed SSH details.
-  \item \textbf{PTERO}: This was done automatically and without any needed setup when deploying.
-  \end{itemize}
+\textbf{Designed the flow} &
+In the \textit{App View}, dragged and dropped the wanted function blocks, then connected the event and data slots. Double-clicked input slots to assign input value. &
+In the \textit{Graph} tab, right-clicked and selected the wanted function blocks to add them, then connected the event and data slots. Right-clicked nodes to assign input value. \\ \hline
 
-\item \textbf{Deployed}
-  \begin{itemize}
-  \item \textbf{Both}: Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console.
-  \end{itemize}
+\textbf{Mapped to \textit{DINASORE}} &
+Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to. &
+Right-clicked nodes to map them to the device. They became color coded to show which device they were mapped to. \\ \hline
 
-\item \textbf{Monitored the output}
-  \begin{itemize}
-  \item \textbf{Both}: The values were displayed on the right side of the output data slots.
-  \end{itemize}
-\end{enumerate}
+\textbf{Synced files with \textit{DINASORE}} &
+Called the \texttt{synchronize.py} manually, feeding it the needed SSH details. &
+This was done automatically and without any needed setup when deploying. \\ \hline
+
+\textbf{Deployed} &
+Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console. &
+Pressed the \textit{Deploy} button. The sent commands and associated responses were displayed in a console. \\ \hline
+
+\textbf{Monitored the output} &
+The values were displayed on the right side of the output data slots. &
+The values were displayed on the right side of the output data slots. \\ \hline
+
+\end{longtable}
 
 Besides verifying that the output values are being monitored correctly, following the \textit{Deployed} step, the commands displayed in the console were directly compared between \acp{IDE}. It was verified that both were sending exactly the same commands, the headers as well as the contents were exactly the same and the responses were no different. These results confirmed that the prototype correctly handles the development of \textit{IEC 61499} programs.
 
 While the two workflows are broadly equivalent in the number of steps required, they differ in several procedural details. Configuring a device in \textit{PTERO} requires additional SSH credentials upfront, a step absent in \textit{4diac IDE}, however, this overhead is offset later in the workflow, as file synchronisation with \textit{DINASORE} is a manual command line operation in \textit{4diac IDE}, while it is handled automatically by \textit{PTERO} at deploy time. Similarly, importing function block files is more straightforward in \textit{PTERO}, which accepts files directly through the interface, whereas \textit{4diac IDE} requires manual placement into a specific directory in the filesystem. These differences reflect a deliberate design philosophy in \textit{PTERO} of consolidating configuration complexity into the tool itself.
 
 \section{Performance Evaluation}
-This solution not only aims to be able to do the same workload as \textit{4diac IDE}, but also have capabilities and an inherent design that justify its existence. Therefore, this section compares the performance of several real world tasks between the \acp{IDE}. The listed tasks are the ones that demonstrated to be significantly different between solutions, others were analysed but proved to not be worth the discussion.
+This solution not only aims to execute the same core workloads as \textit{4diac IDE}, but also introduces architectural capabilities and design choices that justify its development. To assess its efficacy, the system's performance is evaluated against four primary metrics:
 
 \begin{itemize}
-\item \textbf{Install}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Install a desktop app. There is no compatible version for macOS that supports \textit{DINASORE}.
-  \item \textbf{PTERO}: Install a \textit{Node.js} server. By working in a web browser, it is crossplatform without much development effort, which allows macOS users to use it. The downside is that it is not as straightforward to install for just local development.
-  \end{itemize}
-
-\item \textbf{Open}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Average of 4 seconds to boot the application in the \textit{ASUS TUF Gaming F16}. The startup overhead is inherent to the \textit{Eclipse} based desktop architecture underlying this tool.
-  \item \textbf{PTERO}: Average of less than a second to load webpage. The use of lightweight libraries and the move of heavy workloads to the server allow the page to load in an instant.
-  \end{itemize}
-
-\item \textbf{Create and edit function block files}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: While it does have a way to create and edit the \textit{.fbt} files inside the application, there is no built in \textit{Python} text editor.
-  \item \textbf{PTERO}: Has a text editor for both types of files.
-  \end{itemize}
-
-\item \textbf{Collaboration}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: An external periodic version control system like \textit{Git} needs to be used. Structured data in formats like \textit{XML} is not handled properly by these types of version control system, which results in frequent merge conflicts \cite{axelsson_version_2015}. The following test was conducted:
-    \begin{enumerate}
-    \item A project has a graph with 1 function block added. 2 users are working on the graph.
-    \item User \#1 deletes the function block.
-    \item User \#2 modifies the position of the function block.
-    \item User \#1 commits and pushes.
-    \item User \#2 tries to pull the changes but gets a merge conflict
-    \end{enumerate}
-  \item \textbf{PTERO}: Has a realtime collaboration system. Any change made is immediately propagated to every client and resolved by a \ac{CRDT}, ensuring no conflicts need to be handled manually and damage is minimised.
-  \end{itemize}
-
-\item \textbf{Synchronising files with the \textit{DINASOREs}}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Required to manually use an external script before deployment.
-  \item \textbf{PTERO}: The server itself will connect and synchronise the files with the \textit{DINASOREs}. This happens automatically when attempting to deploy, ensuring that deployments never fail due to the human error of forgetting to sync the files.
-  \end{itemize}
-
-\item \textbf{Remote deployment}
-  \begin{itemize}
-  \item \textbf{4diac IDE}: Every \ac{IDE} must have a valid connection with each available \textit{DINASORE}, as well as \textit{SSH} access. This gets increasingly complicated if the user wants to make a deployment while in a different network.
-  \item \textbf{PTERO}: By having the server as the middleware, only it must be exposed for the users to connect. With only the server permanently having direct connection with the \textit{DINASORE} devices, no individual handling is needed.
-  \end{itemize}
+    \item \textbf{Installation Complexity}: The technical overhead and environmental constraints required to set up the development environment.
+    \item \textbf{Startup Latency}: The temporal duration from initialisation to full operational readiness.
+    \item \textbf{Configuration Overhead}: The number of manual steps required to configure the system.
+    \item \textbf{Deployment Flexibility}: The flexibility that the deployment system allows.
 \end{itemize}
+
+Taking these metrics into account, each step of development was tested and compared. The listed tasks in \Cref{tab:performance-evaluation} are the ones that demonstrated to be significantly different between solutions, others were analysed but proved to not be worth the discussion.
+
+\begin{longtable}{p{2.5cm}p{6cm}p{5.5cm}}
+\caption{Performance Evaluation comparison} \label{tab:performance-evaluation} \\
+\hline
+\textbf{Task} & \textbf{4diac IDE} & \textbf{PTERO} \\ \hline
+\endhead
+
+\hline
+\multicolumn{3}{r}{\textit{Continued on next page}} \\
+\endfoot
+\hline
+\endfoot
+\endlastfoot
+
+\textbf{Install} &
+Installed the desktop app. There was no compatible version for macOS that supports \textit{DINASORE} \cite{noauthor_digi2-feupdinasore_2026}. &
+Installed a \textit{Node.js} server and ran command line commands to set it up. Worked in all three major operating systems tested. \\ \hline
+
+\textbf{Open} &
+Average of 4 seconds to boot the application in the \textit{ASUS TUF Gaming F16}. The startup overhead is inherent to the \textit{Eclipse} based desktop architecture underlying this tool. &
+Average of less than a second to load webpage. The use of lightweight libraries and the move of heavy workloads to the server allow the page to load in an instant. \\ \hline
+
+\textbf{Create and edit function block files} &
+While it does have a way to create and edit the \textit{.fbt} files inside the application, there is no built in \textit{Python} text editor. &
+Has a text editor for both types of files. \\ \hline
+
+\textbf{Collaboration} &
+An external periodic version control system like \textit{Git} needed to be used. Structured data in formats like \textit{XML} is not handled properly by these types of version control system, which results in frequent merge conflicts \cite{axelsson_version_2015}. The following test was conducted:
+\begin{enumerate}[leftmargin=*,nosep]
+\item A project has a graph with 1 function block added. 2 users are working on the graph.
+\item User \#1 deletes the function block.
+\item User \#2 modifies the position of the function block.
+\item User \#1 commits and pushes.
+\item User \#2 tries to pull the changes but gets a merge conflict.
+\end{enumerate} &
+Has a realtime collaboration system. Any change made was immediately propagated to every client and resolved by the \ac{CRDT}, ensuring no conflicts needed to be handled manually and damage is minimised. \\ \hline
+
+\textbf{Synchronising files with the \textit{DINASOREs}} &
+Required to manually use an external script before deployment. &
+The server itself connected and synchronised the files with the \textit{DINASOREs}. This happens automatically when attempting to deploy, ensuring that deployments never fail due to the human error of forgetting to sync the files. \\ \hline
+
+\textbf{Remote deployment} &
+Every \ac{IDE} needed to have a valid connection with each available \textit{DINASORE}, as well as \textit{SSH} access. This would be increasingly complicated if the user wanted to make a deployment while in a different network. &
+By having the server as the middleware, only it was exposed for the users to connect to. With only the server permanently having direct connection with the \textit{DINASORE} devices, no individual handling was needed. \\ \hline
+
+\end{longtable}
+
+The \textbf{Install} and \textbf{Open} tasks evaluated installation complexity and startup latency. While \textit{4diac IDE} offers a straightforward local desktop installer, \textit{PTERO} trades this for a one-time backend setup that guarantees universal cross-platform access via standard web browsers. Furthermore, by offloading computationally heavy operations to the backend, \textit{PTERO} reduced client-side startup latency from 4 seconds down to under 1 second, fulfilling the objective for immediate operational readiness.
+
+The remaining tasks evaluated configuration overhead and deployment flexibility. \textit{4diac IDE} introduced operational friction by requiring external text editors for script writing, manual script execution for synchronisation and asynchronous version control operations. It also requires complex network setups since every engineering workstation must maintain individual direct connections to each target \ac{RTE}. Conversely, \textit{PTERO} minimizes configuration overhead by unifying file editing, automating file synchronisation and introducing the concept a \ac{CRDT}. By utilising the server as a middleware, \textit{PTERO} dramatically improved deployment flexibility, as clients only need to authenticate with the centralised server, not the \acp{RTE}.
 
 % TODO actual time measures (deployment time, sync latency, scalability)
 
@@ -196,18 +173,11 @@ This solution not only aims to be able to do the same workload as \textit{4diac 
 
 % TODO talk on the improvements
 
-% One of the concrete objectives of this work was to deliver a solution that is meaningfully faster than the approach it replaces. To verify this, [describe your measurement approach --- e.g. task completion time, API response time, load time] was measured under controlled conditions and compared against [the baseline --- e.g. the previous tool, manual process, or benchmark].
-
-% The prototype achieved [X result], representing a [Y\%] improvement over the baseline. These results confirm that the solution delivers a tangible gain in [speed / efficiency / throughput], directly addressing one of the core gaps motivating this work.
-
-% TODO table with pros and cons of each
-
 
 \section{Collaboration Evaluation}
 % TODO extract from previous section and add (multi-user editing; consistency; conflict resolution)
-% TODO need to test
 
-\Citeauthor{cimiano_yjs_2015} claim that \textit{Yjs} is able to handle an average of 100 actions per millisecond \cite{cimiano_yjs_2015} which is obviously good enough for this use case, as it does not require millisecond precision. Taking connection with the remote server into account, a test was devised to understand how well the \textit{Raspberry Pi} could handle multiple users at the same time. A script was created that initialised a set number of clients, connected them to the remote server and sent a change that would get propagated across the clients. By measuring the time that would take for the clients to receive the change, the chart in \Cref{fig:yjs-performance} was obtained. The results demonstrated that even a resource constrained machine accessed over a network can serve as an adequate collaboration server for a small team, however, the \textit{Raspberry Pi} deployment was found to be unsuitable beyond approximately 240 simultaneous clients, at which point the hardware prevented additional connections from being established reliably.
+\Citeauthor{cimiano_yjs_2015} \cite{cimiano_yjs_2015} establish that \textit{Yjs} is able to handle an average of 100 actions per millisecond which is obviously good enough for this use case, as it does not require millisecond precision. Taking connection with the remote server into account, a test was devised to understand how well the \textit{Raspberry Pi} could handle multiple users at the same time. A script was created that initialised a set number of clients, connected them to the remote server and sent a change that would get propagated across the clients. By measuring the time that would take for the clients to receive the change, the chart in \Cref{fig:yjs-performance} was obtained. The results demonstrated that even a resource constrained machine accessed over a network can serve as an adequate collaboration server for a small team, however, the \textit{Raspberry Pi} deployment was found to be unsuitable beyond approximately 240 simultaneous clients, at which point the hardware prevented additional connections from being established reliably.
 
 \begin{figure}[H]
   \includegraphics[width=0.8\linewidth]{yjs-performance.png}
@@ -215,7 +185,9 @@ This solution not only aims to be able to do the same workload as \textit{4diac 
   \label{fig:yjs-performance}
 \end{figure}
 
-The same test was performed with a server running on the \textit{M1 MacBook Pro} and the clients also in the same machine, removing any delay resulting from network delay and in a much more powerful machine. It was possible to connect 3000 clients with an average propagation time of 65 ms and a P95 of 221 ms, proving that if there is a need for hundreds of clients to be connected at once, the solution is able to scale with the hardware to accommodate it.
+The same test was performed with a server running on the \textit{M1 MacBook Pro} and with the clients also in the same machine, removing any delay resulting from network delay and in a much more powerful machine. It was possible to connect up to 3000 clients with an average propagation time of 65 ms and a P95 of 221 ms, proving that if there is a need for hundreds of clients to be connected at once, the solution is able to scale with the hardware to accommodate it.
+
+% TODO maybe say that it was found to be adeqaute solution
 
 \section{Usability Evaluation}
 Two questionnaires were designed and given to participants. One focused on the user experience of working with \textit{4diac IDE} as the underlying development environment for \textit{IEC 61499}. The other asked both for a usability opinion on \textit{PTERO}, as well as a direct comparison between these two \acp{IDE}. The participants of the questionnaires were:
@@ -232,8 +204,7 @@ Two questionnaires were designed and given to participants. One focused on the u
 % TODO dont like the wording
 % TODO mention the test program is the one added above
 
-A usabilty study on \textit{4diac IDE} has already been conducted by \citeauthor{weber_usability_2019} \cite{weber_usability_2019}, but given as the this new proposed solution introduces new concepts and expectations, a new usability study must be done to understand how this tool fairs in the specific fields that \textit{PTERO} sets out to innovate in.
-% TODO must be done parece q ainda nao o fiz. tenho de dizer q este foi feito
+A usabilty study on \textit{4diac IDE} has already been conducted by \citeauthor{weber_usability_2019} \cite{weber_usability_2019}, but given as the this new proposed solution introduces new concepts and expectations, a new usability study was devised to understand how this tool fairs in the specific fields that \textit{PTERO} sets out to innovate in. Next follows the results of this new study.
 
 \subsubsection*{Difficulty}
 With the use of a Likert \cite{likert_technique_1932} table, the difficulty of doing several different tasks using this \ac{IDE} was analysed. Ranging from \textit{Very Easy} to \textit{Very Hard}, this section had the intent of understanding how easy and straightforward each step of \textit{IEC 61499} development was. If a specific step was difficult in \textit{4diac IDE}, it will be interesting to see how it compares with \textit{PTERO}. The results are displayed in \Cref{tab:4diac-difficulty}.
