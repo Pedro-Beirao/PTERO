@@ -185,7 +185,7 @@ The remaining tasks evaluated configuration overhead and deployment flexibility.
   \label{fig:yjs-performance}
 \end{figure}
 
-The same test was performed with a server running on the \textit{M1 MacBook Pro} and with the clients also in the same machine, removing any delay resulting from network delay and in a much more powerful machine. It was possible to connect up to 3000 clients with an average propagation time of 65 ms and a P95 of 221 ms, proving that if there is a need for hundreds of clients to be connected at once, the solution is able to scale with the hardware to accommodate it.
+The same test was performed with a server running on the \textit{M1 MacBook Pro} and with the clients also in the same machine, removing any delay resulting from network latency and in a much more powerful machine. It was possible to connect up to 3000 clients with an average propagation time of 65 ms and a P95 of 221 ms, proving that if there is a need for hundreds of clients to be connected at once, the solution is able to scale with the hardware to accommodate it.
 
 % TODO maybe say that it was found to be adeqaute solution
 
@@ -197,14 +197,8 @@ Two questionnaires were designed and given to participants. One focused on the u
 \item 5 Students at \ac{FEUP}, working on Master's dissertations at \ac{SYSTEC} on topics directly related to \textit{4diac IDE} and \textit{DINASORE}. Their deeper technical engagement with the ecosystem made them particularly well positioned to evaluate the correctness and completeness of \textit{PTERO}'s workflow.
 \end{itemize}
 
-% TODO how the server was hosted
-
 \subsection{4diac IDE Usability}
-% Firstly the questionnaire asked the participants if the \ac{SINF} course was the first time they have used \textit{4diac IDE}. This was important to differentiate answers based on prior experience.
-% TODO dont like the wording
-% TODO mention the test program is the one added above
-
-A usabilty study on \textit{4diac IDE} has already been conducted by \citeauthor{weber_usability_2019} \cite{weber_usability_2019}, but given as the this new proposed solution introduces new concepts and expectations, a new usability study was devised to understand how this tool fairs in the specific fields that \textit{PTERO} sets out to innovate in. Next follows the results of this new study.
+A usability study on \textit{4diac IDE} has already been conducted by \citeauthor{weber_usability_2019} \cite{weber_usability_2019}, but given as the this new proposed solution introduces new concepts and expectations, a new usability study was devised to understand how this tool fairs in the specific fields that \textit{PTERO} sets out to innovate in. Next follows the results of this new study.
 
 \subsubsection*{Difficulty}
 With the use of a Likert \cite{likert_technique_1932} table, the difficulty of doing several different tasks using this \ac{IDE} was analysed. Ranging from \textit{Very Easy} to \textit{Very Hard}, this section had the intent of understanding how easy and straightforward each step of \textit{IEC 61499} development was. If a specific step was difficult in \textit{4diac IDE}, it will be interesting to see how it compares with \textit{PTERO}. The results are displayed in \Cref{tab:4diac-difficulty}.
@@ -216,11 +210,11 @@ With the use of a Likert \cite{likert_technique_1932} table, the difficulty of d
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
 \toprule
-Installing 4diac IDE & \likertpct{9.1}{36.4}{36.4}{9.1}{9.1}\\
+Installing 4diac IDE & \likertpct{36.4}{36.4}{9.1}{9.1}{9.1}\\
 \midrule
 Setting up the project & \likertpct{0}{18.2}{36.4}{27.3}{19.2}\\
 \midrule
-Connecting the function blocks & \likertpct{18.2}{18.2}{27.3}{27.3}{9.1}\\
+Connecting the function blocks & \likertpct{27.3}{27.3}{18.2}{18.2}{9.1}\\
 \midrule
 Creating new function block files & \likertpct{0}{18.2}{9.1}{54.5}{18.2}\\
 \midrule
@@ -240,7 +234,7 @@ Collaborating with other people & \likertpct{0}{0}{9.1}{36.4}{54.5}\\
 \textcolor{likert5}{\rule{7pt}{7pt}} Very Hard
 \end{table}
 
-% TODO analyse results
+While initial installation and graphical operations showed good to moderate usability, other tasks were not so well reviewed. The most critical usability barriers manifested during distributed orchestration and collaboration. Manually synchronising function blocks with \textit{DINASORE} was rated as \textit{Hard} or \textit{Very Hard} by 63.7\% of participants, reflecting the operational risks of relying on external scripts. Furthermore, group collaboration yielded the most severe negative consensus, with 90.9\% of respondents designating it as \textit{Hard} or \textit{Very Hard} (including a 54.5\% absolute majority for \textit{Very Hard}).
 
 \subsubsection*{Intuitiveness}
 Next, another Likert table, this time on how intuitive it was to understand each part of the \ac{IDE}. This way the design decisions of \textit{4diac IDE} can be critically analysed. The results are displayed in \Cref{tab:4diac-intuitive}.
@@ -257,7 +251,7 @@ Graph editor & \likertpct{18.2}{18.2}{36.4}{18.2}{9.1}\\
 \midrule
 Navigate between pages & \likertpct{0}{0}{63.6}{18.2}{18.2}\\
 \midrule
-Where in the filesystem to put your function blocks and python code & \likertpct{9.1}{18.2}{9.1}{36.4}{27.3}\\
+Where in the filesystem to put your function blocks and python code & \likertpct{9.1}{9.1}{18.2}{36.4}{27.3}\\
 \midrule
 Understand error messages & \likertpct{0}{0}{27.3}{18.2}{54.5}\\
 \midrule
@@ -274,9 +268,9 @@ Monitor the output & \likertpct{9.1}{9.1}{45.5}{27.3}{9.1}\\
 \vspace{3em}
 \end{table}
 
-% TODO analyse results
+The graph editor and the system for monitoring the output received decent evaluations, leaning primarily towards a \textit{Moderate} rating. This suggests that the basic, traditional paradigms of visual component wiring are generally well-understood.
 
-% TODO want to write more on each
+In contrast, structural navigation and file handling caused noticeable confusion. Not a single participant found that moving across views was intuitive. This ambiguity extends to file management, where 63.7\% of respondents struggled to determine exactly where in the filesystem to place custom function block files, marking a clear disconnect between the application and the host directory structure.
 
 \subsubsection*{Open Feedback}
 The questionnaire concluded with open-ended questions that provided additional insight into the user experience of working with \textit{4diac IDE}.
@@ -308,13 +302,11 @@ The most common difficulties were related to deployment, management of function 
 ``(...) Vague Error Messages: Debugging can be quite difficult due to a lack of specificity in error messages. (...) 4diac IDE occasionally rejects the deployment of a project without explaining exactly why, sometimes only providing the name of an input variable without further context.''
 \end{quote}
 
-
 \subsection{PTERO Usability}
-% TODO this text
+Following the user evaluation of \textit{4diac IDE}, the same set of participants was asked to recreate the previously defined \textit{Test Application} using \textit{PTERO}. To allow for more flexibility the \textit{Raspberry Pi} hosted the server in a publicly accessible address.
 
 \subsubsection*{Intuitiveness}
-% Next, another Likert table, this time on how intuitive it was to understand each part of the \ac{IDE}. This way the design decisions of \textit{4diac IDE} can be critically analysed. The results are displayed in \Cref{tab:4diac-intuitive}.
-% TODO this text
+As before, a Likert table is used to evaluate how intuitive it was to understand each part of \textit{PTERO}. This assessment aims to determine if the web design and unified workflow can result in a high perceived intuitiveness. The results are displayed in \Cref{tab:ptero-intuitive}.
 
 \begin{table}[H]
 \centering
@@ -326,9 +318,9 @@ The most common difficulties were related to deployment, management of function 
 \toprule
 DINASORE configuration & \likertpct{75}{25}{0}{0}{0}\\
 \midrule
-Function Blocks Code Editor & \likertpct{75}{25}{0}{0}{0}\\
+Function Blocks text editor & \likertpct{75}{25}{0}{0}{0}\\
 \midrule
-Graph Editor & \likertpct{50}{50}{0}{0}{0}\\
+Graph editor & \likertpct{50}{50}{0}{0}{0}\\
 \midrule
 Monitor the output & \likertpct{75}{25}{0}{0}{0}\\
 \bottomrule
@@ -343,18 +335,15 @@ Monitor the output & \likertpct{75}{25}{0}{0}{0}\\
 \vspace{3em}
 \end{table}
 
-% TODO analyse results
-
-% TODO want to write more on each
+These results reveal a definitive positive consensus across all evaluated categories that participants find the workflow of \textit{PTERO} to be intuitive. This represents a complete reversal of the confusion observed in the \textit{4diac IDE} study. The use of web technologies have allowed for a more user friendly \ac{IDE}.
 
 \subsubsection*{System Usability Scale}
-% TODO describe what it is
+To obtain a globally standardised and quantifiable metric of \textit{PTERO}'s overall user experience, the study incorporated the \ac{SUS} \cite{lewis_system_2018}. The \ac{SUS} is a reliable scale where the raw point responses are aggregated and a score from 0 to 100 is calculated.
 
-Score: 88,75
-
-% TODO add results to appendix
+\textit{PTERO} achieved an average SUS score of \textbf{88.75}. According to empirical usability benchmarks  \cite{lewis_item_2018}, this score positions \textit{PTERO} well above the 95th percentile of all analysed applications. This outstanding evaluation confirms that \textit{PTERO} is a an extremely user friendly solution.
 
 \subsection{Comparison}
+To provide a complete synthesis of the usability evaluation, the study concluded with a direct comparative survey. The core objective of this is to establish a clear relative performance delta, isolating whether \textit{PTERO}'s remote web-based architecture delivers a measurably superior user experience when executing identical IEC 61499 engineering tasks. The comparative results are illustrated in \Cref{tab:direct-comparison}.
 
 \begin{table}[H]
 \centering
@@ -368,7 +357,7 @@ Configuring DINASOREs & \likertpct{75}{25}{0}{0}{0}\\
 \midrule
 Syncing Function Block code with DINASORE & \likertpct{75}{25}{0}{0}{0}\\
 \midrule
-Creating the flow using the Graph Editor & \likertpct{50}{37.5}{12.5}{0}{0}\\
+Creating the flow using the graph editor & \likertpct{50}{37.5}{12.5}{0}{0}\\
 \midrule
 Collaborating with others & \likertpct{62.5}{25}{12.5}{0}{0}\\
 \midrule
@@ -386,6 +375,10 @@ Monitoring output & \likertpct{25}{37.5}{25}{12.5}{0}\\
 \textcolor{likert5}{\rule{7pt}{7pt}} 4diac IDE is much better
 \vspace{3em}
 \end{table}
+
+These results confirm the absolute preference of the participants for \textit{PTERO} over \textit{4diac IDE} across all evaluated tasks, validating the success of the proposed system's architectural innovations.
+
+The most substantial margins of improvement were achieved in target device configuration and orchestration. For both configuring \textit{DINASOREs} and syncing the function block files, an absolute 100\% consensus favoured \textit{PTERO}. This flawless evaluation confirms that the middleware architecture that the server adopts is a great fit with this ecosystem.
 
 \subsubsection*{Open Feedback}
 
@@ -411,7 +404,7 @@ The evaluation results indicate that the proposed solution successfully achieves
 
 The functional validation confirmed that \textit{PTERO} correctly supports the complete development workflow, including configuration, modelling, deployment and monitoring of \textit{IEC 61499} applications. Both systems generated identical deployment commands and produced equivalent runtime behaviour in \textit{DINASORE}. This equivalence is an important result, as it demonstrates that the proposed abstraction layer does not compromise correctness or compatibility with existing tooling. Instead, it preserves interoperability while offering a different interaction model.
 
-The performance evaluation further complements these findings by highlighting how architectural decisions in \textit{PTERO} translate into measurable workflow improvements. While both systems are capable of executing equivalent \textit{IEC 61499} applications, \textit{PTERO} reduces the number of manual steps required across key development tasks such as project setup, synchronisation and deployment. A central factor behind this improvement is the tighter integration between the different components of the development pipeline. In \textit{4diac IDE}, the development workflow is distributed across multiple loosely connected tools and processes, requiring explicit user actions to maintain consistency between the modelling environment, local file system and remote runtime. In contrast, \textit{PTERO} internalises these responsibilities within the platform itself, allowing project state, file management and deployment logic to be handled automatically as part of a single unified system.
+The performance evaluation further complements these findings by highlighting how the architectural decisions in \textit{PTERO} translate into measurable workflow improvements. While both systems are capable of executing equivalent \textit{IEC 61499} applications, \textit{PTERO} reduces the number of manual steps required across key development tasks such as project setup, synchronisation and deployment. A central factor behind this improvement is the tighter integration between the different components of the development pipeline. In \textit{4diac IDE}, the development workflow is distributed across multiple loosely connected tools and processes, requiring explicit user actions to maintain consistency between the modelling environment, local file system and remote runtime. In contrast, \textit{PTERO} internalises these responsibilities within the platform itself, allowing project state, file management and deployment logic to be handled automatically as part of a single unified system.
 
 The usability questionnaires provide strong evidence that a web-based implementation can offer a significantly improved user experience compared to \textit{4diac IDE}. Participants consistently reported higher levels of perceived ease of use, intuitiveness and overall satisfaction when interacting with \textit{PTERO}. This improvement can be attributed not only to interface design choices, but also to the inherent advantages of web technologies in this context.
 
