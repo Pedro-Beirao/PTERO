@@ -1,6 +1,8 @@
-\chapter{Implementation} \label{app:implementation}
+\chapter{Further Details of the Implementation} \label{app:implementation}
+This appendix contains implementation details that were not important enough to include in \Cref{chap:implementation}. Most of the content here are big listings that would break the flow of the chapter, so this place was devised for displaying them.
 
 \section{Function Block Files}
+Examples of the formats of the \textit{.fbt} and \textit{.py} files that make up a function block are represented in \Cref{lst:fb-xml} and \Cref{lst:fb-py}, respectively.
 
 \begin{lstlisting}[language=XML, caption={Example \textit{xml} definition of a function block}, label={lst:fb-xml}]
 <FBType Name="NEW_FB_1">
@@ -10,7 +12,6 @@
       <Event Name="READ" Type="Event">
         <With Var="VARIABLE_1"/>
         <With var="VARIABLE_2"/>
-        <With var="VARIABLE_3"/>
       </Event>
     </EventInputs>
     <EventOutputs>
@@ -21,8 +22,7 @@
     </EventOutputs>
     <InputVars>
       <VarDeclaration Name="VARIABLE_1" Type="STRING"/>
-      <VarDeclaration Name="VARIABLE_2" Type="REAL"/>
-      <VarDeclaration Name="VARIABLE_3" Type="INT"/>
+      <VarDeclaration Name="VARIABLE_2" Type="INT"/>
     </InputVars>
     <OutputVars>
       <VarDeclaration Name="DATA_1" Type="STRING"/>
@@ -46,6 +46,7 @@ class NEW_FB_1:
 \end{lstlisting}
 
 \section{Synchronisation}
+\Cref{lst:sync-config} presents an example configuration that the \texttt{synchronize.py} script requires in order to send the files to the \textit{DINASORE} devices.
 
 \begin{lstlisting}[language=JSON, caption={Sync configuration}, label={lst:sync-config}]
 {
@@ -69,7 +70,10 @@ class NEW_FB_1:
 }
 \end{lstlisting}
 
+\clearpage
+
 \section{Communication} \label{app:implementation:communication}
+The previously mentioned methods to build the messages are replicated in \Cref{lst:build-message-py,lst:build-message-js}.
 
 \begin{lstlisting}[language=Python, caption={build\_message() in Python}, label={lst:build-message-py}]
 def build_message(message_payload, configuration_name):
@@ -117,6 +121,7 @@ function build_message(message_payload, configuration_name) {
 \end{lstlisting}
 
 \section{Send Messages} \label{app:send-messages}
+This section present a more detailed explanation of the commands sent during deployment.
 First, the two commands in \Cref{lst:deploy-setup} need to be sent to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
 
 \begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-setup}]
@@ -150,6 +155,8 @@ Next, depending on which nodes are mapped to each machine, it needs to \texttt{C
 \end{lstlisting}
 
 Then the connections are created between the mapped nodes. A \texttt{Source} a \texttt{Destination} must be provided, with the format \texttt{"NODE\_NAME.SLOT\_NAME"}, using the commands in \Cref{lst:deploy-create-links}.
+
+\clearpage
 
 \begin{lstlisting}[language=XML, caption={\texttt{CREATE} links deployment commands}, label={lst:deploy-create-links}]
 <Request Action="CREATE" ID="6">

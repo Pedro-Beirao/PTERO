@@ -1,4 +1,4 @@
-\chapter{Implementation}
+\chapter{Implementation} \label{chap:implementation}
 To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. This chapter describes the technical implementation of the proposed system, detailing the server architecture, frontend implementation, collaboration system and deployment mechanism used to realise the conceptual design presented in \Cref{chap:proposed-solution}.
 
 \section{Runtime Environment}
@@ -152,7 +152,7 @@ Before the messages can be sent, they need to be built into the format that \tex
   \label{fig:build-message}
 \end{figure}
 
-The \textit{4diac\_simulator.py} file, part of the \textit{tests/} folder of \textit{DINASORE}, implements this method in \textit{Python} as shown in \Cref{lst:build-message-py}. For this prototype, it was necessary to implement it in \textit{JavaScript}, as shown in \Cref{lst:build-message-js}.
+The \textit{4diac\_simulator.py} file, part of the \textit{tests/} folder of \textit{DINASORE}, implements this method in \textit{Python}, for this prototype, it was necessary to implement it in \textit{JavaScript}. The definitions of these methods, available for inspection, are presented in \Cref{app:implementation:communication}.
 
 \subsubsection{Send Messages} \label{subsubsec:send-messages}
 Now that we have defined how to build the messages, we can explore the sequence of commands that need to be sent to each \textit{DINASORE} instance. The server connects to each instance and transmits these messages sequentially. The order of message transmission is critical, as connections can only be established between existing nodes. The sequence is represented in \Cref{fig:sequence-create}. A more technical and in depth analysis of the messages sent can be found in \Cref{app:send-messages}.
