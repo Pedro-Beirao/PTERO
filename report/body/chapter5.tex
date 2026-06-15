@@ -56,8 +56,6 @@ After deployment, the application should execute correctly on the target \textit
 \section{Functional Validation}
 \textit{PTERO} was subjected to functional tests to confirm that all core features behave as specified. It was tested by implementing and deploying the test program defined in \Cref{sec:experimental-setup}. As a control, the same was performed in \textit{4diac IDE}. The steps taken are described in \Cref{tab:workflow-comparison}.
 
-% TODO which hardware (probably dont need to mention)
-
 \begin{longtable}{p{2.5cm}p{6cm}p{5.5cm}}
 \caption{Workflow Comparison Between \textit{4diac IDE} and \textit{PTERO}} \label{tab:workflow-comparison} \\
 \hline
@@ -167,16 +165,7 @@ The \textbf{Install} and \textbf{Open} tasks evaluated installation complexity a
 
 The remaining tasks evaluated configuration overhead and deployment flexibility. \textit{4diac IDE} introduced operational friction by requiring external text editors for script writing, manual script execution for synchronisation and asynchronous version control operations. It also requires complex network setups since every engineering workstation must maintain individual direct connections to each target \ac{RTE}. Conversely, \textit{PTERO} minimizes configuration overhead by unifying file editing, automating file synchronisation and introducing the concept a \ac{CRDT}. By utilising the server as a middleware, \textit{PTERO} dramatically improved deployment flexibility, as clients only need to authenticate with the centralised server, not the \acp{RTE}.
 
-% TODO actual time measures (deployment time, sync latency, scalability)
-
-% TODO remote dev on mobile?
-
-% TODO talk on the improvements
-
-
 \section{Collaboration Evaluation}
-% TODO extract from previous section and add (multi-user editing; consistency; conflict resolution)
-
 \Citeauthor{cimiano_yjs_2015} \cite{cimiano_yjs_2015} establish that \textit{Yjs} is able to handle an average of 100 actions per millisecond which is obviously good enough for this use case, as it does not require millisecond precision. Taking connection with the remote server into account, a test was devised to understand how well the \textit{Raspberry Pi} could handle multiple users at the same time. A script was created that initialised a set number of clients, connected them to the remote server and sent a change that would get propagated across the clients. By measuring the time that would take for the clients to receive the change, the chart in \Cref{fig:yjs-performance} was obtained. The results demonstrated that even a resource constrained machine accessed over a network can serve as an adequate collaboration server for a small team, however, the \textit{Raspberry Pi} deployment was found to be unsuitable beyond approximately 240 simultaneous clients, at which point the hardware prevented additional connections from being established reliably.
 
 \begin{figure}[H]
@@ -186,8 +175,6 @@ The remaining tasks evaluated configuration overhead and deployment flexibility.
 \end{figure}
 
 The same test was performed with a server running on the \textit{M1 MacBook Pro} and with the clients also in the same machine, removing any delay resulting from network latency and in a much more powerful machine. It was possible to connect up to 3000 clients with an average propagation time of 65 ms and a P95 of 221 ms, proving that if there is a need for hundreds of clients to be connected at once, the solution is able to scale with the hardware to accommodate it.
-
-% TODO maybe say that it was found to be adeqaute solution
 
 \section{Usability Evaluation}
 Two questionnaires were designed and given to participants. One focused on the user experience of working with \textit{4diac IDE} as the underlying development environment for \textit{IEC 61499}. The other asked both for a usability opinion on \textit{PTERO}, as well as a direct comparison between these two \acp{IDE}. The participants of the questionnaires were:

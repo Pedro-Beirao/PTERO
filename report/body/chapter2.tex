@@ -77,9 +77,7 @@ Some studies explore remote web based execution and editing of \ac{FBD}. \citeau
 More generally, \citeauthor{sorokin_towards_2023} \cite{sorokin_towards_2023} proposes a new architecture for the development of web-based \ac{DSL} tools, grazing on the field of of \textit{IEC 61499} engineering by using \textit{FBME} as an example of how it can be migrated into a distributed collaborative web environment. While this paper does not provide the groundwork and validation necessary for the development of specifically a \textit{IEC 61499} tool, it does provide good general insights of how its architecture could be designed.
 
 \section{Comparative Analysis and Research Gap}
-% TODO intro
-
-
+Having surveyed the existing landscape of \ac{IEC 61499} development environments, both established tools and recent proposals, it is possible to draw a structured comparison across the dimensions most relevant to modern \ac{CPPS} engineering. \Cref{tab:ide-comparison} summarises the key characteristics of each solution with respect to platform, remote deployment capability and support for real-time collaboration.
 
 \newcommand{\cyes}{\textcolor{teal}{\checkmark}}
 \newcommand{\cno}{\textcolor{purple}{$\times$}}
@@ -141,4 +139,4 @@ Current \textit{IEC 61499} tools face significant limitations that hinder modern
     \item \textbf{Limited Accessibility:} Engineers cannot access a project without access to a fully configured workstation. This is a practical limitation in industrial settings, where on-site diagnosis of a running application may be necessary from a device in which no local tooling has been installed and the project is not set up.
 \end{itemize}
 
-Taken together, these gaps suggest that the ecosystem is well positioned to benefit from a lightweight, browser-accessible development environment that prioritises collaboration, low setup overhead and integration with modern deployment workflows, without sacrificing the domain-specific features that \textit{IEC 61499} engineers depend on. %TODO maybe dont mention the solution here
+Taken together, these gaps suggest that the ecosystem is well positioned to benefit from a lightweight, browser-accessible development environment that prioritises collaboration, low setup overhead and integration with modern deployment workflows, without sacrificing the domain-specific features that \textit{IEC 61499} engineers depend on.

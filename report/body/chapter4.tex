@@ -1,4 +1,3 @@
-% TODO review whole chapter
 \chapter{Implementation}
 To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. This chapter describes the technical implementation of the proposed system, detailing the server architecture, frontend implementation, collaboration system and deployment mechanism used to realise the conceptual design presented in \Cref{chap:proposed-solution}.
 
@@ -16,29 +15,20 @@ Where the open-source \ac{RTE} \textit{4diac FORTE} provides a portable C\texttt
   \label{fig:dinasore-architecture}
 \end{figure}
 
-% TODO talk about limitations:
-% TODO mention that dinasore is not supported in newer versions of 4diac ide, which means it doesnt run on mac. maybe mention it in another section
-% TODO mention that the communication with 4diac ide was studied
-% TODO talk about changes made to DINASORE
-
 \section{Server}
 The design begins by setting up a centralised backend server tasked with serving the \ac{IDE} interface as a web application, managing data persistence, and communicating with the distributed \acp{RTE}. Taking into account the features that are planned, \textit{JavaScript} running on \textit{Node.js} was chosen as the underlying environment to run the server on, due to the extensive library ecosystem, leveraging an asynchronous, event-driven and non-blocking I/O model \cite{sun_reasoning_2019}.
 
-% TODO better to keep this here or move to proposed solution?
 To address data management, the server adopts a \textit{Document-Oriented Database} system. Because \textit{IEC 61499} configurations, such as function blocks and event/data connections, are inherently structured as hierarchical graphs, a database that stores data as key values pairs represents the optimal architectural fit. In fact, local-first \acp{IDE} for the standard usually store the programs in a \textit{XML} format for this exact reason.
 
 Architecturally, the server functions as a multi-protocol hub: it handles traditional HTTP traffic and maintains WebSocket channels for bidirectional communication with active \acp{RTE}. For real-time collaboration, a library will be required to run in both the server and the frontend. Since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server, creating a homogeneous single language stack that simplifies data serialization across network boundaries. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
 
 \section{Frontend}
-% TODO maybe move paragraph to the proposed solution
 The frontend constitutes the client-side architectural layer of the system, acting as the primary \ac{HMI} through which users interact with the underlying application logic. In modern web architectures, the frontend is responsible for rendering the \ac{UI}, capturing user inputs, executing localised presentation logic and managing real-time state synchronisation with the backend server. For this specific application, the frontend serves as the interactive environment used to create, visualize, and modify \ac{FBD} programs.
 
-% TODO didnt i move the first part to proposed solution?
 Each following subsection will first explain and describe what an \ac{IDE} should implement and follow by showing how the prototype solved the proposed requirements.
 
 \subsection{Devices Configuration View}
 In the interest of distributed \acp{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so a clean way to define the resources that are available is needed. Both the \textit{DINASORE} port and the \textit{SSH} port need to be defined for each since deployment communication and synchronisation will use each of them, respectively.
-% TODO something more
 
 Accordingly, each configuration profile maintains these essential properties:
 
@@ -84,9 +74,6 @@ This view contains a split view text editor: a side for the \textit{.fbt} file a
 \subsection{Graph View}
 This view is the primary workspace for composing the application. Function blocks are placed on the canvas and connected together by drawing connections between their data and event ports, forming the application network. Event ports are commonly color coded red, while data ports are color coded blue.
 
-% TODO maybe put this in appendix?
-% In \textit{DINASORE}, all \textit{INIT} event ports are by default assigned to \textit{EMB\_RES}, the default resource that sends an event when the application is started. This removes the need to connect the \textit{INIT} event ports, but the \textit{READ} event port is not assigned by default and therefore needs to be connected in every function block. The \texttt{schedule()} function will only be called and generate output when an event is sent to the \textit{READ} event port. The described event driven execution model is what allows an explicit specification of the execution order of function blocks. Periodic out of event execution of function blocks is also possible with the implementation of a looping function block that triggers events \cite{noauthor_iec_nodate}.
-
 A function block will have some input and output data ports, each with its own associated data type. For example, an \textit{INT} input port will not accept data from a \textit{WORD} output port and therefore should not be able to connect to it. It is also possible to set a default value for an input if no output is connected to it, there is an editable string field for this which gets converted to the expected data type by the \ac{RTE}. The data types supported by \textit{IEC 61499} are derived from and defined by \textit{IEC 61131-3} as listed in \Cref{tab:iec-data-types}.
 
 \begin{table}[H]
@@ -112,22 +99,17 @@ A function block will have some input and output data ports, each with its own a
     \label{tab:iec-data-types}
 \end{table}
 
-% TODO a lot is missing here
+Each function block can also be mapped to a \textit{DINASORE} instance, with the color coding defined in the Devices Configuration View providing an immediate visual indication of how the application is distributed across the available devices.
 
-Each function block can also be mapped to a \textit{DINASORE} instance, with the color coding defined in the Devices Configuration View providing an immediate visual indication of how the application is distributed across the available devices. % TODO explain how distributing works
+This system was achieved in the prototype with the use of the \textit{LiteGraph.js} library \cite{noauthor_jagenjolitegraphjs_nodate}, a graph node editor for the browser. A lot of other libraries were considered, but this one was chosen due to the requirements of the proposed solution. Let us discuss the alternatives that were considered to understand why this choice is important:
 
-% TODO explain a lot more
-
-This system was achieved in the prototype with the use of the \textit{LiteGraph.js} library, a graph node editor for the browser. A lot of other libraries were considered, but this one was chosen due to the requirements of the proposed solution. Let us discuss the alternatives that were considered to understand why this choice is important:
-
-% TODO add references for each
 \begin{itemize}
-  \item \textbf{Rete.js}: A very flexible and complete editor framework, but the added complexity makes it harder to integrate the desired features. It is also a more general purpose editor, meaning the multi-input and multi-output function blocks with specific data types are not as well supported.
-  \item \textbf{xyflow}: A highly customizable framework composed of React Flow and Svelte Flow. While it provides excellent visual customisation and integration with frontend frameworks, it suffers from the same problems as \textit{Rete.js}. % TODO any word better than problems?
-  \item \textbf{Drawflow}: A lightweight and simplistic library with a focus on data flow execution. Although simple to integrate, it lacks many features required for designing \textit{IEC 61499} function blocks, such as robust type handling and multi-input and multi-output.
-  \item \textbf{Baklava.js}: With a clean architecture and flexibility, this would be a good alternative, but since it specifically targets \textit{Vue} and requires a more intricate setup, it was not the most appropriate choice for a prototype.
-  \item \textbf{GoJS}: Very powerful commercial alternative. It offers advanced functionality and flexibility, but its licensing model make it less suitable for lightweight research prototypes and open development environments.
-  \item \textbf{Node-RED}: A flow based programming environment. While conceptually similar, its architecture is more focused on runtime execution than on being a visual editor of structured data.
+  \item \textbf{Rete.js} \cite{noauthor_retejs_nodate}: A very flexible and complete editor framework, but the added complexity makes it harder to integrate the desired features. It is also a more general purpose editor, meaning the multi-input and multi-output function blocks with specific data types are not as well supported.
+  \item \textbf{xyflow} \cite{noauthor_node-based_nodate}: A highly customizable framework composed of React Flow and Svelte Flow. While it provides excellent visual customisation and integration with frontend frameworks, it suffers from the same problems as \textit{Rete.js}.
+  \item \textbf{Drawflow} \cite{soler_jerosolerdrawflow_2026}: A lightweight and simplistic library with a focus on data flow execution. Although simple to integrate, it lacks many features required for designing \textit{IEC 61499} function blocks, such as robust type handling and multi-input and multi-output.
+  \item \textbf{Baklava.js} \cite{noauthor_baklavajs_nodate}: With a clean architecture and flexibility, this would be a good alternative, but since it specifically targets \textit{Vue} and requires a more intricate setup, it was not the most appropriate choice for a prototype.
+  \item \textbf{GoJS} \cite{noauthor_gojs_nodate}: Very powerful commercial alternative. It offers advanced functionality and flexibility, but its licensing model make it less suitable for lightweight research prototypes and open development environments.
+  \item \textbf{Node-RED} \cite{noauthor_low-code_nodate}: A flow based programming environment. While conceptually similar, its architecture is more focused on runtime execution than on being a visual editor of structured data.
 \end{itemize}
 
 Among these alternatives, \textit{LiteGraph.js} presented the best balance between simplicity, flexibility and ease of integration. Its builtin support for typed inputs and outputs, lightweight architecture and direct focus on visual data flow programming made it especially suitable for the requirements of the proposed solution. Even so, it was necessary to implement custom behaviour on top of some functions of \textit{LiteGraph.js} to achieve the desired behaviour. The choice of the graph library is very important, since the requirements of \textit{IEC 61499} differ significantly from those of most conventional graph editors, as such, special care must be taken to ensure that these requirements are properly supported. The described implementation in the prototype is displayed in \Cref{fig:graph-editor}.
@@ -137,8 +119,6 @@ Among these alternatives, \textit{LiteGraph.js} presented the best balance betwe
   \caption{Graph Editor View}
   \label{fig:graph-editor}
 \end{figure}
-
-% TODO a lot
 
 \subsection{Console View}
 This view serves as the primary logging interface within the frontend architecture. It displays the outputs generated during the deployment process. The explicit detailed phases of these logs are discussed further in \Cref{sec:deployment}.
@@ -159,10 +139,6 @@ The deployment process is responsible for taking the application defined in the 
 
 \subsection{Synchronise with DINASOREs}
 The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this the system can make use of the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration file needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. The server must have a valid \textit{SSH} connection with each device in order to connect and send the files.
-
-% First, \texttt{master-fbs-path} dictates where in the server filesystem the function block files that will be sent are located, then an array of \texttt{dinasores} with the configurations defined in the \textit{Devices Configuration View}. The \texttt{port} used here will be the \textit{SSH} port, the \textit{DINASORE} must have an open \textit{SSH} channel that the server is able to connect to via this port. This file is generated from the configured fields in the \textit{Devices Configuration View}. When the script is ran, it will read the contents of this file in order to connect and send the files to each \textit{DINASORE}.
-
-% TODO idk what else there is about sync
 
 \subsection{Send Commands}
 Once the function block files are in place, the server will send the necessary commands to each \textit{DINASORE} instance to build and start the application. This includes creating the function block instances, writing the initial input values, establishing the connections between event and data ports and finally sending the start command to begin execution. The order in which these messages are issued is important, as connections can only be established between existing nodes. The following two subsections describe how the messages are constructed and what they contain.
