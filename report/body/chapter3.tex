@@ -1,5 +1,4 @@
 \chapter{Proposed Solution} \label{chap:proposed-solution}
-% TODO use PTERO in this chapter
 To address the limitations identified in existing \textit{IEC 61499} development environments, this dissertation proposes the design of a \textit{PTERO} (Programming Tool for Editing and Runtime Orchestration), a web-based \ac{IDE} for modelling \textit{IEC 61499}-compliant applications. The goal is to bridge the gap between modern collaborative software engineering practices and industrial automation tooling used in \acp{CPPS}.
 
 Existing tools are predominantly desktop based and poorly suited for distributed development. In contrast, the proposed solution adopts a centralised web-based architecture that enables platform independence, simplified setup, simplified deployment and real-time collaboration.
@@ -12,40 +11,7 @@ The main reason to propose using web technologies is to solve the issues that af
   \item \textbf{Ease of deployment}. Only the server needs to be aware of all of the target \acp{RTE} and have connection to them. When a team member wants to deploy, the request will be routed through the server, acting as the middleware, removing the need for each development machine to have connection with the target \acp{RTE}.
 
   \item \textbf{Improved collaboration}. A real-time collaboration aware system that keeps track of atomic changes, instead of blocks of text, reducing the integration integration error associated with version control systems on structured data.
-
-  % TODO remote deployment
 \end{itemize}
-% TODO the state of the art needs to mention each of these
-% TODO mention 4diac will be used for comparision
-% TODO better coupling with the gaps
-
-\section{Approach}
-The approach is derived from functional and non-functional requirements extracted from the \textit{IEC 61499} standard, an analysis of existing tools and the gaps identified in the state of the art. Functional requirements include:
-
-% TODO remove all reqs
-
-\begin{itemize}
-  \item Creation of function block types
-  \item Design of the event and data flow
-  \item Deployment to compliant \acp{RTE}
-  \item Real-time collaboration
-\end{itemize}
-
-Non-functional requirements should ensure that the solution does not reflect negatively when compared with \textit{4diac IDE} in some key aspects as well as bridge the gaps identified. These include:
-\begin{itemize}
-    \item Platform independence
-    \item Reduced setup complexity
-    \item Improved usability for distributed teams
-    \item Ease of extensibility for future improvements
-    \item The webpage should load in less than 2 seconds
-    \item Deployment should take just as long
-    \item Should be able to handle 100 users concurrently
-\end{itemize}
-
-The effectiveness of the approach is assessed through the implementation of a functional prototype and its direct comparison with current established \acp{IDE}, focusing on usability, accessibility and workflow efficiency. This evaluation demonstrates the feasibility of applying web based principles to \textit{IEC 61499} development and their potential benefits for distributed \acp{CPPS}.
-
-% TODO need to explain a lot more of what i want. like a whole page
-
 
 \section{System Architecture}
 The proposed system follows a centralised server architecture designed to support distributed \ac{CPPS} development. Instead of the \acp{IDE} having direct communication with the \acp{RTE}, the server acts as an intermediary, meaning all requests go through it and removing the need for direct device-level configuration on individual machines. Besides serving the frontend to the users, it also stores all data in a centralised database. The development pipeline therefore consists of the following three core components, organised as displayed in \Cref{fig:ide-server-rte}:
@@ -61,9 +27,6 @@ The proposed system follows a centralised server architecture designed to suppor
   \label{fig:ide-server-rte}
 \end{figure}
 
-% TODO talk more about server
-% TODO mention auth
-
 Being the middleware, there are 4 different types of network communications that the server will need to handle, each with it's own requirements:
 
 \begin{itemize}
@@ -73,14 +36,10 @@ Being the middleware, there are 4 different types of network communications that
   \item \textbf{Deployment sockets}: Communicates via \textit{TCP} with each \ac{RTE} to send commands and monitor.
 \end{itemize}
 
-% TODO more about communication
-
 \section{Real-Time Collaboration Model}
 A key requirement of the proposed system is support for concurrent editing of structured \textit{IEC 61499} programs. Real-time collaborative systems shift conflict management from the merge phase to the editing phase itself, all participants may operate on the shared artefact simultaneously, with the system responsible for converging divergent states automatically. To address this, the system adopts a \ac{CRDT} approach, enabling multiple users to edit shared application models simultaneously. Changes are propagated in real time and merged deterministically without conflicts.  Compared to \ac{OT} approaches, \acp{CRDT} provide a more suitable foundation for non linear structured data. Where in \ac{OT} a semantic state change needs to be expressed as a textual change at a specific offset, in \ac{CRDT} it keeps the semantic meaning \cite{kleppmann_conflict-free_2017}.
 
 The graph based structured data that in other \acp{IDE} would be stored as a conflict prone file in formats such as \textit{XML}, should instead be kept as individual fields. A change in a single element should prompt the \ac{CRDT} to only look into that specific field and not the document as a whole. The class diagram in \Cref{fig:uml} illustrates how the fields can be organised.
-
-
 
 \begin{figure}[H]
   \includegraphics[width=0.8\linewidth]{uml.png}
@@ -88,23 +47,17 @@ The graph based structured data that in other \acp{IDE} would be stored as a con
   \label{fig:uml}
 \end{figure}
 
-% TODO more details
-
 \section{Deployment Model}
-Deployment in the proposed system is based on a centralised orchestration model. The server translates the graphical application model into a sequence of deployment commands that are executed on target \acp{RTE}. This approach ensures consistent deployment across distributed environments while abstracting low level communication from the user. The deployment process follows the following conceptual stages:
+Deployment in the proposed system is based on a centralised orchestration model. Rather than requiring each engineer to manually coordinate communication with target devices, the server acts as the single point of control, translating the graphical application model into a sequence of commands and executing them against the configured \acp{RTE}. This abstraction ensures that deployment behaviour is consistent and reproducible regardless of which team member initiates it or from which machine. The deployment process is divided into three sequential stages:
 
 \begin{enumerate}
-    \item Synchronising the function block types across devices
-    \item Sending execution commands to the assigned \acp{RTE}
-    \item Start monitoring processes
+    \item \textbf{Synchronisation:} Before any execution commands are issued, the function block type definitions must be present on each target device. The server transfers the relevant files to the appropriate \ac{RTE} instances, ensuring that every device has access to the types it will be asked to instantiate.
+    \item \textbf{Execution:} Once the function block files are in place, the server establishes a connection with each \ac{RTE} and issues the necessary commands to create function block instances, write initial input values, establish event and data connections and finally start execution.
+    \item \textbf{Monitoring:} After the application has started, the server begins polling the \acp{RTE} for their output values, making them available to all connected clients through the \ac{IDE} interface in real time.
 \end{enumerate}
-
-% TODO more details
 
 \section{Methods}
 This section describes the research methodology adopted to address the research questions defined in this dissertation. Given the practical and design-oriented nature of the problem, the methodology focuses on the design, implementation and evaluation of a piece of software. The chosen methods are appropriate for investigating how web-based technologies can enhance \textit{IEC 61499} development environments, as they allow both the realisation of a concrete solution and the systematic assessment of its capabilities relative to existing tools.
-
-% TODO the next subsections must be more detailed
 
 \subsection{Research Design}
 This research follows a design-oriented research approach. The core of the research consists of the design and implementation of a functional prototype of the solution. Rather than aiming for statistical generalisation, the study focuses on demonstrating feasibility and identifying qualitative improvements over existing environments. The prototype serves as a research artefact used to explore architectural decisions, usability considerations and workflow implications.

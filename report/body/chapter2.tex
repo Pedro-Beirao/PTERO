@@ -36,8 +36,6 @@ In \ac{FBD}, function blocks are interconnected into networks that form an appli
 
 Conversely, \citeauthor{pinto_digital_2023} \cite{pinto_digital_2023} presented an industrial case study showing that function block oriented approaches improve system modularity and reduce development effort compared to traditional procedural programming. Their study documents the migration of a production cell from a sequential control architecture to an \textit{IEC 61499} function block model using the \textit{DINASORE} \ac{RTE}, using integration time as the main validation metric and demonstrating improved reconfigurability when production requirements changed. The results show that the encapsulation of behaviour and communication interfaces within function blocks leads to more maintainable and extensible software.
 
-% TODO talk about fbd
-
 \section{IEC 61499 Development Environments}
 Currently, the development ecosystem for \textit{IEC 61499} is composed almost exclusively of desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations, requiring each member of a development team to independently install, configure and maintain the software on their own machine. The tools themselves tend to be resource intensive, which creates demands for the hardware, making them less accessible to users working on modest, shared or virtual machines. There is also the issue of platform dependency, as a niche and focused field, some \acp{IDE} are not crossplatform, forcing users to use virtual machines to be able to use them, further intensifying performance issues.
 
@@ -66,12 +64,11 @@ Approaches to real-time concurrent editing, \ac{OT} and \ac{CRDT} offer a fundam
 \section{Evolution of Web-Based Tools}
 The software engineering domain has seen a massive shift from desktop \acp{IDE} to cloud based environments. This trend is now influencing the domain of \ac{ICS} and while recent studies have proposed a \ac{SOA} to integrate \textit{IEC 61499} with cloud layers \cite{torres_literature_2025}, the engineering tools themselves remain still desktop bound.
 
-In general software development, tools like \textit{Visual Studio Code} have started offering web based counterparts to their desktop applications \cite{noauthor_vscode_nodate} in search of a more flexible user experience. Running entirely within the browser, these environments allow engineers to open, edit and navigate codebases from any device without installation. They integrate naturally with cloud hosted codebases and \ac{CI} pipelines. In fact, newer development tools like \textit{Zed} make it a key goal of their products to have web platform support \cite{noauthor_zed_nodate}, treating browser delivery not as an afterthought but as a primary design constraint. % TODO dont like zed as an example
+In general software development, tools like \textit{Visual Studio Code} have started offering web based counterparts to their desktop applications \cite{noauthor_vscode_nodate} in search of a more flexible user experience. Running entirely within the browser, these environments allow engineers to open, edit and navigate codebases from any device without installation. They integrate naturally with cloud hosted codebases and \ac{CI} pipelines.
 
 Web based editors are also often easier to extend with real-time collaboration because they operate within a network architecture, leverage standardised browser communication technologies such as WebSockets and naturally integrate with centralised synchronisation services. These characteristics reduce many of the distribution and interoperability challenges that desktop applications must address separately \cite{schmid_real-time_2014}.
 
 The move towards web based tooling is not limited to software development environments. Across a wide range of professional domains, browser-native applications have gradually replaced traditional desktop software. Collaborative document editors such as \textit{Google Docs} allow multiple users to edit the same document simultaneously, with changes synchronised in real time. Similarly, design and prototyping platforms such as \textit{Figma} have demonstrated that even complex graphical workflows can be delivered entirely through the browser while supporting collaboration and centralised asset management. Drawing tools like \textit{Excalidraw} and \textit{draw.io} further illustrate how browser based applications can provide sophisticated modelling and visualisation capabilities without requiring local installation, while providing live collaboration features that their desktop predecessors did not have.
-% TODO mention they use json underneath
 
 A common characteristic of these platforms is that they treat collaboration as an architectural design rather than an addon. By maintaining a shared representation of the artefact on a central service, users can concurrently make changes with minimal configuration. This contrasts with many traditional desktop applications, where collaboration often relies on exchanging files with separate version control and synchronisation mechanisms. As a result, web based tools have created a new expectation on collaboration.
 
@@ -134,18 +131,14 @@ PTERO\
 
 Current \textit{IEC 61499} tools face significant limitations that hinder modern \ac{CPPS} development. These gaps paint a picture of an ecosystem that has matured in terms of standards compliance, but has lagged considerably in adapting to the workflows and expectations of contemporary engineering teams. The following points describe the most significant gaps:
 
-% TODO What other gaps?
-% TODO add references
 \begin{itemize}
     \item \textbf{Platform Dependency:} Existing solutions are monolithic desktop applications, lacking the accessibility and portability that we have come to expect. Engineers are required to install and maintain native software on every machine from which they intend to work, creating friction at the start of projects and compounding over time as the team grows or its members change.
 
     \item \textbf{Absence of Real-Time Collaboration:} None of the existing tools provide support for real-time editing. Teams must rely on external version control systems and manual coordination to manage shared development, introducing overhead and increasing the risk of integration errors that would be avoided by a collaboration aware environment.
 
-    \item \textbf{Lack of a Centralised System State:} Since tools are local-first, there is no single representation of a system's current state. This makes it difficult to maintain a consistent view of the system across a distributed team to integrate the development environment into automated deployment and monitoring pipelines.
+    \item \textbf{Lack of a Centralised System State:} Since existing tools are local-first, there is no single representation of a system's current state. This makes it difficult to maintain a consistent view of the system across a distributed team to integrate the development environment into automated deployment and monitoring pipelines.
 
     \item \textbf{Limited Accessibility:} Engineers cannot access a project without access to a fully configured workstation. This is a practical limitation in industrial settings, where on-site diagnosis of a running application may be necessary from a device in which no local tooling has been installed and the project is not set up.
-
-    % TODO remote deployment
 \end{itemize}
 
 Taken together, these gaps suggest that the ecosystem is well positioned to benefit from a lightweight, browser-accessible development environment that prioritises collaboration, low setup overhead and integration with modern deployment workflows, without sacrificing the domain-specific features that \textit{IEC 61499} engineers depend on. %TODO maybe dont mention the solution here

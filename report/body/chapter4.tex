@@ -64,8 +64,6 @@ With the existence of the middleware, this solution removes the requirement for 
 This is where individual function blocks are defined. It allows the team to specify the interface of each function block, its input and output data ports and events, as well as program the internal behaviour. This separation of interface and implementation follows the \textit{IEC 61499} model of encapsulation, where a function block exposes a well defined interface while keeping its internal logic self-contained.
 
 Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function block is defined in a \textit{XML} format file with a \textit{.fbt} extension, which results in a function block that can be displayed graphically like seen in \Cref{fig:example-fb}. The internal behaviour of the function blocks in \textit{DINASORE} is programmed in \textit{Python}.
-% TODO explain how the code is structured
-% TODO talk about the format
 
 \begin{figure}[H]
   \includegraphics[width=0.3\linewidth]{example-fb.jpg}
