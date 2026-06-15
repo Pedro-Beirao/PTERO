@@ -4,7 +4,7 @@ To be able to prove the proposed solution is viable and will successfully addres
 \section{Runtime Environment}
 Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration) \cite{pereira_dinasore_2020}. It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of proprietary \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}.
 
-Where the open-source \ac{RTE} \textit{4diac FORTE} provides a portable C\texttt{++} execution environment for low-level industrial deployments, \textit{DINASORE} occupies the same architectural role while targeting higher-level workloads that benefit from the \textit{Python} ecosystem. The two runtimes share the same management protocol, meaning that concepts developed against one transfer directly to the other. \textit{4diac FORTE} itself was considered as a target \ac{RTE} but ruled out as its codebase is substantially larger and more complex, making it more complex to study and target.
+Where the open-source \ac{RTE} \textit{4DIAC FORTE} provides a portable C\texttt{++} execution environment for low-level industrial deployments, \textit{DINASORE} occupies the same architectural role while targeting higher-level workloads that benefit from the \textit{Python} ecosystem. The two runtimes share the same management protocol, meaning that concepts developed against one transfer directly to the other. \textit{4DIAC FORTE} itself was considered as a target \ac{RTE} but ruled out as its codebase is substantially larger and more complex, making it more complex to study and target.
 
 \Cref{fig:dinasore-architecture} represents the architecture of this \textit{DINASORE} where \textit{PTERO} aims to replace the \textit{4DIAC Interface}.
 
@@ -61,7 +61,7 @@ Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function 
   \label{fig:example-fb}
 \end{figure}
 
-For the \acp{IDE} to be able to detect and use the function block, both the \textit{.fbt} file and the \textit{.py} file need to be placed in a specific folder, right next to each other. In this prototype this is handled automatically in the server database, removing the need to manually move files like it is needed in \textit{4diac IDE}.
+For the \acp{IDE} to be able to detect and use the function block, both the \textit{.fbt} file and the \textit{.py} file need to be placed in a specific folder, right next to each other. In this prototype this is handled automatically in the server database, removing the need to manually move files like it is needed in \textit{4DIAC-IDE}.
 
 As seen in \Cref{fig:fbs-editor}, this view contains a split view text editor: a side for the \textit{.fbt} file and the other for the \textit{.py} file. It would be possible to create a visual editor for designing the interface, instead of having to write \textit{xml} by hand, but the added complexity would not be justified at this prototyping stage. The \textit{xml} format is sufficiently structured that a text editor provides an adequate experience and a dedicated visual interface remains a natural direction for future development.
 

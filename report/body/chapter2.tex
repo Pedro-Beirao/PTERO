@@ -40,9 +40,9 @@ Conversely, \citeauthor{pinto_digital_2023} \cite{pinto_digital_2023} presented 
 Currently, the development ecosystem for \textit{IEC 61499} is composed almost exclusively of desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations, requiring each member of a development team to independently install, configure and maintain the software on their own machine. The tools themselves tend to be resource intensive, which creates demands for the hardware, making them less accessible to users working on modest, shared or virtual machines. There is also the issue of platform dependency, as a niche and focused field, some \acp{IDE} are not crossplatform, forcing users to use virtual machines to be able to use them, further intensifying performance issues.
 
 \subsection{Open-Source}
-The most prominent open source implementation is the \textit{4diac IDE} (based on the \textit{Eclipse} framework) which supports a variety of \acp{RTE} such as \textit{4diac FORTE} and \textit{DINASORE}. This \ac{IDE} is very feature rich at the cost of increased complexity, resulting in a steep learning curve, which makes it difficult to use \cite{weber_usability_2019}. The \textit{Eclipse} foundation on which it is built is itself a heavyweight platform and while this grants access to a broad plugin ecosystem, it also means that the \ac{IDE} inherits the framework's architectural complexity. Navigating the interface to accomplish basic tasks such as creating a new function block type, designing the flow and deploying to a \ac{RTE} can require substantial initial investment before productive work can begin.
+The most prominent open source implementation is the \textit{4DIAC-IDE} (based on the \textit{Eclipse} framework) which supports a variety of \acp{RTE} such as \textit{4DIAC FORTE} and \textit{DINASORE}. This \ac{IDE} is very feature rich at the cost of increased complexity, resulting in a steep learning curve, which makes it difficult to use \cite{weber_usability_2019}. The \textit{Eclipse} foundation on which it is built is itself a heavyweight platform and while this grants access to a broad plugin ecosystem, it also means that the \ac{IDE} inherits the framework's architectural complexity. Navigating the interface to accomplish basic tasks such as creating a new function block type, designing the flow and deploying to a \ac{RTE} can require substantial initial investment before productive work can begin.
 
-\citeauthor{zoitl_developing_2013} \cite{zoitl_developing_2013} demonstrated the use of \textit{4diac IDE} to develop modular and reusable \textit{IEC 61499} applications, highlighting the benefits of flexibility and adaptability in industrial settings. The paper provides a practical perspective on the strengths and limitations of this \ac{IDE}.
+\citeauthor{zoitl_developing_2013} \cite{zoitl_developing_2013} demonstrated the use of \textit{4DIAC-IDE} to develop modular and reusable \textit{IEC 61499} applications, highlighting the benefits of flexibility and adaptability in industrial settings. The paper provides a practical perspective on the strengths and limitations of this \ac{IDE}.
 
 An alternative is \textit{FBME}, which is a much simpler modelling environment based on the \textit{JetBrains MPS} language workbench. This \ac{IDE} implements \textit{IEC 61499} concepts through a set of integrated \acp{DSL}. The main contribution of this work is the research on applying model-driven development principles to the architecture of the \ac{IDE} itself \cite{sorokin_novel_2022}, resulting in a very modular and extensible product.
 
@@ -90,7 +90,7 @@ Having surveyed the existing landscape of \ac{IEC 61499} development environment
 \toprule
 \textbf{Tool} & \textbf{Type} & \textbf{Platform} & \textbf{\shortstack{Remote\\deployment}} & \textbf{\shortstack{Real-time\\collaboration}} & \textbf{Comments} \\
 \midrule
-4diac IDE \cite{zoitl_developing_2013}
+4DIAC-IDE \cite{zoitl_developing_2013}
   & Open source & Desktop
   & \cno & \cno
   & Steep learning curve \\[6pt]
