@@ -1,8 +1,8 @@
 \chapter{Implementation} \label{chap:implementation}
-To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. This chapter describes the technical implementation of the proposed system, detailing the server architecture, frontend implementation, collaboration system and deployment mechanism used to realise the conceptual design presented in \Cref{chap:proposed-solution}.
+To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. This chapter describes the technical implementation of the proposed system, detailing the server architecture, frontend implementation, collaboration system and deployment mechanism used to realize the conceptual design presented in \Cref{chap:proposed-solution}.
 
 \section{Runtime Environment}
-Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration) \cite{pereira_dinasore_2020}. It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritised over real-time performance guarantees. This ease of study rules out the use of proprietary \acp{RTE} like \textit{EcoStruxure Automation Expert's "dPAC"} and \textit{ISaGRAF Runtime}.
+Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration) \cite{pereira_dinasore_2020}. It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritized over real-time performance guarantees. This ease of study rules out the use of proprietary \acp{RTE} like \textit{EcoStruxure Automation Expert's dPAC} and \textit{ISaGRAF Runtime}.
 
 Where the open-source \ac{RTE} \textit{4DIAC FORTE} provides a portable C\texttt{++} execution environment for low-level industrial deployments, \textit{DINASORE} occupies the same architectural role while targeting higher-level workloads that benefit from the \textit{Python} ecosystem. The two runtimes share the same management protocol, meaning that concepts developed against one transfer directly to the other. \textit{4DIAC FORTE} itself was considered as a target \ac{RTE} but ruled out as its codebase is substantially larger and more complex, making it more complex to study and target.
 
@@ -16,19 +16,19 @@ Where the open-source \ac{RTE} \textit{4DIAC FORTE} provides a portable C\texttt
 \end{figure}
 
 \section{Server}
-The design begins by setting up a centralised backend server tasked with serving the \ac{IDE} interface as a web application, managing data persistence, and communicating with the distributed \acp{RTE}. Taking into account the features that are planned, \textit{JavaScript} running on \textit{Node.js} was chosen as the underlying environment to run the server on, due to the extensive library ecosystem, leveraging an asynchronous, event-driven and non-blocking I/O model \cite{sun_reasoning_2019}.
+The design begins by setting up a centralized backend server tasked with serving the \ac{IDE} interface as a web application, managing data persistence and communicating with the distributed \acp{RTE}. Taking into account the features that are planned, \textit{JavaScript} running on \textit{Node.js} was chosen as the underlying environment to run the server on, due to the extensive library ecosystem, leveraging an asynchronous, event-driven and non-blocking I/O model \cite{sun_reasoning_2019}.
 
-To address data management, the server adopts a \textit{Document-Oriented Database} system. Because \textit{IEC 61499} configurations, such as function blocks and event/data connections, are inherently structured as hierarchical graphs, a database that stores data as key values pairs represents the optimal architectural fit. In fact, local-first \acp{IDE} for the standard usually store the programs in a \textit{XML} format for this exact reason.
+To address data management, the server adopts a \textit{Document-Oriented Database} system. Because \textit{IEC 61499} configurations, such as function blocks and event/data connections, are inherently structured as hierarchical graphs, a database that stores data as key values pairs represents the optimal architectural fit. In fact, local-first \acp{IDE} for the standard usually store the programs in an \textit{XML} format for this exact reason.
 
-Architecturally, the server functions as a multi-protocol hub: it handles traditional HTTP traffic and maintains WebSocket channels for bidirectional communication with active \acp{RTE}. For real-time collaboration, a library will be required to run in both the server and the frontend. Since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server, creating a homogeneous single language stack that simplifies data serialization across network boundaries. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
+Architecturally, the server functions as a multiprotocol hub: it handles traditional HTTP traffic and maintains WebSocket channels for bidirectional communication with active \acp{RTE}. For real-time collaboration, a library will be required to run in both the server and the frontend. Since \textit{JavaScript} runs natively in the browser, it further reinforces that it should also be used in the server, creating a homogeneous single language stack that simplifies data serialization across network boundaries. The library choice will be explained in depth in \Cref{sec:real-time-collaboration}, proving the previous train of thought.
 
 \section{Frontend}
-The frontend constitutes the client-side architectural layer of the system, acting as the primary \ac{HMI} through which users interact with the underlying application logic. In modern web architectures, the frontend is responsible for rendering the \ac{UI}, capturing user inputs, executing localised presentation logic and managing real-time state synchronisation with the backend server. For this specific application, the frontend serves as the interactive environment used to create, visualize, and modify \ac{FBD} programs.
+The frontend constitutes the client-side architectural layer of the system, acting as the primary \ac{HMI} through which users interact with the underlying application logic. In modern web architectures, the frontend is responsible for rendering the \ac{UI}, capturing user inputs, executing localized presentation logic and managing real-time state synchronization with the backend server. For this specific application, the frontend serves as the interactive environment used to create, visualize and modify \ac{FBD} programs.
 
 Each following subsection will first explain and describe what an \ac{IDE} should implement and follow by showing how the prototype solved the proposed requirements.
 
 \subsection{Devices Configuration View}
-In the interest of distributed \acp{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so a clean way to define the resources that are available is needed. Both the \textit{DINASORE} port and the \textit{SSH} port need to be defined for each since deployment communication and synchronisation will use each of them, respectively.
+In the interest of distributed \acp{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so a clean way to define the resources that are available is needed. Both the \textit{DINASORE} port and the \textit{SSH} port need to be defined for each since deployment communication and synchronization will use each of them, respectively.
 
 Accordingly, each configuration profile maintains these essential properties:
 
@@ -36,7 +36,7 @@ Accordingly, each configuration profile maintains these essential properties:
   \item \textbf{Name}: Human friendly name to quickly identify what device this is
   \item \textbf{Address}: The address of the device
   \item \textbf{DINASORE port}: The port where \textit{DINASORE} is running
-  \item \textbf{Color}: The color associated with this \textit{DINASORE} instance, providing a visual distinction in the \textit{Graph View} between function blocks mapped to different instances.
+  \item \textbf{Colour}: The colour associated with this \textit{DINASORE} instance, providing a visual distinction in the \textit{Graph View} between function blocks mapped to different instances.
   \item \textbf{SSH port}: The open \textit{SSH} port of the device.
   \item \textbf{SSH user} and \textbf{SSH password}: The \textit{SSH} login credentials.
   \item \textbf{SSH path to DINASORE}: Path in the \textit{SSH} filesystem pointing to where \textit{DINASORE} is located.
@@ -46,33 +46,33 @@ With the existence of the middleware, this solution removes the requirement for 
 
 \begin{figure}[H]
   \includegraphics[width=0.7\linewidth]{devices-configuration.jpg}
-  \caption{Devices Configuration View}
+  \caption{Devices Configuration View.}
   \label{fig:devices-configuration}
 \end{figure}
 
 \subsection{Function Blocks Editor View}
-This is where individual function blocks are defined. It allows the team to specify the interface of each function block, its input and output data ports and events, as well as program the internal behaviour. This separation of interface and implementation follows the \textit{IEC 61499} model of encapsulation, where a function block exposes a well defined interface while keeping its internal logic self-contained.
+This is where individual function blocks are defined. It allows the team to specify the interface of each function block, its input and output data ports and events, as well as program the internal behaviour. This separation of interface and implementation follows the \textit{IEC 61499} model of encapsulation, where a function block exposes a well-defined interface while keeping its internal logic self-contained.
 
-Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function block is defined in a \textit{XML} format file with a \textit{.fbt} extension, which results in a function block that can be displayed graphically like seen in \Cref{fig:example-fb}. The internal behaviour of the function blocks in \textit{DINASORE} is programmed in \textit{Python}.
+Like in the other \acp{RTE}, in \textit{DINASORE} the interface of the function block is defined in an \textit{XML} format file with a \textit{.fbt} extension, which results in a function block that can be displayed graphically like seen in \Cref{fig:example-fb}. The internal behaviour of the function blocks in \textit{DINASORE} is programmed in \textit{Python}.
 
 \begin{figure}[H]
   \includegraphics[width=0.3\linewidth]{example-fb.jpg}
-  \caption{Example function block defined via \textit{XML}}
+  \caption{Example function block defined via \textit{XML}.}
   \label{fig:example-fb}
 \end{figure}
 
 For the \acp{IDE} to be able to detect and use the function block, both the \textit{.fbt} file and the \textit{.py} file need to be placed in a specific folder, right next to each other. In this prototype this is handled automatically in the server database, removing the need to manually move files like it is needed in \textit{4DIAC-IDE}.
 
-As seen in \Cref{fig:fbs-editor}, this view contains a split view text editor: a side for the \textit{.fbt} file and the other for the \textit{.py} file. It would be possible to create a visual editor for designing the interface, instead of having to write \textit{xml} by hand, but the added complexity would not be justified at this prototyping stage. The \textit{xml} format is sufficiently structured that a text editor provides an adequate experience and a dedicated visual interface remains a natural direction for future development.
+As seen in \Cref{fig:fbs-editor}, this view contains a split view text editor: a side for the \textit{.fbt} file and the other for the \textit{.py} file. It would be possible to create a visual editor for designing the interface, instead of having to write \textit{XML} by hand, but the added complexity would not be justified at this prototyping stage. The \textit{XML} format is sufficiently structured that a text editor provides an adequate experience and a dedicated visual interface remains a natural direction for future development.
 
 \begin{figure}[H]
   \includegraphics[width=1\linewidth]{fbs-editor.jpg}
-  \caption{Function Blocks Editor View}
+  \caption{Function Blocks Editor View.}
   \label{fig:fbs-editor}
 \end{figure}
 
 \subsection{Graph View}
-This view is the primary workspace for composing the application. Function blocks are placed on the canvas and connected together by drawing connections between their data and event ports, forming the application network. Event ports are commonly color coded red, while data ports are color coded blue.
+This view is the primary workspace for composing the application. Function blocks are placed on the canvas and connected together by drawing connections between their data and event ports, forming the application network. Event ports are commonly colour coded red, while data ports are colour coded blue.
 
 A function block will have some input and output data ports, each with its own associated data type. For example, an \textit{INT} input port will not accept data from a \textit{WORD} output port and therefore should not be able to connect to it. It is also possible to set a default value for an input if no output is connected to it, there is an editable string field for this which gets converted to the expected data type by the \ac{RTE}. The data types supported by \textit{IEC 61499} are derived from and defined by \textit{IEC 61131-3} as listed in \Cref{tab:iec-data-types}.
 
@@ -95,28 +95,28 @@ A function block will have some input and output data ports, each with its own a
         \texttt{DATE}    & Date                 &        \\
         \hline
     \end{tabular}
-    \caption{IEC 61131-3 Data Types \cite{noauthor_iec_2026}}
+    \caption{IEC 61131-3 Data Types \cite{noauthor_iec_2026}.}
     \label{tab:iec-data-types}
 \end{table}
 
-Each function block can also be mapped to a \textit{DINASORE} instance, with the color coding defined in the Devices Configuration View providing an immediate visual indication of how the application is distributed across the available devices.
+Each function block can also be mapped to a \textit{DINASORE} instance, with the colour coding defined in the Devices Configuration View providing an immediate visual indication of how the application is distributed across the available devices.
 
-This system was achieved in the prototype with the use of the \textit{LiteGraph.js} library \cite{noauthor_jagenjolitegraphjs_nodate}, a graph node editor for the browser. A lot of other libraries were considered, but this one was chosen due to the requirements of the proposed solution. Let us discuss the alternatives that were considered to understand why this choice is important:
+This system was achieved in the prototype with the use of the \textit{LiteGraph.js} library \cite{noauthor_litegraphjs_nodate}, a graph node editor for the browser. A lot of other libraries were considered, but this one was chosen due to the requirements of the proposed solution. Let us discuss the alternatives that were considered to understand why this choice is important:
 
 \begin{itemize}
-  \item \textbf{Rete.js} \cite{noauthor_retejs_nodate}: A very flexible and complete editor framework, but the added complexity makes it harder to integrate the desired features. It is also a more general purpose editor, meaning the multi-input and multi-output function blocks with specific data types are not as well supported.
-  \item \textbf{xyflow} \cite{noauthor_node-based_nodate}: A highly customizable framework composed of React Flow and Svelte Flow. While it provides excellent visual customisation and integration with frontend frameworks, it suffers from the same problems as \textit{Rete.js}.
-  \item \textbf{Drawflow} \cite{soler_jerosolerdrawflow_2026}: A lightweight and simplistic library with a focus on data flow execution. Although simple to integrate, it lacks many features required for designing \textit{IEC 61499} function blocks, such as robust type handling and multi-input and multi-output.
+  \item \textbf{Rete.js} \cite{noauthor_retejs_nodate}: A very flexible and complete editor framework, but the added complexity makes it harder to integrate the desired features. It is also a more general purpose editor, meaning the multi-input and multi-output function blocks with specific data types are not as well-supported.
+  \item \textbf{xyflow} \cite{noauthor_node-based_nodate}: A highly customizable framework composed of React Flow and Svelte Flow. While it provides excellent visual customization and integration with frontend frameworks, it suffers from the same problems as \textit{Rete.js}.
+  \item \textbf{Drawflow} \cite{soler_drawflow_2026}: A lightweight and simplistic library with a focus on data flow execution. Although simple to integrate, it lacks many features required for designing \textit{IEC 61499} function blocks, such as robust type handling and multi-input and multi-output.
   \item \textbf{Baklava.js} \cite{noauthor_baklavajs_nodate}: With a clean architecture and flexibility, this would be a good alternative, but since it specifically targets \textit{Vue} and requires a more intricate setup, it was not the most appropriate choice for a prototype.
   \item \textbf{GoJS} \cite{noauthor_gojs_nodate}: Very powerful commercial alternative. It offers advanced functionality and flexibility, but its licensing model make it less suitable for lightweight research prototypes and open development environments.
   \item \textbf{Node-RED} \cite{noauthor_low-code_nodate}: A flow based programming environment. While conceptually similar, its architecture is more focused on runtime execution than on being a visual editor of structured data.
 \end{itemize}
 
-Among these alternatives, \textit{LiteGraph.js} presented the best balance between simplicity, flexibility and ease of integration. Its builtin support for typed inputs and outputs, lightweight architecture and direct focus on visual data flow programming made it especially suitable for the requirements of the proposed solution. Even so, it was necessary to implement custom behaviour on top of some functions of \textit{LiteGraph.js} to achieve the desired behaviour. The choice of the graph library is very important, since the requirements of \textit{IEC 61499} differ significantly from those of most conventional graph editors, as such, special care must be taken to ensure that these requirements are properly supported. The described implementation in the prototype is displayed in \Cref{fig:graph-editor}.
+Among these alternatives, \textit{LiteGraph.js} presented the best balance between simplicity, flexibility and ease of integration. Its built in support for typed inputs and outputs, lightweight architecture, and direct focus on visual data flow programming made it especially suitable for the requirements of the proposed solution. Even so, it was necessary to implement custom behaviour on top of some functions of \textit{LiteGraph.js} to achieve the desired behaviour. The choice of the graph library is very important, since the requirements of \textit{IEC 61499} differ significantly from those of most conventional graph editors, as such, special care must be taken to ensure that these requirements are properly supported. The described implementation in the prototype is displayed in \Cref{fig:graph-editor}.
 
 \begin{figure}[H]
   \includegraphics[width=0.9\linewidth]{graph-editor.jpg}
-  \caption{Graph Editor View}
+  \caption{Graph Editor View.}
   \label{fig:graph-editor}
 \end{figure}
 
@@ -125,19 +125,19 @@ This view, as shown in \Cref{fig:console-editor}, serves as the primary logging 
 
 \begin{figure}[H]
   \includegraphics[width=0.9\linewidth]{console-editor.jpg}
-  \caption{Console View}
+  \caption{Console View.}
   \label{fig:console-editor}
 \end{figure}
 
 \section{Real-Time Collaboration} \label{sec:real-time-collaboration}
-In \textit{PTERO} the collaborative editing system was implemented using \textit{Yjs} \cite{cimiano_yjs_2015}, a \ac{CRDT} framework designed for distributed collaborative applications, allowing users to concurrently edit shared data structures while automatically resolving conflicts in a deterministic manner. \textit{Yjs} was chosen in detriment of alternative \ac{CRDT} implementations like \textit{Automerge} due to its larger ecosystem. With built-in support for many text editor libraries \cite{noauthor_editor_2023}, such as \textit{CodeMirror}, adding real-time collaboration to the \textit{Function Blocks Editor View} is very straightforward.
+In \textit{PTERO} the collaborative editing system was implemented using \textit{Yjs} \cite{cimiano_yjs_2015}, a \ac{CRDT} framework designed for distributed collaborative applications, allowing users to concurrently edit shared data structures while automatically resolving conflicts in a deterministic manner. \textit{Yjs} was chosen in detriment of alternative \ac{CRDT} implementations like \textit{Automerge} due to its larger ecosystem. With built-in support for many text editor libraries \cite{noauthor_yjs_2023}, such as \textit{CodeMirror}, adding real-time collaboration to the \textit{Function Blocks Editor View} is very straightforward.
 
-The graph structure representing the \ac{FBD} application is synchronised through shared \textit{Yjs} data structures. Operations such as creating function blocks, deleting connections, modifying inputs or moving nodes are propagated in real time to all connected clients. Each user therefore observes the same graph state with minimal delay. To integrate collaboration into the \textit{Graph View}, the internal state changes of the graph were connected to the shared \textit{Yjs} document. Whenever a local modification occurs in the graph, the corresponding operation is serialized and applied to the shared collaborative state. Likewise, remote updates received from other users are reflected back into the local graph editor instance.
+The graph structure representing the \ac{FBD} application is synchronized through shared \textit{Yjs} data structures. Operations such as creating function blocks, deleting connections, modifying inputs or moving nodes are propagated in real time to all connected clients. Each user therefore observes the same graph state with minimal delay. To integrate collaboration into the \textit{Graph View}, the internal state changes of the graph were connected to the shared \textit{Yjs} document. Whenever a local modification occurs in the graph, the corresponding operation is serialized and applied to the shared collaborative state. Likewise, remote updates received from other users are reflected back into the local graph editor instance.
 
 \section{Deployment} \label{sec:deployment}
 The deployment process is responsible for taking the application defined in the \textit{Graph View} and bringing it to life across the configured \textit{DINASORE} instances. It is broken down into a sequence of steps, each of which is described in the following subsections.
 
-\subsection{Synchronise with DINASOREs}
+\subsection{Synchronize with DINASOREs}
 The first step is to ensure that each \textit{DINASORE} instance has access to the function blocks that it will need to run the application. This is done by sending all the \textit{.fbt} and corresponding \textit{.py} files in the database, to every device. To achieve this the system can make use of the \texttt{synchronize.py} script that accompanies the \textit{DINASORE} source code. A configuration file needs to be provided that tells the script where to send the function blocks to, like shown in \Cref{lst:sync-config}. The server must have a valid \textit{SSH} connection with each device in order to connect and send the files.
 
 \subsection{Send Commands}
@@ -148,7 +148,7 @@ Before the messages can be sent, they need to be built into the format that \tex
 
 \begin{figure}[H]
   \includegraphics[width=0.9\linewidth]{build-message.png}
-  \caption{\textit{DINASORE} communication format}
+  \caption{\textit{DINASORE} communication format.}
   \label{fig:build-message}
 \end{figure}
 
@@ -159,7 +159,7 @@ Now that we have defined how to build the messages, we can explore the sequence 
 
 \begin{figure}[H]
   \includegraphics[width=0.8\linewidth]{sequence-create.png}
-  \caption{Overview of the communication sequence when deploying}
+  \caption{Overview of the communication sequence when deploying.}
   \label{fig:sequence-create}
 \end{figure}
 
@@ -167,23 +167,23 @@ Now that we have defined how to build the messages, we can explore the sequence 
 To give the team visibility into the deployment process right from the \ac{IDE}, without having to log into the server, a console is provided in the \textit{Console View} that displays a live log of each action taken during deployment. There are two main things being logged:
 
 \begin{itemize}
-  \item \textbf{Synchronise}: The output of running the \textit{Python} script is displayed so that the team see that the \textit{SSH} communication is being done properly.
-  \item \textbf{Send Commands}: As commands are sent and responses are received, they are displayed, allowing the team to make sure each command is formulated correctly, being processed and a response is issued.
+  \item \textbf{Synchronize}: The output of running the \textit{Python} script is displayed so that the team see that the \textit{SSH} communication is being done properly.
+  \item \textbf{Send Commands}: As commands are sent and responses are received, they are displayed, allowing the team to make sure each command is formulated correctly, being processed, and a response is issued.
 \end{itemize}
 
 \subsection{Watch}
-Once the application is running, the values of the node outputs are continuously retrieved from the \textit{DINASORE} instances and displayed in the \textit{Graph View}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development. In order to get these values, the \ac{IDE} must tell the \textit{DINASORE} instances which output slots it wants to watch and then request the values. In this prototype, for simplicity, all data outputs are watched and a watch creation request must be sent for each.
+Once the application is running, the values of the node outputs are continuously retrieved from the \textit{DINASORE} instances and displayed in the \textit{Graph View}, providing immediate feedback on the state of the running application. This is particularly useful for debugging and validating the behaviour of the application during development. In order to get these values, the \ac{IDE} must tell the \textit{DINASORE} instances which output slots it wants to watch and then request the values. In this prototype, for simplicity, all data outputs are watched, and a watch creation request must be sent for each.
 
 \Cref{fig:sequence-watch} represents the sequence that the messages need to be sent. Details about these requests and the associated responses can be found in \Cref{app:watch}. When the watch values are retrieved, they are displayed on the right side of the corresponding output slots, as demonstrated in \Cref{fig:display-watch}.
 
 \begin{figure}[H]
   \includegraphics[width=0.8\linewidth]{sequence-watch.png}
-  \caption{Overview of the communication sequence when watching}
+  \caption{Overview of the communication sequence when watching.}
   \label{fig:sequence-watch}
 \end{figure}
 
 \begin{figure}[H]
   \includegraphics[width=0.4\linewidth]{display-watch.jpg}
-  \caption{Watching an output slot in the \textit{Graph View}}
+  \caption{Watching an output slot in the \textit{Graph View}.}
   \label{fig:display-watch}
 \end{figure}

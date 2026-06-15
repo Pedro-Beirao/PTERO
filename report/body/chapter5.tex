@@ -17,11 +17,11 @@ A common test application was used throughout the validation process. The same a
 The following hardware devices were available and used throughout the evaluation phase of this work:
 
 \begin{enumerate}
-\item \textbf{M1 MacBook Pro} (16GB RAM, 2020, macOS 26): This machine served as the primary development and testing platform for \textit{PTERO}. Being the development machine, it hosted the local development server during iterative testing cycles and was used to evaluate the responsiveness of the collaborative editing interface, the correctness of graph synchronisation and the performance of the \textit{Yjs} based real-time collaboration layer under local conditions.
+\item \textbf{M1 MacBook Pro} (16 GB RAM, 2020, macOS 26): This machine served as the primary development and testing platform for \textit{PTERO}. Being the development machine, it hosted the local development server during iterative testing cycles and was used to evaluate the responsiveness of the collaborative editing interface, the correctness of graph synchronization and the performance of the \textit{Yjs} based real-time collaboration layer under local conditions.
 
-\item \textbf{ASUS TUF Gaming F16} (32GB RAM, 2024, Windows 11): This machine was employed primarily for evaluating the performance of \textit{4DIAC-IDE}.
+\item \textbf{ASUS TUF Gaming F16} (32 GB RAM, 2024, Windows 11): This machine was employed primarily for evaluating the performance of \textit{4DIAC-IDE}.
 
-\item \textbf{Raspberry Pi 3} (1GB RAM, Raspberry Pi OS): This device acted as a permanently running, remotely accessible server throughout the evaluation period. It hosted a persistent instance of the \textit{PTERO} server as well as an instance of \textit{DINASORE}. Its limited memory and processing capacity made it the most representative of real-world target environments and its inclusion in the testing structure was instrumental in establishing the practical boundaries of the collaboration server.
+\item \textbf{Raspberry Pi 3} (1 GB RAM, Raspberry Pi OS): This device acted as a permanently running, remotely accessible server throughout the evaluation period. It hosted a persistent instance of the \textit{PTERO} server as well as an instance of \textit{DINASORE}. Its limited memory and processing capacity made it the most representative of real-world target environments and its inclusion in the testing structure was instrumental in establishing the practical boundaries of the collaboration server.
 \end{enumerate}
 
 \subsection{Available Resources}
@@ -29,7 +29,7 @@ The following resources were made available in the testing environments:
 
 \begin{itemize}
 \item One \textit{DINASORE} \ac{RTE}.
-\item Three function block definitions obtained from the official \textit{DINASORE} tutorial \textit{'Sensorization "Hello World!"'}:
+\item Three function block definitions obtained from the official \textit{DINASORE} tutorial \textit{'Sensorization "Hello World!"'} \cite{noauthor_digi2-feupdinasore_2026}:
   \begin{itemize}
   \item \texttt{SENSOR\_SIMULATOR.fbt} and \texttt{SENSOR\_SIMULATOR.py}
   \item \texttt{MOVING\_AVERAGE.fbt} and \texttt{MOVING\_AVERAGE.py}
@@ -46,7 +46,7 @@ The application shown in \Cref{fig:test-program} was implemented and deployed du
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.8\linewidth]{test-program.jpg}
-\caption{Test application implemented in \textit{4DIAC-IDE}}
+\caption{Test application implemented in \textit{4DIAC-IDE}.}
 \label{fig:test-program}
 \end{figure}
 
@@ -57,7 +57,7 @@ After deployment, the application should execute correctly on the target \textit
 \textit{PTERO} was subjected to functional tests to confirm that all core features behave as specified. It was tested by implementing and deploying the test program defined in \Cref{sec:experimental-setup}. As a control, the same was performed in \textit{4DIAC-IDE}. The steps taken are described in \Cref{tab:workflow-comparison}.
 
 \begin{longtable}{p{2.5cm}p{6cm}p{5.5cm}}
-\caption{Workflow Comparison Between \textit{4DIAC-IDE} and \textit{PTERO}} \label{tab:workflow-comparison} \\
+\caption{Workflow Comparison Between \textit{4DIAC-IDE} and \textit{PTERO}.} \label{tab:workflow-comparison} \\
 \hline
 \textbf{Step} & \textbf{4DIAC-IDE} & \textbf{PTERO} \\ \hline
 \endhead
@@ -101,14 +101,14 @@ The values were displayed on the right side of the output data slots. \\ \hline
 
 Besides verifying that the output values are being monitored correctly, following the \textit{Deployed} step, the commands displayed in the console were directly compared between \acp{IDE}. It was verified that both were sending exactly the same commands, the headers as well as the contents were exactly the same and the responses were no different. These results confirmed that the prototype correctly handles the development of \textit{IEC 61499} programs.
 
-While the two workflows are broadly equivalent in the number of steps required, they differ in several procedural details. Configuring a device in \textit{PTERO} requires additional SSH credentials upfront, a step absent in \textit{4DIAC-IDE}, however, this overhead is offset later in the workflow, as file synchronisation with \textit{DINASORE} is a manual command line operation in \textit{4DIAC-IDE}, while it is handled automatically by \textit{PTERO} at deploy time. Similarly, importing function block files is more straightforward in \textit{PTERO}, which accepts files directly through the interface, whereas \textit{4DIAC-IDE} requires manual placement into a specific directory in the filesystem. These differences reflect a deliberate design philosophy in \textit{PTERO} of consolidating configuration complexity into the tool itself.
+While the two workflows are broadly equivalent in the number of steps required, they differ in several procedural details. Configuring a device in \textit{PTERO} requires additional SSH credentials upfront, a step absent in \textit{4DIAC-IDE}, however, this overhead is offset later in the workflow, as file synchronization with \textit{DINASORE} is a manual command line operation in \textit{4DIAC-IDE}, while it is handled automatically by \textit{PTERO} at deploy time. Similarly, importing function block files is more straightforward in \textit{PTERO}, which accepts files directly through the interface, whereas \textit{4DIAC-IDE} requires manual placement into a specific directory in the filesystem. These differences reflect a deliberate design philosophy in \textit{PTERO} of consolidating configuration complexity into the tool itself.
 
 \section{Performance Evaluation}
 This solution not only aims to execute the same core workloads as \textit{4DIAC-IDE}, but also introduces architectural capabilities and design choices that justify its development. To assess its efficacy, the system's performance is evaluated against four primary metrics:
 
 \begin{itemize}
     \item \textbf{Installation Complexity}: The technical overhead and environmental constraints required to set up the development environment.
-    \item \textbf{Startup Latency}: The temporal duration from initialisation to full operational readiness.
+    \item \textbf{Startup Latency}: The temporal duration from initialization to full operational readiness.
     \item \textbf{Configuration Overhead}: The number of manual steps required to configure the system.
     \item \textbf{Deployment Flexibility}: The flexibility that the deployment system allows.
 \end{itemize}
@@ -116,7 +116,7 @@ This solution not only aims to execute the same core workloads as \textit{4DIAC-
 Taking these metrics into account, each step of development was tested and compared. The listed tasks in \Cref{tab:performance-evaluation} are the ones that demonstrated to be significantly different between solutions, others were analysed but proved to not be worth the discussion.
 
 \begin{longtable}{p{2.5cm}p{6cm}p{5.5cm}}
-\caption{Performance Evaluation comparison} \label{tab:performance-evaluation} \\
+\caption{Performance Evaluation comparison.} \label{tab:performance-evaluation} \\
 \hline
 \textbf{Task} & \textbf{4DIAC-IDE} & \textbf{PTERO} \\ \hline
 \endhead
@@ -137,7 +137,7 @@ Average of 4 seconds to boot the application in the \textit{ASUS TUF Gaming F16}
 Average of less than a second to load webpage. The use of lightweight libraries and the move of heavy workloads to the server allow the page to load in an instant. \\ \hline
 
 \textbf{Create and edit function block files} &
-While it does have a way to create and edit the \textit{.fbt} files inside the application, there is no built in \textit{Python} text editor. &
+While it does have a way to create and edit the \textit{.fbt} files inside the application, there is no built-in \textit{Python} text editor. &
 Has a text editor for both types of files. \\ \hline
 
 \textbf{Collaboration} &
@@ -149,11 +149,11 @@ An external periodic version control system like \textit{Git} needed to be used.
 \item User \#1 commits and pushes.
 \item User \#2 tries to pull the changes but gets a merge conflict.
 \end{enumerate} &
-Has a realtime collaboration system. Any change made was immediately propagated to every client and resolved by the \ac{CRDT}, ensuring no conflicts needed to be handled manually and damage is minimised. \\ \hline
+Has a real-time collaboration system. Any change made was immediately propagated to every client and resolved by the \ac{CRDT}, ensuring no conflicts needed to be handled manually and damage is minimized. \\ \hline
 
-\textbf{Synchronising files with the \textit{DINASOREs}} &
+\textbf{Synchronizing files with the \textit{DINASOREs}} &
 Required to manually use an external script before deployment. &
-The server itself connected and synchronised the files with the \textit{DINASOREs}. This happens automatically when attempting to deploy, ensuring that deployments never fail due to the human error of forgetting to sync the files. \\ \hline
+The server itself connected and synchronized the files with the \textit{DINASOREs}. This happens automatically when attempting to deploy, ensuring that deployments never fail due to the human error of forgetting to sync the files. \\ \hline
 
 \textbf{Remote deployment} &
 Every \ac{IDE} needed to have a valid connection with each available \textit{DINASORE}, as well as \textit{SSH} access. This would be increasingly complicated if the user wanted to make a deployment while in a different network. &
@@ -163,14 +163,14 @@ By having the server as the middleware, only it was exposed for the users to con
 
 The \textbf{Install} and \textbf{Open} tasks evaluated installation complexity and startup latency. While \textit{4DIAC-IDE} offers a straightforward local desktop installer, \textit{PTERO} trades this for a one-time backend setup that guarantees universal cross-platform access via standard web browsers. Furthermore, by offloading computationally heavy operations to the backend, \textit{PTERO} reduced client-side startup latency from 4 seconds down to under 1 second, fulfilling the objective for immediate operational readiness.
 
-The remaining tasks evaluated configuration overhead and deployment flexibility. \textit{4DIAC-IDE} introduced operational friction by requiring external text editors for script writing, manual script execution for synchronisation and asynchronous version control operations. It also requires complex network setups since every engineering workstation must maintain individual direct connections to each target \ac{RTE}. Conversely, \textit{PTERO} minimizes configuration overhead by unifying file editing, automating file synchronisation and introducing the concept a \ac{CRDT}. By utilising the server as a middleware, \textit{PTERO} dramatically improved deployment flexibility, as clients only need to authenticate with the centralised server, not the \acp{RTE}.
+The remaining tasks evaluated configuration overhead and deployment flexibility. \textit{4DIAC-IDE} introduced operational friction by requiring external text editors for script writing, manual script execution for synchronization and asynchronous version control operations. It also requires complex network setups since every engineering workstation must maintain individual direct connections to each target \ac{RTE}. Conversely, \textit{PTERO} minimizes configuration overhead by unifying file editing, automating file synchronization and introducing the concept a \ac{CRDT}. By utilizing the server as a middleware, \textit{PTERO} dramatically improved deployment flexibility, as clients only need to authenticate with the centralized server, not the \acp{RTE}.
 
 \section{Collaboration Evaluation}
-\Citeauthor{cimiano_yjs_2015} \cite{cimiano_yjs_2015} establish that \textit{Yjs} is able to handle an average of 100 actions per millisecond which is obviously good enough for this use case, as it does not require millisecond precision. Taking connection with the remote server into account, a test was devised to understand how well the \textit{Raspberry Pi} could handle multiple users at the same time. A script was created that initialised a set number of clients, connected them to the remote server and sent a change that would get propagated across the clients. By measuring the time that would take for the clients to receive the change, the chart in \Cref{fig:yjs-performance} was obtained. The results demonstrated that even a resource constrained machine accessed over a network can serve as an adequate collaboration server for a small team, however, the \textit{Raspberry Pi} deployment was found to be unsuitable beyond approximately 240 simultaneous clients, at which point the hardware prevented additional connections from being established reliably.
+\Citeauthor{cimiano_yjs_2015} \cite{cimiano_yjs_2015} establish that \textit{Yjs} is able to handle an average of 100 actions per millisecond which is obviously good enough for this use case, as it does not require millisecond precision. Taking connection with the remote server into account, a test was devised to understand how well the \textit{Raspberry Pi} could handle multiple users at the same time. A script was created that initialized a set number of clients, connected them to the remote server and sent a change that would get propagated across the clients. By measuring the time that would take for the clients to receive the change, the chart in \Cref{fig:yjs-performance} was obtained. The results demonstrated that even a resource constrained machine accessed over a network can serve as an adequate collaboration server for a small team, however, the \textit{Raspberry Pi} deployment was found to be unsuitable beyond approximately 240 simultaneous clients, at which point the hardware prevented additional connections from being established reliably.
 
 \begin{figure}[H]
   \includegraphics[width=0.8\linewidth]{yjs-performance.png}
-  \caption{Performance results of \textit{Yjs} running in the \textit{Raspberry Pi}}
+  \caption{Performance results of \textit{Yjs} running in the \textit{Raspberry Pi}.}
   \label{fig:yjs-performance}
 \end{figure}
 
@@ -185,14 +185,14 @@ Two questionnaires were designed and given to participants. One focused on the u
 \end{itemize}
 
 \subsection{4DIAC-IDE Usability}
-A usability study on \textit{4DIAC-IDE} has already been conducted by \citeauthor{weber_usability_2019} \cite{weber_usability_2019}, but given as the this new proposed solution introduces new concepts and expectations, a new usability study was devised to understand how this tool fairs in the specific fields that \textit{PTERO} sets out to innovate in. Next follows the results of this new study.
+A usability study on \textit{4DIAC-IDE} has already been conducted by \citeauthor{weber_usability_2019} \cite{weber_usability_2019}, but given as this new proposed solution introduces new concepts and expectations, a new usability study was devised to understand how this tool fairs in the specific fields that \textit{PTERO} sets out to innovate in. Next follows the results of this new study.
 
 \subsubsection*{Difficulty}
-With the use of a Likert \cite{likert_technique_1932} table, the difficulty of doing several different tasks using this \ac{IDE} was analysed. Ranging from \textit{Very Easy} to \textit{Very Hard}, this section had the intent of understanding how easy and straightforward each step of \textit{IEC 61499} development was. If a specific step was difficult in \textit{4DIAC-IDE}, it will be interesting to see how it compares with \textit{PTERO}. The results are displayed in \Cref{tab:4diac-difficulty}.
+With the use of a Likert \cite{koo_likert-type_2025} table, the difficulty of doing several different tasks using this \ac{IDE} was analysed. Ranging from \textit{Very Easy} to \textit{Very Hard}, this section had the intent of understanding how easy and straightforward each step of \textit{IEC 61499} development was. If a specific step was difficult in \textit{4DIAC-IDE}, it will be interesting to see how it compares with \textit{PTERO}. The results are displayed in \Cref{tab:4diac-difficulty}.
 
 \begin{table}[H]
 \centering
-\caption{Perceived difficulty of tasks in \textit{4DIAC-IDE}}
+\caption{Perceived difficulty of tasks in \textit{4DIAC-IDE}.}
 \label{tab:4diac-difficulty}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{m{0.42\linewidth}m{0.5\linewidth}}
@@ -221,14 +221,14 @@ Collaborating with other people & \likertpct{0}{0}{9.1}{36.4}{54.5}\\
 \textcolor{likert5}{\rule{7pt}{7pt}} Very Hard
 \end{table}
 
-While initial installation and graphical operations showed good to moderate usability, other tasks were not so well reviewed. The most critical usability barriers manifested during distributed orchestration and collaboration. Manually synchronising function blocks with \textit{DINASORE} was rated as \textit{Hard} or \textit{Very Hard} by 63.7\% of participants, reflecting the operational risks of relying on external scripts. Furthermore, group collaboration yielded the most severe negative consensus, with 90.9\% of respondents designating it as \textit{Hard} or \textit{Very Hard} (including a 54.5\% absolute majority for \textit{Very Hard}).
+While initial installation and graphical operations showed good to moderate usability, other tasks were not so well reviewed. The most critical usability barriers manifested during distributed orchestration and collaboration. Manually synchronizing function blocks with \textit{DINASORE} was rated as \textit{Hard} or \textit{Very Hard} by 63.7\% of participants, reflecting the operational risks of relying on external scripts. Furthermore, group collaboration yielded the most severe negative consensus, with 90.9\% of respondents designating it as \textit{Hard} or \textit{Very Hard} (including a 54.5\% absolute majority for \textit{Very Hard}).
 
 \subsubsection*{Intuitiveness}
 Next, another Likert table, this time on how intuitive it was to understand each part of the \ac{IDE}. This way the design decisions of \textit{4DIAC-IDE} can be critically analysed. The results are displayed in \Cref{tab:4diac-intuitive}.
 
 \begin{table}[H]
 \centering
-\caption{Perceived intuitiveness of key parts of \textit{4DIAC-IDE}}
+\caption{Perceived intuitiveness of key parts of \textit{4DIAC-IDE}.}
 \label{tab:4diac-intuitive}
 \noindent
 \renewcommand{\arraystretch}{1.2}
@@ -271,14 +271,14 @@ The most frequently mentioned positive aspect was the modularity of programming 
 \end{quote}
 
 \begin{quote}
-``I highly appreciated the modularity of the system, specifically the ability to design independent data manipulation pipelines for each individual machine. This decentralised approach feels highly relevant and closely mimics real-world industrial scenarios.''
+``I highly appreciated the modularity of the system, specifically the ability to design independent data manipulation pipelines for each individual machine. This decentralized approach feels highly relevant and closely mimics real-world industrial scenarios.''
 \end{quote}
 
 \paragraph{What were the biggest challenges you faced?}
-The most common difficulties were related to deployment, management of function block files and collaboration. Participants reported confusion regarding where files needed to be placed in the filesystem and how synchronisation with \textit{DINASORE} should be performed. As \ac{SINF} students had been tasked over the semester to work in groups, the collaboration issues were a recurring theme in their answers. It is also noteworthy that the average response length increased substantially, from 108 characters in the previous question to 510 characters in this one. This suggests that participants had considerably more detailed feedback when discussing the challenges, often providing detailed explanations and examples.
+The most common difficulties were related to deployment, management of function block files and collaboration. Participants reported confusion regarding where files needed to be placed in the filesystem and how synchronization with \textit{DINASORE} should be performed. As \ac{SINF} students had been tasked over the semester to work in groups, the collaboration issues were a recurring theme in their answers. It is also noteworthy that the average response length increased substantially, from 108 characters in the previous question to 510 characters in this one. This suggests that participants had considerably more detailed feedback when discussing the challenges, often providing detailed explanations and examples.
 
 \begin{quote}
-``Collaborating with colleagues was very hard, because of the management of file versions. Only one could be working at a time and we could only change the file after it has uploaded on Github.''
+``Collaborating with colleagues was very hard, because of the management of file versions. Only one could be working at a time, and we could only change the file after it has uploaded on GitHub.''
 \end{quote}
 
 \begin{quote}
@@ -297,7 +297,7 @@ As before, a Likert table is used to evaluate how intuitive it was to understand
 
 \begin{table}[H]
 \centering
-\caption{Perceived intuitiveness of key parts of \textit{PTERO}}
+\caption{Perceived intuitiveness of key parts of \textit{PTERO}.}
 \label{tab:ptero-intuitive}
 \noindent
 \renewcommand{\arraystretch}{1.2}
@@ -322,19 +322,19 @@ Monitor the output & \likertpct{75}{25}{0}{0}{0}\\
 \vspace{3em}
 \end{table}
 
-These results reveal a definitive positive consensus across all evaluated categories that participants find the workflow of \textit{PTERO} to be intuitive. This represents a complete reversal of the confusion observed in the \textit{4DIAC-IDE} study. The use of web technologies have allowed for a more user friendly \ac{IDE}.
+These results reveal a definitive positive consensus across all evaluated categories that participants find the workflow of \textit{PTERO} to be intuitive. This represents a complete reversal of the confusion observed in the \textit{4DIAC-IDE} study. The use of web technologies have allowed for a more user-friendly \ac{IDE}.
 
 \subsubsection*{System Usability Scale}
-To obtain a globally standardised and quantifiable metric of \textit{PTERO}'s overall user experience, the study incorporated the \ac{SUS} \cite{lewis_system_2018}. The \ac{SUS} is a reliable scale where the raw point responses are aggregated and a score from 0 to 100 is calculated.
+To obtain a globally standardized and quantifiable metric of \textit{PTERO}'s overall user experience, the study incorporated the \ac{SUS} \cite{lewis_system_2018}. The \ac{SUS} is a reliable scale where the raw point responses are aggregated and a score from 0 to 100 is calculated.
 
-\textit{PTERO} achieved an average SUS score of \textbf{88.75}. According to empirical usability benchmarks  \cite{lewis_item_2018}, this score positions \textit{PTERO} well above the 95th percentile of all analysed applications. This outstanding evaluation confirms that \textit{PTERO} is a an extremely user friendly solution.
+\textit{PTERO} achieved an average SUS score of \textbf{88.75}. According to empirical usability benchmarks  \cite{lewis_item_2018}, this score positions \textit{PTERO} well above the 95th percentile of all analysed applications. This outstanding evaluation confirms that \textit{PTERO} is an extremely user-friendly solution.
 
 \subsection{Comparison}
 To provide a complete synthesis of the usability evaluation, the study concluded with a direct comparative survey. The core objective of this is to establish a clear relative performance delta, isolating whether \textit{PTERO}'s remote web-based architecture delivers a measurably superior user experience when executing identical IEC 61499 engineering tasks. The comparative results are illustrated in \Cref{tab:direct-comparison}.
 
 \begin{table}[H]
 \centering
-\caption{Direct comparison of usability of \textit{PTERO} and \textit{4DIAC-IDE}}
+\caption{Direct comparison of usability of \textit{PTERO} and \textit{4DIAC-IDE}.}
 \label{tab:direct-comparison}
 \noindent
 \renewcommand{\arraystretch}{1.2}
@@ -373,15 +373,15 @@ The most substantial margins of improvement were achieved in target device confi
 Responses to this question were predominantly positive. Participants highlighted the reduced setup requirements, improved accessibility and simpler user interface provided by the web-based approach. Several respondents also noted that integrating the \texttt{.fbt} and \texttt{.py} editors into a single environment simplified the development workflow. While some usability improvements were suggested, participants considered PTERO easier to use than \textit{4DIAC-IDE}.
 
 \begin{quote}
-``Easier to setup for group work. Accessible from any PC.''
+``Easier to set up for group work. Accessible from any PC.''
 \end{quote}
 
 \begin{quote}
-``PTERO seems easier to setup and overall use. Loved the feature of writing the .fbt and .py files on the same tab.''
+``PTERO seems easier to set up and overall use. Loved the feature of writing the .fbt and .py files on the same tab.''
 \end{quote}
 
 \begin{quote}
-``PTERO is an easy to use and very intuitive platform that surpasses in user friendliness the 4DIAC-IDE when compared to its complexity and function block management.''
+``PTERO is an easy to use and very intuitive platform that surpasses in user-friendliness the 4DIAC-IDE when compared to its complexity and function block management.''
 \end{quote}
 
 \section{Discussion}
@@ -389,10 +389,10 @@ The evaluation results indicate that the proposed solution successfully achieves
 
 The functional validation confirmed that \textit{PTERO} correctly supports the complete development workflow, including configuration, modelling, deployment and monitoring of \textit{IEC 61499} applications. Both systems generated identical deployment commands and produced equivalent runtime behaviour in \textit{DINASORE}. This equivalence is an important result, as it demonstrates that the proposed abstraction layer does not compromise correctness or compatibility with existing tooling. Instead, it preserves interoperability while offering a different interaction model.
 
-The performance evaluation further complements these findings by highlighting how the architectural decisions in \textit{PTERO} translate into measurable workflow improvements. While both systems are capable of executing equivalent \textit{IEC 61499} applications, \textit{PTERO} reduces the number of manual steps required across key development tasks such as project setup, synchronisation and deployment. A central factor behind this improvement is the tighter integration between the different components of the development pipeline. In \textit{4DIAC-IDE}, the development workflow is distributed across multiple loosely connected tools and processes, requiring explicit user actions to maintain consistency between the modelling environment, local file system and remote runtime. In contrast, \textit{PTERO} internalises these responsibilities within the platform itself, allowing project state, file management and deployment logic to be handled automatically as part of a single unified system.
+The performance evaluation further complements these findings by highlighting how the architectural decisions in \textit{PTERO} translate into measurable workflow improvements. While both systems are capable of executing equivalent \textit{IEC 61499} applications, \textit{PTERO} reduces the number of manual steps required across key development tasks such as project setup, synchronization and deployment. A central factor behind this improvement is the tighter integration between the different components of the development pipeline. In \textit{4DIAC-IDE}, the development workflow is distributed across multiple loosely connected tools and processes, requiring explicit user actions to maintain consistency between the modelling environment, local file system and remote runtime. In contrast, \textit{PTERO} internalizes these responsibilities within the platform itself, allowing project state, file management and deployment logic to be handled automatically as part of a single unified system.
 
 The usability questionnaires provide strong evidence that a web-based implementation can offer a significantly improved user experience compared to \textit{4DIAC-IDE}. Participants consistently reported higher levels of perceived ease of use, intuitiveness and overall satisfaction when interacting with \textit{PTERO}. This improvement can be attributed not only to interface design choices, but also to the inherent advantages of web technologies in this context.
 
-Furthermore, it was observed that the integration of all development tasks into a single unified interface contributes to a reduction in cognitive load. Unlike \textit{4DIAC-IDE}, where users must switch between multiple tools and external processes (such as file system management and synchronisation scripts), the web-based environment consolidates modelling, editing, deployment and monitoring into a coherent workflow. The results also suggest that responsiveness and perceived simplicity play an important role in user satisfaction.
+Furthermore, it was observed that the integration of all development tasks into a single unified interface contributes to a reduction in cognitive load. Unlike \textit{4DIAC-IDE}, where users must switch between multiple tools and external processes (such as file system management and synchronization scripts), the web-based environment consolidates modelling, editing, deployment and monitoring into a coherent workflow. The results also suggest that responsiveness and perceived simplicity play an important role in user satisfaction.
 
 Overall, the findings indicate that the adoption of web technologies is not merely a change in deployment platform, but a design decision that directly influences usability by simplifying access, unifying workflows and reducing structural complexity for end users.

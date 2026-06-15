@@ -45,7 +45,7 @@ class NEW_FB_1:
       return [None, event_value, ""]
 \end{lstlisting}
 
-\section{Synchronisation}
+\section{Synchronization}
 \Cref{lst:sync-config} presents an example configuration that the \texttt{synchronize.py} script requires in order to send the files to the \textit{DINASORE} devices.
 
 \begin{lstlisting}[language=JSON, caption={Sync configuration}, label={lst:sync-config}]
@@ -122,7 +122,7 @@ function build_message(message_payload, configuration_name) {
 
 \section{Send Messages} \label{app:send-messages}
 This section present a more detailed explanation of the commands sent during deployment.
-First, the two commands in \Cref{lst:deploy-setup} need to be sent to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create a \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
+First, the two commands in \Cref{lst:deploy-setup} need to be sent to every device. A \texttt{QUERY} request and a \texttt{CREATE} request that will create an \textit{EMB\_RES} resource which will be automatically connected to the \textit{INIT} port of all other function block nodes to initialize them. Both these commands will have an empty configuration name, as \textit{EMB\_RES} has not been created yet and therefore cannot be bounded to.
 
 \begin{lstlisting}[language=XML, caption={Setup deployment commands}, label={lst:deploy-setup}]
 <Request Action="QUERY" ID="0">
@@ -134,7 +134,7 @@ First, the two commands in \Cref{lst:deploy-setup} need to be sent to every devi
 </Request>
 \end{lstlisting}
 
-Next, depending on which nodes are mapped to each machine, it needs to \texttt{CREATE} all the mapped nodes and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}. The configuration name in these and all following commands will be "\textit{EMB\_RES}" as they need to be bound to it in order to be initialised and ran.
+Next, depending on which nodes are mapped to each machine, it needs to \texttt{CREATE} all the mapped nodes and \texttt{WRITE} the initial input values with the commands in \Cref{lst:deploy-create-nodes}. The configuration name in these and all following commands will be "\textit{EMB\_RES}" as they need to be bound to it in order to be initialized and ran.
 
 \begin{lstlisting}[language=XML, caption={\texttt{CREATE} nodes deployment commands}, label={lst:deploy-create-nodes}]
 <Request Action="CREATE" ID="2">
@@ -168,7 +168,7 @@ Then the connections are created between the mapped nodes. A \texttt{Source} a \
 </Request>
 \end{lstlisting}
 
-Finally the \texttt{START} command in \Cref{lst:deploy-start} can be issued, which will request for the start of the program execution. For this command the configuration name used will also be "\textit{EMB\_RES}" as it is this resource that will begin the execution of the program.
+Finally, the \texttt{START} command in \Cref{lst:deploy-start} can be issued, which will request for the start of the program execution. For this command the configuration name used will also be "\textit{EMB\_RES}" as it is this resource that will begin the execution of the program.
 
 \begin{lstlisting}[language=XML, caption={\texttt{START} deployment command}, label={lst:deploy-start}]
 <Request Action="START" ID="8"/>

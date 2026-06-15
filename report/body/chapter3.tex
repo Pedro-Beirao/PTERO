@@ -1,66 +1,66 @@
 \chapter{Proposed Solution} \label{chap:proposed-solution}
 To address the limitations identified in existing \textit{IEC 61499} development environments, this dissertation proposes the design of a \textit{PTERO} (Programming Tool for Editing and Runtime Orchestration), a web-based \ac{IDE} for modelling \textit{IEC 61499}-compliant applications. The goal is to bridge the gap between modern collaborative software engineering practices and industrial automation tooling used in \acp{CPPS}.
 
-Existing tools are predominantly desktop based and poorly suited for distributed development. In contrast, the proposed solution adopts a centralised web-based architecture that enables platform independence, simplified setup, simplified deployment and real-time collaboration.
+Existing tools are predominantly desktop based and poorly suited for distributed development. In contrast, the proposed solution adopts a centralized web-based architecture that enables platform independence, simplified setup, simplified deployment and real-time collaboration.
 
-The main reason to propose using web technologies is to solve the issues that affects any local-first development environment. By having the \ac{IDE} be hosted by a centralised server, the following key aspects are achieved:
+The main reason to suggest using web technologies is to solve the issues that affect any local-first development environment. By having the \ac{IDE} be hosted by a centralized server, the following key aspects are achieved:
 
 \begin{itemize}
   \item \textbf{Ease of setup}. Instead of each team member having to install a resource heavy program and set it up with the team's code and configurations, a single server is set up and the team members simply have to connect to it via their browser.
 
-  \item \textbf{Ease of deployment}. Only the server needs to be aware of all of the target \acp{RTE} and have connection to them. When a team member wants to deploy, the request will be routed through the server, acting as the middleware, removing the need for each development machine to have connection with the target \acp{RTE}.
+  \item \textbf{Ease of deployment}. Only the server needs to be aware of all the target \acp{RTE} and have connection to them. When a team member wants to deploy, the request will be routed through the server, acting as the middleware, removing the need for each development machine to have connection with the target \acp{RTE}.
 
-  \item \textbf{Improved collaboration}. A real-time collaboration aware system that keeps track of atomic changes, instead of blocks of text, reducing the integration integration error associated with version control systems on structured data.
+  \item \textbf{Improved collaboration}. A real-time collaboration aware system that keeps track of atomic changes, instead of blocks of text, reducing the integration errors associated with version control systems on structured data.
 \end{itemize}
 
 \section{System Architecture}
-The proposed system follows a centralised server architecture designed to support distributed \ac{CPPS} development. Instead of the \acp{IDE} having direct communication with the \acp{RTE}, the server acts as an intermediary, meaning all requests go through it and removing the need for direct device-level configuration on individual machines. Besides serving the frontend to the users, it also stores all data in a centralised database. The development pipeline therefore consists of the following three core components, organised as displayed in \Cref{fig:ide-server-rte}:
+The proposed system follows a centralized server architecture designed to support distributed \ac{CPPS} development. Instead of the \acp{IDE} having direct communication with the \acp{RTE}, the server acts as an intermediary, meaning all requests go through it and removing the need for direct device-level configuration on individual machines. Besides serving the frontend to the users, it also stores all data in a centralized database. The development pipeline therefore consists of the following three core components, organized as displayed in \Cref{fig:ide-server-rte}:
 \begin{itemize}
     \item \textbf{Frontend \ac{IDE}}: A web interface for setting up and modelling the \textit{IEC 61499} applications.
-    \item \textbf{Server Middleware}: A centralised backend responsible for state management, collaboration and communication.
+    \item \textbf{Server Middleware}: A centralized backend responsible for state management, collaboration and communication.
     \item \textbf{\acp{RTE}}: External execution environments where the applications are deployed.
 \end{itemize}
 
 \begin{figure}[H]
   \includegraphics[width=0.7\linewidth]{ide-server-rte.png}
-  \caption{Communication through the server}
+  \caption{Communication through the server.}
   \label{fig:ide-server-rte}
 \end{figure}
 
-Being the middleware, there are 4 different types of network communications that the server will need to handle, each with it's own requirements:
+Being the middleware, there are 4 different types of network communications that the server will need to handle, each with its own requirements:
 
 \begin{itemize}
-  \item \textbf{Serve webpage}: Communicates via \textit{GET} requests to deliver the \textit{html}, \textit{css} and \textit{js} files that make up the \ac{IDE} interface.
+  \item \textbf{Serve webpage}: Communicates via \textit{GET} requests to deliver the \textit{HTML}, \textit{CSS} and \textit{JS} files that make up the \ac{IDE} interface.
   \item \textbf{Real-Time Collaboration}: Frequent atomic updates whenever changes are made.
   \item \textbf{Requested deployment}: A team member sends a \textit{POST} request, that tells the server to deploy.
   \item \textbf{Deployment sockets}: Communicates via \textit{TCP} with each \ac{RTE} to send commands and monitor.
 \end{itemize}
 
 \section{Real-Time Collaboration Model}
-A key requirement of the proposed system is support for concurrent editing of structured \textit{IEC 61499} programs. Real-time collaborative systems shift conflict management from the merge phase to the editing phase itself, all participants may operate on the shared artefact simultaneously, with the system responsible for converging divergent states automatically. To address this, the system adopts a \ac{CRDT} approach, enabling multiple users to edit shared application models simultaneously. Changes are propagated in real time and merged deterministically without conflicts.  Compared to \ac{OT} approaches, \acp{CRDT} provide a more suitable foundation for non linear structured data. Where in \ac{OT} a semantic state change needs to be expressed as a textual change at a specific offset, in \ac{CRDT} it keeps the semantic meaning \cite{kleppmann_conflict-free_2017}.
+A key requirement of the proposed system is support for concurrent editing of structured \textit{IEC 61499} programs. Real-time collaborative systems shift conflict management from the merge phase to the editing phase itself, all participants may operate on the shared artefact simultaneously, with the system responsible for converging divergent states automatically. To address this, the system adopts a \ac{CRDT} approach, enabling multiple users to edit shared application models simultaneously. Changes are propagated in real time and merged deterministically without conflicts.  Compared to \ac{OT} approaches, \acp{CRDT} provide a more suitable foundation for non-linear structured data. Where in \ac{OT} a semantic state change needs to be expressed as a textual change at a specific offset, in \ac{CRDT} it keeps the semantic meaning \cite{kleppmann_conflict-free_2017}.
 
-The graph based structured data that in other \acp{IDE} would be stored as a conflict prone file in formats such as \textit{XML}, should instead be kept as individual fields. A change in a single element should prompt the \ac{CRDT} to only look into that specific field and not the document as a whole. The class diagram in \Cref{fig:uml} illustrates how the fields can be organised.
+The graph based structured data that in other \acp{IDE} would be stored as a conflict prone file in formats such as \textit{XML}, should instead be kept as individual fields. A change in a single element should prompt the \ac{CRDT} to only look into that specific field and not the document as a whole. The class diagram in \Cref{fig:uml} illustrates how the fields can be organized.
 
 \begin{figure}[H]
   \includegraphics[width=0.8\linewidth]{uml.png}
-  \caption{Class diagram of the program's data}
+  \caption{Class diagram of the program's data.}
   \label{fig:uml}
 \end{figure}
 
 \section{Deployment Model}
-Deployment in the proposed system is based on a centralised orchestration model. Rather than requiring each engineer to manually coordinate communication with target devices, the server acts as the single point of control, translating the graphical application model into a sequence of commands and executing them against the configured \acp{RTE}. This abstraction ensures that deployment behaviour is consistent and reproducible regardless of which team member initiates it or from which machine. The deployment process is divided into three sequential stages:
+Deployment in the proposed system is based on a centralized orchestration model. Rather than requiring each engineer to manually coordinate communication with target devices, the server acts as the single point of control, translating the graphical application model into a sequence of commands and executing them against the configured \acp{RTE}. This abstraction ensures that deployment behaviour is consistent and reproducible regardless of which team member initiates it or from which machine. The deployment process is divided into three sequential stages:
 
 \begin{enumerate}
-    \item \textbf{Synchronisation:} Before any execution commands are issued, the function block type definitions must be present on each target device. The server transfers the relevant files to the appropriate \ac{RTE} instances, ensuring that every device has access to the types it will be asked to instantiate.
+    \item \textbf{Synchronization:} Before any execution commands are issued, the function block type definitions must be present on each target device. The server transfers the relevant files to the appropriate \ac{RTE} instances, ensuring that every device has access to the types it will be asked to instantiate.
     \item \textbf{Execution:} Once the function block files are in place, the server establishes a connection with each \ac{RTE} and issues the necessary commands to create function block instances, write initial input values, establish event and data connections and finally start execution.
     \item \textbf{Monitoring:} After the application has started, the server begins polling the \acp{RTE} for their output values, making them available to all connected clients through the \ac{IDE} interface in real time.
 \end{enumerate}
 
 \section{Methods}
-This section describes the research methodology adopted to address the research questions defined in this dissertation. Given the practical and design-oriented nature of the problem, the methodology focuses on the design, implementation and evaluation of a piece of software. The chosen methods are appropriate for investigating how web-based technologies can enhance \textit{IEC 61499} development environments, as they allow both the realisation of a concrete solution and the systematic assessment of its capabilities relative to existing tools.
+This section describes the research methodology adopted to address the research questions defined in this dissertation. Given the practical and design-oriented nature of the problem, the methodology focuses on the design, implementation and evaluation of a piece of software. The chosen methods are appropriate for investigating how web-based technologies can enhance \textit{IEC 61499} development environments, as they allow both the realization of a concrete solution and the systematic assessment of its capabilities relative to existing tools.
 
 \subsection{Research Design}
-This research follows a design-oriented research approach. The core of the research consists of the design and implementation of a functional prototype of the solution. Rather than aiming for statistical generalisation, the study focuses on demonstrating feasibility and identifying qualitative improvements over existing environments. The prototype serves as a research artefact used to explore architectural decisions, usability considerations and workflow implications.
+This research follows a design-oriented research approach. The core of the research consists of the design and implementation of a functional prototype of the solution. Rather than aiming for statistical generalization, the study focuses on demonstrating feasibility and identifying qualitative improvements over existing environments. The prototype serves as a research artefact used to explore architectural decisions, usability considerations and workflow implications.
 
 \subsection{Evaluation}
 Evaluation is conducted through qualitative analysis and comparative assessment against established \textit{IEC 61499} \acp{IDE}. Criteria such as accessibility, usability, feature coverage and support for collaborative workflows are used to assess how effectively the proposed solution addresses the limitations identified in the literature and state of the art.
