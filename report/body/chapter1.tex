@@ -14,16 +14,18 @@ In industrial automation, it is common to use the \textit{IEC 61499} standard, w
   \label{fig:function-block-interface}
 \end{figure}
 
-\acp{RTE} provide the underlying execution layer for \textit{IEC 61499} applications, responsible for running function blocks on target devices in accordance with the standard’s event-driven execution model.  In distributed \ac{CPPS} environments, \acp{RTE} are deployed across multiple devices, enabling the execution of decentralized control logic while maintaining coordination between system components.
+\acp{RTE} provide the underlying execution layer for \textit{IEC 61499} applications, responsible for running function blocks on target devices in accordance with the standard’s event-driven execution model. In distributed \ac{CPPS} environments, \acp{RTE} are deployed across multiple devices, enabling the execution of decentralized control logic while maintaining coordination between system components.
 
-Conversely, \acp{IDE} are responsible for the design, configuration and deployment of applications into \ac{CPPS} infrastructures. In this role, they act as the primary interface between the engineer and the distributed runtime system, bridging the gap between high-level system modelling and low-level execution. \acp{IDE} typically provide a graphical \ac{UI} like shown in \Cref{fig:4diac-ide}, with specialized tools for constructing function block networks, configuring device mappings and managing deployment workflows. \Cref{fig:ide-rte} represents the communications between these two layers.
+Conversely, \acp{IDE} are responsible for the design, configuration, and deployment of applications into \ac{CPPS} infrastructures. In this role, they act as the primary interface between the engineer and the distributed runtime system, bridging the gap between high-level system modelling and low-level execution. \acp{IDE} typically provide a graphical \ac{UI} as shown in \Cref{fig:4diac-ide}, with specialized tools for constructing function block networks, configuring device mappings, and managing deployment workflows.
 
 % TODO higher res
 \begin{figure}[H]
-  \includegraphics[width=0.95\linewidth]{4diac-ide.jpg}
+  \includegraphics[width=1\linewidth]{4diac-ide.jpg}
   \caption{4DIAC-IDE \cite{noauthor_4diac_nodate}.}
   \label{fig:4diac-ide}
 \end{figure}
+
+The relationship and configuration data flow between these two separate operational layers require systematic communication protocols. As illustrated in \Cref{fig:ide-rte}, the \ac{IDE} translates the abstract canvas into deployment payloads transmitted directly to each target device.
 
 \begin{figure}[H]
   \includegraphics[width=0.7\linewidth]{ide-rte.jpg}
@@ -31,26 +33,31 @@ Conversely, \acp{IDE} are responsible for the design, configuration and deployme
   \label{fig:ide-rte}
 \end{figure}
 
-\section{Motivation}
-The evolution of \acp{CPPS} has increased the demand for flexible and intelligent control solutions capable of integrating physical processes with digital technologies. The \textit{IEC 61499} standard offer a structured, modular approach to building such distributed automation systems. It provides not only a technically robust foundation for industrial automation, but also a structured way of reasoning about distributed control systems. To fully leverage these benefits, development tools must evolve alongside industrial needs, supporting more accessible and scalable workflows.
+% \section{Motivation}
+% The \textit{IEC 61499} standard offers a structured, modular approach to building these distributed automation systems, it provides not only a technically robust foundation for industrial automation, but also a structured way of reasoning about distributed control systems. To fully leverage these benefits, development tools must evolve alongside industrial needs, supporting more accessible and scalable workflows.
 
 \section{Problem}
-Existing \textit{IEC 61499} development environments lack modern capabilities such as remote access, real-time collaboration and seamless integration with cloud infrastructures. These limitations hinder efficient development, maintenance and deployment of control applications within distributed \acp{CPPS}. As a result, current tools fall short in supporting the flexibility and scalability required by certain modern industrial automation systems. Besides this, the complexity of these current \acp{IDE} rules them out for many simpler use cases where the time wasted on setting up and learning them is not justifiable.
+Existing \textit{IEC 61499} development environments lack modern capabilities such as remote access, real-time collaboration and seamless integration with cloud infrastructures. Most are monolithic desktop applications requiring local installation and manual configuration, which hinders efficient development, maintenance and deployment of control applications within distributed \acp{CPPS}. Engineers working across dispersed workplaces or with external partners cannot easily share a live view of an application, collaborate concurrently, or access deployed systems remotely without cumbersome workarounds. As a result, current tools fall short in supporting the flexibility and scalability required by modern industrial automation systems.
 
-\section{Research Questions}
-This research seeks to investigate how modern web and distribution technologies can be leveraged to enhance the development, deployment and operation of \textit{IEC 61499}-compliant systems. This study is guided by the following main research question:
+Besides this, the complexity of these current \acp{IDE} rules them out for many simpler use cases where the time wasted on setting up and learning them is not justifiable, limiting the practical accessibility and broader adoption of the \textit{IEC 61499} standard.
+
+\section{Objectives}
+This research seeks to investigate how modern web and distribution technologies can be leveraged to enhance the development, deployment and operation of \textit{IEC 61499}-compliant systems. This study is guided by the following hypothesis:
 \begin{quote}
-How can a web-based \ac{IDE} support the modelling, deployment and execution of \textit{IEC 61499} applications?
+\textbf{Hypothesis}: A remote web-based \ac{IDE} can improve the modelling, deployment and execution of \textit{IEC 61499} applications.
 \end{quote}
 
-\noindent To further refine the scope, the following sub-questions are proposed:
+\noindent To further refine the scope, the following research questions are proposed:
 \begin{quote}
-To what extent can collaborative web technologies improve \textit{IEC 61499} engineering workflows compared with traditional desktop \acp{IDE}?
+\textbf{RQ1}: To what extent can collaborative web technologies improve \textit{IEC 61499} engineering workflows compared with traditional desktop \acp{IDE}?
 \end{quote}
 
 \begin{quote}
-What are the performance and usability implications of adopting a web-based collaborative architecture for \textit{IEC 61499} engineering?
+\textbf{RQ2}: What are the performance and usability implications of adopting a web-based collaborative architecture for \textit{IEC 61499} engineering?
 \end{quote}
+
+% TODO add another RQ
+% TODO add objectives paragraph
 
 \section{Contributions}
 This dissertation contributes to the field of \textit{IEC 61499} engineering by investigating the applicability of modern web technologies to the development of distributed automation systems. The main contributions of this work are:
@@ -64,3 +71,8 @@ This dissertation contributes to the field of \textit{IEC 61499} engineering by 
 
 \item An analysis of the benefits and limitations of adopting a web-based collaborative architecture for \textit{IEC 61499} engineering, providing insights for future research and development in this area.
 \end{itemize}
+
+\section{Dissertation Structure}
+\label{sec:structure}
+
+Besides the \nameref{chap:introduction}, this dissertation contains five more chapters. The second chapter, \nameref{chap:background-related-work}, reviews the current ecosystem, surveying existing \textit{IEC 61499} development environments, collaborative modelling techniques and the evolution of web-based engineering tools, concluding with a comparative analysis that identifies the research gap this work addresses. The third chapter, \nameref{chap:proposed-solution}, details the full system proposal, from the server architecture to the collaboration and deployment models, which in turn, the fourth chapter, \nameref{chap:implementation}, describes the implementation of said proposal. It documents how the solution can be built for real world use, and the decisions associated. The next chapter, \nameref{chap:validation}, examines the results derived from the developed prototype. This chapter contains sections that analyse each specific evaluation performed: the functional validation, the performance evaluation, the collaboration evaluation and the usability evaluation. Finally, the last chapter, \nameref{chap:conclusion}, overviews the document's topics and presents the main conclusions. The document ends with the idealisation of possible future work unlocked by this project, aiming to guide future investigation.
