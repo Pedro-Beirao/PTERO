@@ -1,10 +1,8 @@
 \chapter{Background and Related Work} \label{chap:background-related-work}
 This chapter reviews prior work related to \textit{IEC 61499}-based development and the used \acp{IDE}. The goal is to better understand the landscape, which will then allow the critical review of the state of the art. By providing a comprehensive analysis of the current landscape of development environments for \acp{CPPS} and the \textit{IEC 61499} standard, we are able to categorize and critically examine the existing solutions, while looking for possible gaps in the ecosystem.
 
-\section{Methodology}
-A targeted literature review was carried out, focusing on studies addressing \textit{IEC 61499} development tools, function blocks, \apc{CPPS} and development environments, to then critically reflect upon their findings to help the writing of this dissertation and the planning of the final product.
-
-The search was conducted in digital libraries \textit{ScienceDirect}, \textit{IEEE Xplore}, \textit{ACM Digital Library}, among others, as well as research paper aggregators like \textit{Semantic Scholar} and \textit{Scopus} using combinations of the following terms:
+\section{Search and Selection} \label{sec:search-selection}
+A targeted literature search was conducted across the digital libraries \textit{ScienceDirect}, \textit{IEEE Xplore}, \textit{Scopus} and \textit{ACM Digital Library}, complemented by the research aggregator \textit{Semantic Scholar}. The search was restricted to publications from 2008 onward, in order to capture the period following the consolidation of the \textit{IEC 61499} standard, and to peer-reviewed journal articles and conference papers written in English. The following core terms were identified as the most promising:
 
 \begin{itemize}
   \item \textit{IEC 61499}
@@ -13,11 +11,7 @@ The search was conducted in digital libraries \textit{ScienceDirect}, \textit{IE
   \item \ac{CPPS}
 \end{itemize}
 
-Following the search, a manual review process was conducted to refine and validate the results. Titles and abstracts were first screened to understand the relevance of the articles with respect to this dissertation. The publications were then examined in greater detail through full-text review, the reference lists of selected papers were manually inspected to identify relevant works that may not have been captured by the initial keyword search.
-
-Articles mentioning new development environment proposals \cite{sorokin_novel_2022} were immediately included as their novel ideas were of great interest for a gap analysis on this ecosystem. These papers usually already contained a gap analysis of their own, which allowed for a literature review that was consistent with the prevalent opinion of the scientific community.
-
-Furthermore, terms related to the state of the art that were discovered mid-search were also included in some queries. The objectives of doing this were to get a better personal understanding of the scene, as well as to find interesting references that could be included in this dissertation to back up the written claims. Some of the terms used were:
+Related terms that were discovered mid-search were also included in some queries. The objective of doing this was to get a better personal understanding of the scene, as well as to find interesting references that could be included in this dissertation to back up the written claims. Some of the terms used were:
 
 \begin{itemize}
   \item 4diac
@@ -25,6 +19,24 @@ Furthermore, terms related to the state of the art that were discovered mid-sear
   \item collaboration
   \item real-time
 \end{itemize}
+
+For each database, queries were built by combining the identified terms using boolean operators. The base query, adapted to the syntax of each platform, took the form:
+
+\begin{quote}
+\texttt{("IEC 61499" OR "function block diagram") AND ("IDE" OR "development environment")}
+\end{quote}
+
+For example, in \textit{Scopus} this was expressed using the \texttt{TITLE-ABS-KEY} field as:
+
+\begin{quote}
+\texttt{TITLE-ABS-KEY(("IEC 61499" OR "function block diagram") AND ("IDE" OR "development environment")) AND PUBYEAR > 2007}
+\end{quote}
+
+In the other platforms the same term combinations were applied to the \textit{Title, Abstract, Author Keywords} fields, using each respective advanced search syntax.
+
+This initial search returned a total of 43 unique records across the databases. Papers were excluded if they were out of scope or were inaccessible in full text. This screening stage reduced the set 31 papers, used for detailed analysis and citation in this dissertation. Next, all retained references were imported into \textit{Zotero} for management and citation formatting. The reference lists of the selected papers were manually inspected to identify additional relevant works not captured by the initial keyword search, this process surfaced 8 further papers that were incorporated into the review.
+
+Articles proposing specifically new \textit{IEC 61499} development environments were prioritised for inclusion, as their own related work sections typically contained an independent gap analysis, allowing the present review to be cross-checked against the prevailing assessment of the scientific community.
 
 \section{Distributed Function Block Engineering}
 Modern manufacturing and industrial automation are increasingly characterized by the transition from monolithic centralized control architectures towards distributed modular systems. The industry is moving towards a paradigm in which individual parts possess intelligence and communicate with one another. This shift is driven by the demands of Industry 4.0, which calls for flexibility and interoperability as key properties of the production infrastructure \cite{folgado_review_2024}. \citeauthor{monostori_cyber-physical_2014} \cite{monostori_cyber-physical_2014} provides a comprehensive analysis of \ac{CPPS}, examining the theoretical foundations and practical implications of tightly coupling computational intelligence with physical manufacturing processes. The author explores how cyber-physical integration enables real-time monitoring, adaptive control and autonomous decision-making in production systems, framing \ac{CPPS} as a cornerstone of the fourth industrial revolution. This work establishes the concepts, wording and architectural principles that help understand much of the research in this area, and it serves as a reference for understanding why the flexible distributed control is necessary to realize the vision of \ac{CPPS}.
