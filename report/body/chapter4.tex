@@ -2,7 +2,7 @@
 To be able to prove the proposed solution is viable and will successfully address the gap identified, a prototype needs to be developed and afterwards validated. This chapter describes the technical implementation of the proposed system, detailing the server architecture, frontend implementation, collaboration system and deployment mechanism used to realize the conceptual design presented in \Cref{chap:proposed-solution}.
 
 \section{Runtime Environment}
-Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} (Dynamic INtelligent Architecture for Software and MOdular REconfiguration) \cite{pereira_dinasore_2020}. It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritized over real-time performance guarantees. This ease of study rules out the use of proprietary \acp{RTE} like \textit{EcoStruxure Automation Expert's dPAC} and \textit{ISaGRAF Runtime}.
+Out of all \acp{RTE} compatible with \textit{IEC 61499}, this prototype will focus on supporting \textit{DINASORE} \cite{pereira_dinasore_2020}. It is much less complex than others, making it ideal for a proof of concept \ac{IDE}. As an open-source project, \textit{DINASORE} can be freely inspected and studied, which is particularly valuable in a research and prototyping context where flexibility is prioritized over real-time performance guarantees. This ease of study rules out the use of proprietary \acp{RTE} like \textit{EcoStruxure Automation Expert's dPAC} and \textit{ISaGRAF Runtime}.
 
 Where the open-source \ac{RTE} \textit{4DIAC FORTE} provides a portable C\texttt{++} execution environment for low-level industrial deployments, \textit{DINASORE} occupies the same architectural role while targeting higher-level workloads that benefit from the \textit{Python} ecosystem. The two runtimes share the same management protocol, meaning that concepts developed against one transfer directly to the other. \textit{4DIAC FORTE} itself was considered as a target \ac{RTE} but ruled out as its codebase is substantially larger and more complex, making it more complex to study and target.
 
@@ -27,7 +27,7 @@ The frontend constitutes the client-side architectural layer of the system, acti
 
 Each following subsection will first explain and describe what an \ac{IDE} should implement and follow by showing how the prototype solved the proposed requirements.
 
-\subsection{Devices Configuration View}
+\subsection{Configuration View}
 In the interest of distributed \acp{CPPS}, \textit{IEC 61499} allows function blocks to be mapped to different \textit{DINASOREs}, so a clean way to define the resources that are available is needed. Both the \textit{DINASORE} port and the \textit{SSH} port need to be defined for each since deployment communication and synchronization will use each of them, respectively.
 
 Accordingly, each configuration profile maintains these essential properties:
@@ -46,7 +46,7 @@ With the existence of the middleware, this solution removes the requirement for 
 
 \begin{figure}[H]
   \includegraphics[width=0.7\linewidth]{devices-configuration.jpg}
-  \caption{Devices Configuration View.}
+  \caption{Configuring a \textit{DINASORE} in the  Configuration View.}
   \label{fig:devices-configuration}
 \end{figure}
 
@@ -67,7 +67,7 @@ As seen in \Cref{fig:fbs-editor}, this view contains a split view text editor: a
 
 \begin{figure}[H]
   \includegraphics[width=1\linewidth]{fbs-editor.jpg}
-  \caption{Function Blocks Editor View.}
+  \caption{Editing function block files in the Function Blocks Editor View.}
   \label{fig:fbs-editor}
 \end{figure}
 
@@ -99,7 +99,7 @@ A function block will have some input and output data ports, each with its own a
     \label{tab:iec-data-types}
 \end{table}
 
-Each function block can also be mapped to a \textit{DINASORE} instance, with the colour coding defined in the Devices Configuration View providing an immediate visual indication of how the application is distributed across the available devices.
+Each function block can also be mapped to a \textit{DINASORE} instance, with the colour coding defined in the \textit{Configuration View} providing an immediate visual indication of how the application is distributed across the available devices.
 
 This system was achieved in the prototype with the use of the \textit{LiteGraph.js} library \cite{noauthor_litegraphjs_nodate}, a graph node editor for the browser. A lot of other libraries were considered, but this one was chosen due to the requirements of the proposed solution. Let us discuss the alternatives that were considered to understand why this choice is important:
 
@@ -116,7 +116,7 @@ Among these alternatives, \textit{LiteGraph.js} presented the best balance betwe
 
 \begin{figure}[H]
   \includegraphics[width=0.9\linewidth]{graph-editor.jpg}
-  \caption{Graph Editor View.}
+  \caption{Configuring the data flow in Graph Editor View.}
   \label{fig:graph-editor}
 \end{figure}
 
@@ -125,7 +125,7 @@ This view, as shown in \Cref{fig:console-editor}, serves as the primary logging 
 
 \begin{figure}[H]
   \includegraphics[width=0.9\linewidth]{console-editor.jpg}
-  \caption{Console View.}
+  \caption{Deployment output seen in the Console View.}
   \label{fig:console-editor}
 \end{figure}
 

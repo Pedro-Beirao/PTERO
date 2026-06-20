@@ -4,7 +4,6 @@ This chapter reviews prior work related to \textit{IEC 61499}-based development 
 \section{Methodology}
 A targeted literature review was carried out, focusing on studies addressing \textit{IEC 61499} development tools, function blocks, \apc{CPPS} and development environments, to then critically reflect upon their findings to help the writing of this dissertation and the planning of the final product.
 
-\subsection{Search and Selection}
 The search was conducted in digital libraries \textit{ScienceDirect}, \textit{IEEE Xplore}, \textit{ACM Digital Library}, among others, as well as research paper aggregators like \textit{Semantic Scholar} and \textit{Scopus} using combinations of the following terms:
 
 \begin{itemize}
@@ -34,7 +33,7 @@ The \textit{IEC 61499} standard was developed precisely to address these require
 
 In \ac{FBD}, function blocks are interconnected into networks that form an application, which can then be distributed across multiple devices \cite{liang_kind_2008}, a property that makes \ac{FBD} a natural fit for \ac{CPPS} deployments where hardware must collaborate to execute a unified control program. \citeauthor{torres_literature_2025} \cite{torres_literature_2025} conducted a literature review examining how \textit{IEC 61499} can be leveraged specifically for \ac{CPPS} development, mentioning possible enhancements with the use of a cloud-based \ac{SOA} approach. Their paper examines the current state of adoption of the standard within industrial automation research, identifying recurring architectural patterns in \ac{CPPS} implementations.
 
-Conversely, \citeauthor{pinto_digital_2023} \cite{pinto_digital_2023} presented an industrial case study showing that function block oriented approaches improve system modularity and reduce development effort compared to traditional procedural programming. Their study documents the migration of a production cell from a sequential control architecture to an \textit{IEC 61499} function block model using the \textit{DINASORE} \ac{RTE}, using integration time as the main validation metric and demonstrating improved reconfigurability when production requirements changed. The results show that the encapsulation of behaviour and communication interfaces within function blocks leads to more maintainable and extensible software.
+Conversely, \citeauthor{pinto_digital_2023} \cite{pinto_digital_2023} presented an industrial case study showing that function block oriented approaches improve system modularity and reduce development effort compared to traditional procedural programming. Their study documents the migration of a production cell from a sequential control architecture to an \textit{IEC 61499} function block model using the Dynamic INtelligent Architecture for Software and MOdular REconfiguration (\textit{DINASORE}) \ac{RTE}, using integration time as the main validation metric and demonstrating improved reconfigurability when production requirements changed. The results show that the encapsulation of behaviour and communication interfaces within function blocks leads to more maintainable and extensible software.
 
 \section{IEC 61499 Development Environments}
 Currently, the development ecosystem for \textit{IEC 61499} is composed almost exclusively of desktop-based \acp{IDE}. These tools are typically monolithic applications installed locally on engineering workstations, requiring each member of a development team to independently install, configure and maintain the software on their own machine. The tools themselves tend to be resource intensive, which creates demands for the hardware, making them less accessible to users working on modest, shared or virtual machines. There is also the issue of platform dependency, as a niche and focused field, some \acp{IDE} are not cross-platform, forcing users to use virtual machines to be able to use them, further intensifying performance issues.
@@ -86,7 +85,7 @@ Having surveyed the existing landscape of \textit{IEC 61499} development environ
 \caption{Comparison of IEC 61499 development environments and proposals.}
 \label{tab:ide-comparison}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}llp{2.5cm}ccp{5cm}@{}}
+\begin{tabular}{@{}p{4.2cm}lp{2.5cm}ccp{5cm}@{}}
 \toprule
 \textbf{Tool} & \textbf{Type} & \textbf{Platform} & \textbf{\shortstack{Remote\\deployment}} & \textbf{\shortstack{Real-time\\collaboration}} & \textbf{Comments} \\
 \midrule
@@ -106,15 +105,16 @@ ISaGRAF Workbench \cite{vyatkin_comparisons_2008}
   & Commercial & Desktop
   & \cno & \cno
   & Licensing model \\[6pt]
-\citeauthor{rohat_remote_2014}\ \cite{rohat_remote_2014}
+\citeauthor{rohat_remote_2014}\ \cite{rohat_remote_2014} (2014)
   & Proposal & Web (monitoring only)
   & \cyes & \cno
   & No remote modelling capabilities \\[6pt]
-\citeauthor{lyu_towards_2024}\ \cite{lyu_towards_2024}
+\citeauthor{lyu_towards_2024}\ \cite{lyu_towards_2024} (2024)
   & Proposal & Web (embedded desktop IDE)
   & \cyes & \cno
   & Does not take advantage of web technologies for the modelling tool \\
-\citeauthor{sorokin_towards_2023}\ \cite{sorokin_towards_2023}
+
+\citeauthor{sorokin_towards_2023}\ \cite{sorokin_towards_2023} (2023)
   & Proposal & Web
   & \cyes & \cyes
   & Designs a general architecture for creating web \ac{DSL} tooling  \\
@@ -140,3 +140,5 @@ Current \textit{IEC 61499} tools face significant limitations that hinder modern
 \end{itemize}
 
 Taken together, these gaps suggest that the ecosystem is well positioned to benefit from a lightweight, browser-accessible development environment that prioritizes collaboration, low setup overhead and integration with modern deployment workflows, without sacrificing the domain-specific features that \textit{IEC 61499} engineers depend on.
+
+Regarding \citeauthor{sorokin_towards_2023}\ \cite{sorokin_towards_2023}'s proposal, the closest current solution, it provides valuable architectural groundwork for web-based \ac{DSL} tooling in general, but their work is deliberately generic, it is not built around the specific semantics, data model or deployment process of \textit{IEC 61499}, and it offers no working implementation or empirical validation. Migrating \textit{FBME} into a distributed web environment, as suggested in the paper, is presented only as an illustrative example rather than as a concrete, tested system. Consequently, the gaps here identified are still justified, as none are properly addressed by this previous paper to the degree needed.
