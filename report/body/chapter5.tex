@@ -1,14 +1,7 @@
 \chapter{Validation} \label{chap:validation}
-The purpose of this chapter is to evaluate whether the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified. The evaluation combines objective measurements of system behaviour with subjective feedback collected from users. Together, these perspectives provide a comprehensive assessment of the prototype's effectiveness as an \textit{IEC 61499} development environment. The following questions are to be answered by this evaluation:
+The purpose of this chapter is to evaluate whether the proposed solution achieves the proposed objectives, effectively addressing the gap previously identified. The evaluation combines objective measurements of system behaviour with subjective feedback collected from users. Together, these perspectives provide a comprehensive assessment of the prototype's effectiveness as an \textit{IEC 61499} development environment. The hypothesis that guided this work is to be validated, and the research questions answered.
 
-\begin{enumerate}
-\item Can the proposed solution successfully support the complete development workflow of an \textit{IEC 61499} application?
-\item Does the proposed architecture provide advantages over existing desktop based development environments?
-\item Does the integration of real-time collaboration improve collaborative development workflows?
-\item Do users perceive the proposed solution as accessible, easy to use and an improvement over previous solutions?
-\end{enumerate}
-
-To address these questions, the evaluation combined both quantitative and qualitative methods, assessing objective performance characteristics alongside subjective user experience. Five complementary areas make up this validation. Functional validation verifies that the prototype correctly supports the modelling, deployment and monitoring of \textit{IEC 61499} applications. Performance evaluation analyses workflow efficiency and compares key tasks against existing tools. Collaboration evaluation examines the benefits of the real-time collaborative architecture and contrasts it with traditional version control workflows. Usability evaluation focuses on user perception and experience, including a study of existing \textit{IEC 61499} tooling. Finally, the results are discussed in the context of the research objectives and identified limitations.
+The evaluation combined both quantitative and qualitative methods, assessing objective performance characteristics alongside subjective user experience. Five complementary areas make up this validation. Functional validation verifies that the prototype correctly supports the modelling, deployment and monitoring of \textit{IEC 61499} applications. Performance evaluation analyses workflow efficiency and compares key tasks against existing tools. Collaboration evaluation examines the benefits of the real-time collaborative architecture and contrasts it with traditional version control workflows. Usability evaluation focuses on user perception and experience, including a study of existing \textit{IEC 61499} tooling. Finally, the results are discussed in the context of the research objectives and identified limitations.
 
 \section{Experimental Setup} \label{sec:experimental-setup}
 A common test application was used throughout the validation process. The same application was implemented using both \textit{PTERO} and \textit{4DIAC-IDE}, allowing direct comparison between environments.
@@ -33,7 +26,7 @@ The following resources were made available in the testing environments:
   \begin{itemize}
   \item \texttt{SENSOR\_SIMULATOR.fbt} and \texttt{SENSOR\_SIMULATOR.py}
     \begin{itemize}
-    \item[] Simulates a sensor read by emitting periodic events and producing fake data.
+    \item[] Simulates a sensor read by emitting periodic events and producing simulated data.
     \end{itemize}
 
   \item \texttt{MOVING\_AVERAGE.fbt} and \texttt{MOVING\_AVERAGE.py}
@@ -397,6 +390,21 @@ Responses to this question were predominantly positive. Participants highlighted
 
 \section{Discussion}
 The evaluation results indicate that the proposed solution successfully achieves functional parity with the established \textit{4DIAC-IDE} while introducing architectural and usability improvements that address several of the limitations identified in traditional \textit{IEC 61499} development environments.
+
+% TODO add this somwhere
+
+% \begin{quote}
+% \textbf{Hypothesis}: A remote web-based \ac{IDE} can improve the modelling, deployment and execution of \textit{IEC 61499} applications.
+% \end{quote}
+
+% \begin{quote}
+% \textbf{RQ1}: To what extent can collaborative web technologies improve \textit{IEC 61499} engineering workflows compared with traditional desktop \acp{IDE}?
+% \end{quote}
+
+% \begin{quote}
+% \textbf{RQ2}: What are the performance and usability implications of adopting a web-based collaborative architecture for \textit{IEC 61499} engineering?
+% \end{quote}
+
 
 The functional validation confirmed that \textit{PTERO} correctly supports the complete development workflow, including configuration, modelling, deployment and monitoring of \textit{IEC 61499} applications. Both systems generated identical deployment commands and produced equivalent runtime behaviour in \textit{DINASORE}. This equivalence is an important result, as it demonstrates that the proposed abstraction layer does not compromise correctness or compatibility with existing tooling. Instead, it preserves interoperability while offering a different interaction model.
 
