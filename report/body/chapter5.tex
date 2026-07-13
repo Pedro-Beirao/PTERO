@@ -391,26 +391,11 @@ Responses to this question were predominantly positive. Participants highlighted
 \section{Discussion}
 The evaluation results indicate that the proposed solution successfully achieves functional parity with the established \textit{4DIAC-IDE} while introducing architectural and usability improvements that address several of the limitations identified in traditional \textit{IEC 61499} development environments.
 
-% TODO add this somwhere
-
-% \begin{quote}
-% \textbf{Hypothesis}: A remote web-based \ac{IDE} can improve the modelling, deployment and execution of \textit{IEC 61499} applications.
-% \end{quote}
-
-% \begin{quote}
-% \textbf{RQ1}: To what extent can collaborative web technologies improve \textit{IEC 61499} engineering workflows compared with traditional desktop \acp{IDE}?
-% \end{quote}
-
-% \begin{quote}
-% \textbf{RQ2}: What are the performance and usability implications of adopting a web-based collaborative architecture for \textit{IEC 61499} engineering?
-% \end{quote}
-
-
 The functional validation confirmed that \textit{PTERO} correctly supports the complete development workflow, including configuration, modelling, deployment and monitoring of \textit{IEC 61499} applications. Both systems generated identical deployment commands and produced equivalent runtime behaviour in \textit{DINASORE}. This equivalence is an important result, as it demonstrates that the proposed abstraction layer does not compromise correctness or compatibility with existing tooling. Instead, it preserves interoperability while offering a different interaction model.
 
-The performance evaluation further complements these findings by highlighting how the architectural decisions in \textit{PTERO} translate into measurable workflow improvements. While both systems are capable of executing equivalent \textit{IEC 61499} applications, \textit{PTERO} reduces the number of manual steps required across key development tasks such as project setup, synchronization and deployment. A central factor behind this improvement is the tighter integration between the different components of the development pipeline. In \textit{4DIAC-IDE}, the development workflow is distributed across multiple loosely connected tools and processes, requiring explicit user actions to maintain consistency between the modelling environment, local file system and remote runtime. In contrast, \textit{PTERO} internalizes these responsibilities within the platform itself, allowing project state, file management and deployment logic to be handled automatically as part of a single unified system.
+The performance evaluation further complements these findings by highlighting how the architectural decisions in \textit{PTERO} translate into measurable workflow improvements, confirming the \hyperlink{hypothesis}{\textbf{Hypothesis}}. While both systems are capable of executing equivalent \textit{IEC 61499} applications, \textit{PTERO} reduces the number of manual steps required across key development tasks such as project setup, synchronization and deployment. A central factor behind this improvement is the tighter integration between the different components of the development pipeline. In \textit{4DIAC-IDE}, the development workflow is distributed across multiple loosely connected tools and processes, requiring explicit user actions to maintain consistency between the modelling environment, local file system and remote runtime. In contrast, \textit{PTERO} internalizes these responsibilities within the platform itself, allowing project state, collaboration and deployment logic to be handled automatically as part of a single unified system, answering the \hyperlink{rq1}{\textbf{RQ1}}.
 
-The usability questionnaires provide strong evidence that a web-based implementation can offer a significantly improved user experience compared to \textit{4DIAC-IDE}. Participants consistently reported higher levels of perceived ease of use, intuitiveness and overall satisfaction when interacting with \textit{PTERO}. This improvement can be attributed not only to interface design choices, but also to the inherent advantages of web technologies in this context.
+The usability questionnaires provide strong evidence that a web-based implementation can offer a significantly improved user experience compared to \textit{4DIAC-IDE}. Participants consistently reported higher levels of perceived ease of use, intuitiveness and overall satisfaction when interacting with \textit{PTERO}, providing rest to the \hyperlink{rq2}{\textbf{RQ2}}. This improvement can be attributed not only to interface design choices, but also to the inherent advantages of web technologies in this context.
 
 Furthermore, it was observed that the integration of all development tasks into a single unified interface contributes to a reduction in cognitive load. Unlike \textit{4DIAC-IDE}, where users must switch between multiple tools and external processes (such as file system management and synchronization scripts), the web-based environment consolidates modelling, editing, deployment and monitoring into a coherent workflow. The results also suggest that responsiveness and perceived simplicity play an important role in user satisfaction.
 
