@@ -1,5 +1,6 @@
 import * as Y from "https://esm.sh/yjs@13.6.0";
 import { WebsocketProvider } from "https://esm.sh/y-websocket@3.0.0?deps=yjs@13.6.0";
+import { IndexeddbPersistence } from "https://esm.sh/y-indexeddb@9.0.12?deps=yjs@13.6.0";
 
 LiteGraph.NODE_TITLE_COLOR = "#BBB"
 LiteGraph.NODE_TEXT_COLOR = "#CCC"
@@ -13,15 +14,22 @@ const wsUrl = (window.location.hostname === 'localhost' ||
   ? 'ws://localhost:1234'
   : `wss://${window.location.host}`;
 
-let roomid = "room";
 if (mode == "test") {
-  roomid = localStorage.getItem('ptero-roomid');
-  if (!roomid) {
-    roomid = self.crypto.randomUUID();
-    localStorage.setItem('ptero-roomid', roomid);
-  }
+  window.provider = new IndexeddbPersistence("room", ydoc);
+  window.broadcastchannel = new BroadcastChannel(`ptero-yjs-room`);
+
+  window.ydoc.on('update', (update, origin) => {
+    if (origin === window.broadcastchannel) return;
+    window.broadcastchannel.postMessage(update);
+  });
+
+  window.broadcastchannel.onmessage = (event) => {
+    Y.applyUpdate(window.ydoc, event.data, window.broadcastchannel);
+  };
 }
-window.provider = new WebsocketProvider(wsUrl, roomid, ydoc, { binary: true });
+else
+  window.provider = new WebsocketProvider(wsUrl, "room", ydoc, { binary: true });
+
 window.nodes = window.ydoc.getMap('nodes');
 window.links = window.ydoc.getArray('links');
 window.fbs = window.ydoc.getMap('fbs');
