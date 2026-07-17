@@ -3,7 +3,10 @@
   "version": "0.1",
   "description": "Web-based IDE for DINASORE",
   "main": "server.js",
-  "scripts": {},
+  "scripts": {
+    "server": "node server.js",
+    "static": "node static.js"
+  },
   "keywords": [
     "DINASORE",
     "IEC 61499",

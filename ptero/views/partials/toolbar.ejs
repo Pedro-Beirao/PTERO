@@ -14,7 +14,7 @@
 
   <div id="toolbar-actions">
     <!--<button class="action-btn secondary" onclick="window.toolbar_exportGraph()">Export</button>-->
-    <% if (mode != 'test') { %>
+    <% if (typeof mode !== "undefined" && mode != 'test') { %>
       <button class="action-btn secondary" onclick="window.toolbar_clearStorage()">Clear Storage</button>
       <button class="action-btn secondary" onclick="window.toolbar_restartDINASOREs()">Restart DINASOREs</button>
     <% } %>

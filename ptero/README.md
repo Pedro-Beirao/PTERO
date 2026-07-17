@@ -17,7 +17,7 @@ YPERSISTENCE=./db npx y-websocket --binary true
 
 In a separate tab, run this command to start the server and serve the frontend. Make sure that the `python3` environment in this session is the same as the one where your did `pip install -r requirements.txt` before.
 ```bash
-node server.js
+npm run server
 # Server running at http://localhost:3000
 ```
 

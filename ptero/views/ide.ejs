@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/theme/monokai.min.css">
 
   <link rel="stylesheet" href="ide.css">
-  <script>window.mode = '<%= mode %>';</script>
+  <script>window.mode = '<%= typeof mode !== "undefined" ? mode : "test" %>';</script>
   <script type="module" src="ide.js"></script>
 </head>
 <body>
