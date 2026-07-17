@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ptero
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -35,7 +38,7 @@ jobs:
       - name: Upload /dist as Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./ptero/dist
 
   deploy:
     needs: build
