@@ -35,6 +35,9 @@ jobs:
       - name: Build static site
         run: npm run static
 
+      - name: Add CNAME
+        run: echo "ptero.pedro-beirao.eu" > ./dist/CNAME
+
       - name: Upload /dist as Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
