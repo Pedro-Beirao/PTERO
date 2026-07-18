@@ -100,3 +100,28 @@ u {
 .split > *:not(img) {
   padding: 0.5em;
 }
+
+.icon {
+  font-size: 1em;
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.8em 1em;
+  border-radius: 0.5em;
+  background: #323232;
+  color: #cbcbcb;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.icon:visited {
+  color: #cbcbcb;
+}
+
+.icon:hover {
+  color: white;
+  background: #434343;
+}
